@@ -1,0 +1,4 @@
+<map id="Queue&lt; dataType &gt;" name="Queue&lt; dataType &gt;">
+<area shape="rect" id="node1" title="Implements a queue to transmit data from one RTOS task to another." alt="" coords="5,80,159,107"/>
+<area shape="rect" id="node2" href="$classBaseShare.html" title="Base class for classes that share data in a thread&#45;safe manner between tasks." alt="" coords="37,5,127,32"/>
+</map>

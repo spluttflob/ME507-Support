@@ -1,0 +1,6 @@
+<map id="taskshare.h" name="taskshare.h">
+<area shape="rect" id="node1" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="68,5,167,32"/>
+<area shape="rect" id="node2" href="$baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="5,80,107,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="131,80,229,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="14,155,98,181"/>
+</map>
