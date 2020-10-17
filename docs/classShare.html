@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ME507 Utility Library for ARM/Arduino/FreeRTOS
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.1</span>
    </div>
    <div id="projectbrief">Making Learn by Zooming a little less unbearable</div>
   </td>
@@ -161,9 +161,9 @@ DataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr class="memdesc:a7247d922017c7720e3c2146a9d286be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the data to be shared. <br /></td></tr>
 <tr class="separator:a7247d922017c7720e3c2146a9d286be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classBaseShare"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classBaseShare')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classBaseShare.html">BaseShare</a></td></tr>
-<tr class="memitem:a47507198486449dfdbd54c9ff3ebff18 inherit pro_attribs_classBaseShare"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseShare.html#a47507198486449dfdbd54c9ff3ebff18">name</a> [13]</td></tr>
-<tr class="memdesc:a47507198486449dfdbd54c9ff3ebff18 inherit pro_attribs_classBaseShare"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the shared item.  <a href="classBaseShare.html#a47507198486449dfdbd54c9ff3ebff18">More...</a><br /></td></tr>
-<tr class="separator:a47507198486449dfdbd54c9ff3ebff18 inherit pro_attribs_classBaseShare"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc438f82d56097f13a1e791dcd617a72 inherit pro_attribs_classBaseShare"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">name</a> [16]</td></tr>
+<tr class="memdesc:abc438f82d56097f13a1e791dcd617a72 inherit pro_attribs_classBaseShare"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the shared item.  <a href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">More...</a><br /></td></tr>
+<tr class="separator:abc438f82d56097f13a1e791dcd617a72 inherit pro_attribs_classBaseShare"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8077022ea40c4ba44a6ff07ab24cac83 inherit pro_attribs_classBaseShare"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBaseShare.html">BaseShare</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">p_next</a></td></tr>
 <tr class="memdesc:a8077022ea40c4ba44a6ff07ab24cac83 inherit pro_attribs_classBaseShare"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the next item in the linked list of shares.  <a href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">More...</a><br /></td></tr>
 <tr class="separator:a8077022ea40c4ba44a6ff07ab24cac83 inherit pro_attribs_classBaseShare"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,7 +188,7 @@ Usage</h1>
 <p>In the file which contains <code><a class="el" href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title="Arduino setup function which runs once at program startup.">setup()</a></code> we create a shared data object. The constructor of the <code>Share&lt;uint16_t&gt;</code> class is given a name for the share; the name will be shown on system diagnostic printouts. If it is desired to print diagnostic information to a serial monitor, a pointer to an output stream may also be given: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskshare_8h.html">taskshare.h</a>&quot;</span></div>
 <div class="line">...<span class="comment"></span></div>
 <div class="line"><span class="comment">/// Data from sensor number 3 on the moose&#39;s right antler</span></div>
-<div class="line"><span class="comment"></span>Share&lt;uint16_t&gt; my_share (<span class="stringliteral">&quot;Data_3&quot;</span>, &amp;Serial);</div>
+<div class="line"><span class="comment"></span>Share&lt;uint16_t&gt; my_share (<span class="stringliteral">&quot;Data_3&quot;</span>);</div>
 </div><!-- fragment --><p> If there are any tasks which use this share in other source files, we must re-declare this share with the keyword <code>extern</code> near the top of those files to make it accessible to those task(s). This copy of the share does not need a Doxygen comment: </p><div class="fragment"><div class="line"><span class="comment">// Sensor 3 (right antler) data</span></div>
 <div class="line"><span class="keyword">extern</span> <a class="code" href="classShare.html">Share&lt;uint16_t&gt;</a> my_share;</div>
 </div><!-- fragment --><p> In the sending task, data is put into the share: </p><div class="fragment"><div class="line">uint16_t a_data_item = 42;     <span class="comment">///&lt; Holds antler data</span></div>

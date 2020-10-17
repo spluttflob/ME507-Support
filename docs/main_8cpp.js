@@ -5,6 +5,6 @@ var main_8cpp =
     [ "task_returns", "main_8cpp.html#a480f148fad1890cb82185237adb02f1a", null ],
     [ "task_send", "main_8cpp.html#adad8dc2832befcde5d76459bd91cd09f", null ],
     [ "bad_global_0", "main_8cpp.html#a640ba08114db644da3248db71daf3d96", null ],
-    [ "test_queue_0", "main_8cpp.html#a9cb16db4e7a453c48929eeb36ca61870", null ],
+    [ "test_queue_0", "main_8cpp.html#a0c84e737127e673cb2f864aff228bba5", null ],
     [ "test_share_0", "main_8cpp.html#a324685518ffe0f03513adb6eb850ed54", null ]
 ];

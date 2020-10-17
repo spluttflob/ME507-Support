@@ -45,45 +45,45 @@
  */
 class BaseShare
 {
-	protected:
-		/** @brief   The name of the shared item.
-		 *  @details This string holds the shared item's name. The name is only
+    protected:
+        /** @brief   The name of the shared item.
+         *  @details This string holds the shared item's name. The name is only
          *           used for identification on debugging printouts or logs.
-		 */
-		char name[16];
+         */
+        char name[16];
 
-		/** @brief   Pointer to the next item in the linked list of shares.
-		 *  @details This pointer points to the next item in the system's list
+        /** @brief   Pointer to the next item in the linked list of shares.
+         *  @details This pointer points to the next item in the system's list
          *           of shared data items (shares, queues, @e etc.) If this 
          *           share is the most recently created one, the pointer will 
          *           be @c NULL. The list goes backwards; the next item is the
          *           previously created one.
-		 */
-		BaseShare* p_next;
+         */
+        BaseShare* p_next;
 
-		/** @brief   Pointer to the most recently created shared data item.
-		 *  @details This @c static variable, one copy of which is shared by 
+        /** @brief   Pointer to the most recently created shared data item.
+         *  @details This @c static variable, one copy of which is shared by 
          *           all shared data items, is a pointer to the most recently 
          *           created one. It is used as the beginning of a linked list
          *           of all shared data items in the system. 
-		 */
-		static BaseShare* p_newest;
+         */
+        static BaseShare* p_newest;
 
-	public:
-		// Construct a base shared data item
-		BaseShare (const char* p_name = NULL);
+    public:
+        // Construct a base shared data item
+        BaseShare (const char* p_name = NULL);
 
-		/** @brief   Print one shared data item within a list.
-		 *  @details Make a printout showing the condition of this shared data
+        /** @brief   Print one shared data item within a list.
+         *  @details Make a printout showing the condition of this shared data
          *           item, such as the value of a shared variable or how full a
          *           queue's buffer is. This method must be overridden in each
          *           descendent class with a method that actually @e does 
          *           something. 
-		 *  @param   printer Reference to a serial device on which to print 
-		 */
-		virtual void print_in_list (Print& printer) = 0;
+         *  @param   printer Reference to a serial device on which to print 
+         */
+        virtual void print_in_list (Print& printer) = 0;
 
-		// }
+        // }
         friend void print_all_shares (Print& printer);
 };
 

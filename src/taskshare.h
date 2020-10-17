@@ -73,7 +73,7 @@
  *           #include "taskshare.h"
  *           ...
  *           /// Data from sensor number 3 on the moose's right antler
- *           Share<uint16_t> my_share ("Data_3", &Serial);
+ *           Share<uint16_t> my_share ("Data_3");
  *           @endcode
  *           If there are any tasks which use this share in other source files,
  *           we must re-declare this share with the keyword @c extern near the
@@ -99,96 +99,96 @@
  */
 template <class DataType> class Share : public BaseShare
 {
-	protected:
-		DataType the_data;					///< Holds the data to be shared
+    protected:
+        DataType the_data;                    ///< Holds the data to be shared
 
-	public:
-		/** @brief   Construct a shared data item.
-		 *  @details This default constructor for a shared data item doesn't do
+    public:
+        /** @brief   Construct a shared data item.
+         *  @details This default constructor for a shared data item doesn't do
          *           much besides allocate memory because there isn't any 
          *           particular setup required. Note that the data is @b not 
          *           initialized. 
-		 *  @param   p_name A name to be shown in the list of task shares 
+         *  @param   p_name A name to be shown in the list of task shares 
          *           (default @c NULL)
-		 */
-		Share<DataType> (const char* p_name = NULL) : BaseShare (p_name)
-		{
-		}
+         */
+        Share<DataType> (const char* p_name = NULL) : BaseShare (p_name)
+        {
+        }
 
-		// This method is used to write data into the shared data item
-		void put (DataType);
+        // This method is used to write data into the shared data item
+        void put (DataType);
 
-		// This method is used to write data from within an ISR only
-		void ISR_put (DataType);
+        // This method is used to write data from within an ISR only
+        void ISR_put (DataType);
 
-		// This method is used to read data from the shared data item
-		void get (DataType&);
+        // This method is used to read data from the shared data item
+        void get (DataType&);
 
-		// This method is used to read data from within an ISR only
-		void ISR_get (DataType&);
+        // This method is used to read data from within an ISR only
+        void ISR_get (DataType&);
 
-		// Print the share's status within a list of all shares' statuses
-		void print_in_list (Print& printer);
+        // Print the share's status within a list of all shares' statuses
+        void print_in_list (Print& printer);
 
-		/**   @brief   The prefix increment causes the shared data to increase
+        /**   @brief   The prefix increment causes the shared data to increase
          *             by one.
-		 *    @details This operator just increases by one the variable held by
+         *    @details This operator just increases by one the variable held by
          *             the shared data item. @b BUG: It should return a 
          *             reference to this shared data item, but for some reason 
          *             the compiler insists it must return a reference to the 
          *             data @e in the shared data object. Why is unknown. 
-		 */
-		DataType& operator ++ (void)
-		{
-			portENTER_CRITICAL ();
-			the_data++;
-			portEXIT_CRITICAL ();
+         */
+        DataType& operator ++ (void)
+        {
+            portENTER_CRITICAL ();
+            the_data++;
+            portEXIT_CRITICAL ();
 
-			return (the_data);
-		}
+            return (the_data);
+        }
 
-		/**   @brief The postfix increment causes the shared data to increase
+        /**   @brief The postfix increment causes the shared data to increase
          *           by one.
-		 */
-		DataType operator ++ (int)
-		{
-			DataType result = the_data;
-			portENTER_CRITICAL ();
-			the_data++;
-			portEXIT_CRITICAL ();
+         */
+        DataType operator ++ (int)
+        {
+            DataType result = the_data;
+            portENTER_CRITICAL ();
+            the_data++;
+            portEXIT_CRITICAL ();
 
-			return (result);
-		}
+            return (result);
+        }
 
-		/**   @brief   The prefix decrement causes the shared data to decrease
+        /**   @brief   The prefix decrement causes the shared data to decrease
          *             by one.
-		 *    @details This operator just decreases by one the variable held by
+         *    @details This operator just decreases by one the variable held by
          *             the shared data item. @b BUG: It should return a 
          *             reference to this shared data item, but for some reason 
          *             the compiler insists it must return a reference to the 
          *             data @e in the shared data object. Why is unknown. 
-		 */
-		DataType& operator -- (void)
-		{
-			portENTER_CRITICAL ();
-			the_data--;
-			portEXIT_CRITICAL ();
+         */
+        DataType& operator -- (void)
+        {
+            portENTER_CRITICAL ();
+            the_data--;
+            portEXIT_CRITICAL ();
 
-			return (the_data); //// *this);  The BUG
-		}
+            return (the_data); //// *this);  The BUG
+        }
 
-		/**   @brief The postfix decrement causes the shared data to decrease
+        /**   @brief The postfix decrement causes the shared data to decrease
          *           by one.
-		 */
-		DataType operator -- (int)
-		{
-			DataType result = the_data;
-			portENTER_CRITICAL ();
-			the_data--;
-			portEXIT_CRITICAL ();
+         */
+        DataType operator -- (int)
+        {
+            DataType result = the_data;
+            portENTER_CRITICAL ();
+            the_data--;
+            portEXIT_CRITICAL ();
 
-			return (result);
-		}
+            return (result);
+        }
 }; // class TaskShare<DataType>
 
 
@@ -207,9 +207,9 @@ template <class DataType> class Share : public BaseShare
 template <class DataType>
 inline void Share<DataType>::put (DataType new_data)
 {
-	portENTER_CRITICAL ();
-	the_data = new_data;
-	portEXIT_CRITICAL ();
+    portENTER_CRITICAL ();
+    the_data = new_data;
+    portEXIT_CRITICAL ();
 }
 
 
@@ -225,7 +225,7 @@ inline void Share<DataType>::put (DataType new_data)
 template <class DataType>
 void Share<DataType>::ISR_put (DataType new_data)
 {
-	the_data = new_data;
+    the_data = new_data;
 }
 
 
@@ -241,10 +241,10 @@ void Share<DataType>::ISR_put (DataType new_data)
 template <class DataType>
 void Share<DataType>::get (DataType& recv_data)
 {
-	// Copy the data from the queue into the receiving variable
-	portENTER_CRITICAL ();
-	recv_data = the_data;
-	portEXIT_CRITICAL ();
+    // Copy the data from the queue into the receiving variable
+    portENTER_CRITICAL ();
+    recv_data = the_data;
+    portEXIT_CRITICAL ();
 }
 
 
@@ -261,7 +261,7 @@ void Share<DataType>::get (DataType& recv_data)
 template <class DataType>
 void Share<DataType>::ISR_get (DataType& recv_data)
 {
-	recv_data = the_data;
+    recv_data = the_data;
 }
 
 
@@ -276,17 +276,17 @@ void Share<DataType>::ISR_get (DataType& recv_data)
 template <class DataType>
 void Share<DataType>::print_in_list (Print& printer)
 {
-	// Print this task's name and pad it to 16 characters
-	printer.printf ("%-16sshare\t", name);
+    // Print this task's name and pad it to 16 characters
+    printer.printf ("%-16sshare\t", name);
 
-	// End the line
-	printer << endl;
+    // End the line
+    printer << endl;
 
-	// Call the next item
-	if (p_next != NULL)
-	{
-		p_next->print_in_list (printer);
-	}
+    // Call the next item
+    if (p_next != NULL)
+    {
+        p_next->print_in_list (printer);
+    }
 }
 
 

@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ME507 Utility Library for ARM/Arduino/FreeRTOS
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.1</span>
    </div>
    <div id="projectbrief">Making Learn by Zooming a little less unbearable</div>
   </td>
@@ -529,91 +529,75 @@ $(document).ready(function(){initNavTree('taskqueue_8h_source.html',''); initRes
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    return_value = (bool)(xQueueSendToBackFromISR (handle, &amp;item, </div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;                                                   &amp;shouldSwitch));</div>
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160; </div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    <span class="comment">// If the queue said that putting something into it has un-blocked a higher</span></div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <span class="comment">// priority task than the one currently running, ask for a context switch</span></div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="comment">// BUG: There doesn&#39;t seem to be a taskYIELD_FROM_ISR() for the AVR port</span></div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="comment">//  if (shouldSwitch)</span></div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="comment">//  {</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="comment">//      taskYIELD_FROM_ISR ();</span></div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="comment">//  }</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue. BUG: max_full isn&#39;t</span></div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <span class="comment">// thread safe (but getting max_full corrupted shouldn&#39;t cause a calamity)</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    uint16_t fillage = uxQueueMessagesWaitingFromISR (handle);</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    {</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        max_full = fillage;</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    }</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160; </div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue. BUG: max_full isn&#39;t</span></div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="comment">// thread safe (but getting max_full corrupted shouldn&#39;t cause a calamity)</span></div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    uint16_t fillage = uxQueueMessagesWaitingFromISR (handle);</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    {</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;        max_full = fillage;</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    }</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160; </div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;}</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160; </div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;<span class="comment">/** @brief   Put an item into the front of the queue from within an ISR.</span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="comment"> *  @details This method puts an item into the front of the queue from within</span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="comment"> *           an ISR. It must \b not be used within normal, non-ISR code. </span></div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="comment"> *  @param   item The item which is going to be (rudely) put into the front of</span></div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="comment"> *           the queue</span></div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00472"></a><span class="lineno"><a class="line" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">  472</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue&lt;dataType&gt;::ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;{</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    <span class="keywordtype">bool</span> return_value;                      <span class="comment">// Value returned from this method</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;}</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment">/** @brief   Put an item into the front of the queue from within an ISR.</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="comment"> *  @details This method puts an item into the front of the queue from within</span></div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="comment"> *           an ISR. It must \b not be used within normal, non-ISR code. </span></div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="comment"> *  @param   item The item which is going to be (rudely) put into the front of</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="comment"> *           the queue</span></div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00464"></a><span class="lineno"><a class="line" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">  464</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue&lt;dataType&gt;::ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;{</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160; </div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <span class="keywordtype">bool</span> return_value;                        <span class="comment">// Value returned from this method</span></div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160; </div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    return_value = (bool)(xQueueSendToFrontFromISR (handle, &amp;item, </div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;                                                    &amp;shouldSwitch));</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;}</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160; </div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    return_value = (bool)(xQueueSendToFrontFromISR (handle, &amp;item, </div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;                                                    &amp;shouldSwitch));</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160; </div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;    <span class="comment">// If the queue said that putting something into it has un-blocked a higher</span></div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    <span class="comment">// priority task than the one currently running, ask for a context switch</span></div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <span class="comment">// BUG: There doesn&#39;t seem to be a taskYIELD_FROM_ISR() for the AVR port</span></div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="comment">//  if (shouldSwitch)</span></div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;<span class="comment">//  {</span></div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;<span class="comment">//      taskYIELD_FROM_ISR ();</span></div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;<span class="comment">//  }</span></div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;}</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160; </div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;<span class="comment">/** @brief   Print the queue&#39;s status to a serial device.</span></div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;<span class="comment"> *  @details This method makes a printout of the queue&#39;s status on the given</span></div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;<span class="comment"> *           serial device, then calls this same method for the next item of </span></div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;<span class="comment"> *           thread-safe data in the linked list of items. </span></div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;<span class="comment"> *  @param   print_dev Reference to the serial device on which to print</span></div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00503"></a><span class="lineno"><a class="line" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">  503</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue&lt;dataType&gt;::print_in_list</a> (Print&amp; print_dev)</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;{</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    <span class="comment">// Print this task&#39;s name and pad it to 16 characters</span></div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    print_dev.printf (<span class="stringliteral">&quot;%-16squeue\t&quot;</span>, name);</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160; </div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    <span class="comment">// Print the free and total number of spaces in the queue or an error</span></div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    <span class="comment">// message if this queue can&#39;t be used (probably due to a memory error)</span></div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    <span class="keywordflow">if</span> (usable)</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    {</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;        print_dev &lt;&lt; max_full &lt;&lt; <span class="charliteral">&#39;/&#39;</span> &lt;&lt; buf_size &lt;&lt; endl;</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    }</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    {</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        print_dev &lt;&lt; <span class="stringliteral">&quot;UNUSABLE&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    }</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160; </div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;    <span class="comment">// Call the next item</span></div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;    <span class="keywordflow">if</span> (p_next != NULL)</div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    {</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        p_next-&gt;print_in_list (print_dev);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;    }</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;}</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160; </div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;<span class="preprocessor">#endif  // _TASKQUEUE_H_</span></div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;<span class="comment">/** @brief   Print the queue&#39;s status to a serial device.</span></div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;<span class="comment"> *  @details This method makes a printout of the queue&#39;s status on the given</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;<span class="comment"> *           serial device, then calls this same method for the next item of </span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="comment"> *           thread-safe data in the linked list of items. </span></div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;<span class="comment"> *  @param   print_dev Reference to the serial device on which to print</span></div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00487"></a><span class="lineno"><a class="line" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">  487</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue&lt;dataType&gt;::print_in_list</a> (Print&amp; print_dev)</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;{</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="comment">// Print this task&#39;s name and pad it to 16 characters</span></div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    print_dev.printf (<span class="stringliteral">&quot;%-16squeue\t&quot;</span>, name);</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="comment">// Print the free and total number of spaces in the queue or an error</span></div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;    <span class="comment">// message if this queue can&#39;t be used (probably due to a memory error)</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;    <span class="keywordflow">if</span> (usable ())</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;    {</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        print_dev &lt;&lt; max_full &lt;&lt; <span class="charliteral">&#39;/&#39;</span> &lt;&lt; buf_size &lt;&lt; endl;</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    }</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    {</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;        print_dev &lt;&lt; <span class="stringliteral">&quot;UNUSABLE&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;    }</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160; </div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;    <span class="comment">// Call the next item</span></div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">if</span> (p_next != NULL)</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    {</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        p_next-&gt;print_in_list (print_dev);</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    }</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;}</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160; </div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160; </div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;<span class="preprocessor">#endif  // _TASKQUEUE_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassQueue_html_ac7869eacf6bc024b4d8ce25496fdaaed"><div class="ttname"><a href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">Queue::ticks_to_wait</a></div><div class="ttdeci">TickType_t ticks_to_wait</div><div class="ttdoc">RTOS ticks to wait for empty.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:132</div></div>
@@ -629,8 +613,8 @@ $(document).ready(function(){initNavTree('taskqueue_8h_source.html',''); initRes
 <div class="ttc" id="aclassQueue_html_ab009e50722f689c48d146125f6d50519"><div class="ttname"><a href="classQueue.html#ab009e50722f689c48d146125f6d50519">Queue::get_handle</a></div><div class="ttdeci">QueueHandle_t get_handle(void)</div><div class="ttdoc">Return a handle to the FreeRTOS structure which runs this queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:283</div></div>
 <div class="ttc" id="aclassQueue_html_a6bef71a925790602cef9eb6274ae61e3"><div class="ttname"><a href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">Queue::available</a></div><div class="ttdeci">unsigned portBASE_TYPE available(void)</div><div class="ttdoc">Return the number of items in the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:239</div></div>
 <div class="ttc" id="aclassQueue_html_a14df528749e226183df3fa5472368e82"><div class="ttname"><a href="classQueue.html#a14df528749e226183df3fa5472368e82">Queue::get</a></div><div class="ttdeci">void get(dataType &amp;recv_item)</div><div class="ttdoc">Remove the item at the head of the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:330</div></div>
-<div class="ttc" id="aclassQueue_html_a24849f96865b52468bcd611ee67bd7dc"><div class="ttname"><a href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue::ISR_butt_in</a></div><div class="ttdeci">bool ISR_butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:472</div></div>
-<div class="ttc" id="aclassQueue_html_ace8d2d512e49f018c5e2df4b5a2bf810"><div class="ttname"><a href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue::print_in_list</a></div><div class="ttdeci">void print_in_list(Print &amp;print_dev)</div><div class="ttdoc">Print the queue's status to a serial device.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:503</div></div>
+<div class="ttc" id="aclassQueue_html_a24849f96865b52468bcd611ee67bd7dc"><div class="ttname"><a href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue::ISR_butt_in</a></div><div class="ttdeci">bool ISR_butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:464</div></div>
+<div class="ttc" id="aclassQueue_html_ace8d2d512e49f018c5e2df4b5a2bf810"><div class="ttname"><a href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue::print_in_list</a></div><div class="ttdeci">void print_in_list(Print &amp;print_dev)</div><div class="ttdoc">Print the queue's status to a serial device.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:487</div></div>
 <div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:408</div></div>
 <div class="ttc" id="aclassQueue_html_a69b90b10718e9469499375c61cc9c236"><div class="ttname"><a href="classQueue.html#a69b90b10718e9469499375c61cc9c236">Queue::handle</a></div><div class="ttdeci">QueueHandle_t handle</div><div class="ttdoc">Hhandle for the FreeTOS queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:131</div></div>
 <div class="ttc" id="abaseshare_8h_html"><div class="ttname"><a href="baseshare_8h.html">baseshare.h</a></div><div class="ttdoc">Headers for a base class for type-safe, thread-safe task data exchange classes.</div></div>

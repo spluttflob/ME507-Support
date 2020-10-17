@@ -45,21 +45,21 @@ BaseShare* BaseShare::p_newest = NULL;
  */
 BaseShare::BaseShare (const char* p_name)
 {
-	// Allocate some memory and save the share's name; trim it to 12 characters
-	if (p_name != NULL)
-	{
-		uint8_t namelength = strlen (p_name);
-		namelength = (namelength <= 15) ? namelength : 15;
-		strncpy (name, p_name, namelength);
-	}
+    // Allocate some memory and save the share's name; trim it to 12 characters
+    if (p_name != NULL)
+    {
+        uint8_t namelength = strlen (p_name);
+        namelength = (namelength <= 15) ? namelength : 15;
+        strncpy (name, p_name, namelength);
+    }
     else
     {
         strcpy (name, "(No Name)");
     }
 
-	// Install this share in the linked list of shares
-	p_next = p_newest;
-	p_newest = this;
+    // Install this share in the linked list of shares
+    p_next = p_newest;
+    p_newest = this;
 }
 
 
