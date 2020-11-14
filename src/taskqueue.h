@@ -122,7 +122,6 @@
  *           hockey_queue.get (data_we_got);       // Get data from the queue
  *           @endcode
  */
-
 template <class dataType> class Queue : public BaseShare
 {
     // This protected data can only be accessed from this class or its 
@@ -290,8 +289,7 @@ template <class dataType> class Queue : public BaseShare
 /** @brief   Construct a queue object, allocating memory for the buffer.
  *  @details This constructor creates the FreeRTOS queue which is wrapped by 
  *           the @c Queue class. 
- *  @param   queue_size The number of characters which can be stored in the 
- *           queue
+ *  @param   queue_size The number of items which can be stored in the queue
  *  @param   p_name A name to be shown in the list of task shares (default 
  *           empty String)
  *  @param   wait_time How long, in RTOS ticks, to wait for a queue to become

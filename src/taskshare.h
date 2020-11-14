@@ -1,4 +1,3 @@
-//*****************************************************************************
 /** @file    taskshare.h
  *  @brief   Data which can be shared between tasks in a thread-safe manner.
  *  @details This file contains a template class for data which is to be shared
@@ -14,6 +13,7 @@
  *  @date 2014-Oct-18 JRR Added linked list of all shares for tracking and 
  *        debugging
  *  @date 2020-Oct-10 JRR Made compatible with Arduino, class name to @c Share
+ *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x)
  *
  *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released 
  *    under the Lesser GNU Public License, version 2. It intended for 
@@ -29,7 +29,6 @@
  *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
  *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *    THE POSSIBILITY OF SUCH DAMAGE. */
-//*****************************************************************************
 
 // This define prevents this .h file from being included more than once
 #ifndef _TASKSHARE_H_
@@ -37,6 +36,21 @@
 
 #include "baseshare.h"                      // Base class for shared data items
 #include "FreeRTOS.h"                       // Main header for FreeRTOS
+
+
+// Macros that allow critical sections on ESP32's to use a mutex, while those
+// on some other processors do not. This is being debugged as of 2020-Nov-14
+#ifdef ESP32
+    #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL(x)
+    #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL(x)
+    // #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR(x)
+    // #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR(x)
+#else
+    #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL()
+    #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL()
+    // #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR()
+    // #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR()
+#endif
 
 
 /** @brief   Class for data to be shared in a thread-safe manner between tasks.
@@ -73,7 +87,7 @@
  *           #include "taskshare.h"
  *           ...
  *           /// Data from sensor number 3 on the moose's right antler
- *           Share<uint16_t> my_share ("Data_3");
+ *           Share<uint16_t> my_share ("Data_3", &Serial);
  *           @endcode
  *           If there are any tasks which use this share in other source files,
  *           we must re-declare this share with the keyword @c extern near the
@@ -101,6 +115,11 @@ template <class DataType> class Share : public BaseShare
 {
     protected:
         DataType the_data;                    ///< Holds the data to be shared
+
+    #ifdef ESP32
+        /// A mutex used on ESP32's for critical sections
+        portMUX_TYPE mutex;
+    #endif
 
     public:
         /** @brief   Construct a shared data item.
@@ -140,9 +159,9 @@ template <class DataType> class Share : public BaseShare
          */
         DataType& operator ++ (void)
         {
-            portENTER_CRITICAL ();
+            SHARE_ENTER_CRITICAL (&mutex);
             the_data++;
-            portEXIT_CRITICAL ();
+            SHARE_EXIT_CRITICAL (&mutex);
 
             return (the_data);
         }
@@ -153,9 +172,9 @@ template <class DataType> class Share : public BaseShare
         DataType operator ++ (int)
         {
             DataType result = the_data;
-            portENTER_CRITICAL ();
+            SHARE_ENTER_CRITICAL (&mutex);
             the_data++;
-            portEXIT_CRITICAL ();
+            SHARE_EXIT_CRITICAL (&mutex);
 
             return (result);
         }
@@ -170,9 +189,9 @@ template <class DataType> class Share : public BaseShare
          */
         DataType& operator -- (void)
         {
-            portENTER_CRITICAL ();
+            SHARE_ENTER_CRITICAL (&mutex);
             the_data--;
-            portEXIT_CRITICAL ();
+            SHARE_EXIT_CRITICAL (&mutex);
 
             return (the_data); //// *this);  The BUG
         }
@@ -183,9 +202,9 @@ template <class DataType> class Share : public BaseShare
         DataType operator -- (int)
         {
             DataType result = the_data;
-            portENTER_CRITICAL ();
+            SHARE_ENTER_CRITICAL (&mutex);
             the_data--;
-            portEXIT_CRITICAL ();
+            SHARE_EXIT_CRITICAL (&mutex);
 
             return (result);
         }
@@ -203,29 +222,30 @@ template <class DataType> class Share : public BaseShare
  *           variables, jumping back and popping the program counter, @e etc.
  *  @param   new_data The data which is to be written
  */
-
 template <class DataType>
 inline void Share<DataType>::put (DataType new_data)
 {
-    portENTER_CRITICAL ();
+    SHARE_ENTER_CRITICAL (&mutex);
     the_data = new_data;
-    portEXIT_CRITICAL ();
+    SHARE_EXIT_CRITICAL (&mutex);
 }
 
 
 /** @brief   Put data into the shared data item from within an ISR.
  *  @details This method writes data from an ISR into the shared data item. It
  *           must only be called from within an interrupt, not a normal task. 
- *           This is because critical section protection isn't used here, which
- *           is OK, assuming that an interrupt can't be interrupted by another 
- *           interrupt, which is the case on most small microcontrollers. 
  *  @param   new_data The data which is to be written into the shared data item
  */
-
 template <class DataType>
 void Share<DataType>::ISR_put (DataType new_data)
 {
+    #ifndef ESP32
+        // taskENTER_CRITICAL_FROM_ISR ();
+    #endif
     the_data = new_data;
+    #ifndef ESP32
+        // taskEXIT_CRITICAL_FROM_ISR ();
+    #endif
 }
 
 
@@ -242,26 +262,29 @@ template <class DataType>
 void Share<DataType>::get (DataType& recv_data)
 {
     // Copy the data from the queue into the receiving variable
-    portENTER_CRITICAL ();
+    SHARE_ENTER_CRITICAL (&mutex);
     recv_data = the_data;
-    portEXIT_CRITICAL ();
+    SHARE_EXIT_CRITICAL (&mutex);
 }
 
 
 /** @brief   Read data from the shared data item, from within an ISR.
  *  @details This method is used to enable code within an ISR to read data from
  *           the shared data item. It must only be called from within an 
- *           interrupt service routine, not a normal task. This is because 
- *           critical section protection isn't used here, which is OK, assuming
- *           that an interrupt can't be interrupted by another interrupt, which
- *           is the case on most small microcontrollers. 
+ *           interrupt service routine, not a normal task. 
  *  @param   recv_data A reference to the variable in which to put received
  *           data
  */
 template <class DataType>
 void Share<DataType>::ISR_get (DataType& recv_data)
 {
+    #ifndef ESP32
+        // taskENTER_CRITICAL_FROM_ISR ();
+    #endif
     recv_data = the_data;
+    #ifndef ESP32
+        // taskEXIT_CRITICAL_FROM_ISR ();
+    #endif
 }
 
 
@@ -288,7 +311,5 @@ void Share<DataType>::print_in_list (Print& printer)
         p_next->print_in_list (printer);
     }
 }
-
-
 
 #endif  // _TASKSHARE_H_
