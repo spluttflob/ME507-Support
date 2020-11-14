@@ -33,7 +33,6 @@
 #include "baseshare.h"
 
 
-//-----------------------------------------------------------------------------
 /** @brief   Implements a queue to transmit data from one RTOS task to another. 
  *  @details Since multithreaded tasks must not use unprotected shared data 
  *           items for communication, queues are a primary means of intertask 
@@ -124,165 +123,222 @@
  */
 template <class dataType> class Queue : public BaseShare
 {
-    // This protected data can only be accessed from this class or its 
-    // descendents
-    protected:
-        QueueHandle_t handle;             ///< Hhandle for the FreeTOS queue
-        TickType_t ticks_to_wait;         ///< RTOS ticks to wait for empty
-        uint16_t buf_size;                ///< Size of queue buffer in bytes
-        uint16_t max_full;                ///< Maximum number of bytes in queue
+// This protected data can only be accessed from this class or its 
+// descendents
+protected:
+    QueueHandle_t handle;             ///< Hhandle for the FreeTOS queue
+    TickType_t ticks_to_wait;         ///< RTOS ticks to wait for empty
+    uint16_t buf_size;                ///< Size of queue buffer in bytes
+    uint16_t max_full;                ///< Maximum number of bytes in queue
 
-    // Public methods can be called from anywhere in the program where there is
-    // a pointer or reference to an object of this class
-    public:
-        // The constructor creates a FreeRTOS queue
-        Queue (BaseType_t queue_size, const char* p_name = NULL, 
-               TickType_t = portMAX_DELAY);
+// Public methods can be called from anywhere in the program where there is
+// a pointer or reference to an object of this class
+public:
+    // The constructor creates a FreeRTOS queue
+    Queue (BaseType_t queue_size, const char* p_name = NULL, 
+            TickType_t = portMAX_DELAY);
 
-        // Put an item into the queue behind other items.
-        bool put (const dataType& item);
+    // Put an item into the queue behind other items.
+    bool put (const dataType& item);
 
-        // This method puts an item of data into the back of the queue from 
-        // within an interrupt service routine. It must not be used within 
-        // non-ISR code. 
-        bool ISR_put (const dataType& item);
+    // This method puts an item of data into the back of the queue from 
+    // within an interrupt service routine. It must not be used within 
+    // non-ISR code. 
+    bool ISR_put (const dataType& item);
 
-        /** @brief   Put an item into the front of the queue to be retrieved 
-         *           first.
-         *  @details This method puts an item into the front of the queue so
-         *           that it will be received first as long as nothing else is
-         *           put in front of it. This is not the normal way to put 
-         *           things into a queue; using @c put() to put items into the
-         *           back of the queue is. If you always use this method, 
-         *           you're making a stack rather than a queue, you weirdo. 
-         *           This method must @b not be used within an interrupt 
-         *           service routine. 
-         *  @param   item Reference to the item which is going to be (rudely) 
-         *           put into the front of the queue
-         *  @return  @c True if the item was successfully queued, false if not
-         */
-        bool butt_in (const dataType& item)
-        {
-            return ((bool)(xQueueSendToFront (handle, &item, ticks_to_wait)));
-        }
+    /** @brief   Put an item into the front of the queue to be retrieved 
+     *           first.
+     *  @details This method puts an item into the front of the queue so
+     *           that it will be received first as long as nothing else is
+     *           put in front of it. This is not the normal way to put 
+     *           things into a queue; using @c put() to put items into the
+     *           back of the queue is. If you always use this method, 
+     *           you're making a stack rather than a queue, you weirdo. 
+     *           This method must @b not be used within an interrupt 
+     *           service routine. 
+     *  @param   item Reference to the item which is going to be (rudely) 
+     *           put into the front of the queue
+     *  @return  @c True if the item was successfully queued, false if not
+     */
+    bool butt_in (const dataType& item)
+    {
+        return ((bool)(xQueueSendToFront (handle, &item, ticks_to_wait)));
+    }
 
-        // This method puts an item into the front of the queue from within 
-        // an ISR. It must not be used within normal, non-ISR code. 
-        bool ISR_butt_in (const dataType& item);
+    // This method puts an item into the front of the queue from within 
+    // an ISR. It must not be used within normal, non-ISR code. 
+    bool ISR_butt_in (const dataType& item);
 
-        /** @brief   Return true if the queue is empty.
-         *  @details This method checks if the queue is empty. It returns 
-         *           @c true if there are no items in the queue and @c false if
-         *           there are items.
-         *  @return  @c true if the queue is empty, @c false if it's not empty
-         */
-        bool is_empty (void)
-        {
-            return (uxQueueMessagesWaiting (handle) == 0);
-        }
+    /** @brief   Return true if the queue is empty.
+     *  @details This method checks if the queue is empty. It returns 
+     *           @c true if there are no items in the queue and @c false if
+     *           there are items.
+     *  @return  @c true if the queue is empty, @c false if it's not empty
+     */
+    bool is_empty (void)
+    {
+        return (uxQueueMessagesWaiting (handle) == 0);
+    }
 
-        /** @brief   Return true if the queue is empty, from within an ISR.
-         *  @details This method checks if the queue is empty from within an 
-         *           interrupt service routine. It must not be used in normal
-         *           non-ISR code. 
-         *  @return  @c true if the queue is empty, @c false if it's not empty
-         */
-        bool ISR_is_empty (void)
-        {
-            return (uxQueueMessagesWaitingFromISR (handle) == 0);
-        }
+    /** @brief   Return true if the queue is empty, from within an ISR.
+     *  @details This method checks if the queue is empty from within an 
+     *           interrupt service routine. It must @b not be used in normal
+     *           non-ISR code. 
+     *  @return  @c true if the queue is empty, @c false if it's not empty
+     */
+    bool ISR_is_empty (void)
+    {
+        return (uxQueueMessagesWaitingFromISR (handle) == 0);
+    }
 
-        // Get an item from the queue
-        void get (dataType& recv_item);
+    /** @brief   Retrieve and remove the item at the head of the queue.
+     *  @details This method gets the item at the head of the queue and removes
+     *           that item from the queue. If there's nothing in the queue, 
+     *           this method waits, blocking the calling task, for the number 
+     *           of RTOS ticks specified in the @c wait_time parameter to the 
+     *           queue constructor (the default is forever) or until something 
+     *           shows up. 
+     *  @param   recv_item A reference to the item to be filled with data from 
+     *           the queue
+     */
+    void get (dataType& recv_item)
+    {
+        // If xQueueReceive doesn't return pdTrue, nothing was found in the
+        // queue, so no changes are made to the item
+        xQueueReceive (handle, &recv_item, ticks_to_wait);
+    }
 
-        // Get an item from the queue from within an interrupt service routine
-        void ISR_get (dataType& recv_item);
+    /** @brief   Remove the item at the head of the queue from within an ISR.
+     *  @details This method gets and returns the item at the head of the queue 
+     *           from within an interrupt service routine. This method must 
+     *           @b not be called from within normal non-ISR code. 
+     *  @param   recv_item A reference to the item to be filled with data from
+     *           the queue
+     */
+    void ISR_get (dataType& recv_item)
+    {
+        portBASE_TYPE task_awakened;         // Checks if context switch needed
 
-        // Look at the first available item in the queue but don't remove it
-        void peek (dataType& recv_item);
+        // If xQueueReceive doesn't return pdTrue, nothing was found in the
+        // queue, so we won't change the data referenced in the parameter
+        xQueueReceiveFromISR (handle, &recv_item, &task_awakened);
+    }
 
-        // Look at the first item in the queue from within an interrupt 
-        // service routine
-        void ISR_peek (dataType& recv_item);
+    /** @brief   Return the item at the queue head without removing it.
+     *  @details This method returns the item at the head of the queue without 
+     *           removing that item from the queue. If there's nothing in the 
+     *           queue this method waits, blocking the calling task, for for 
+     *           the number of RTOS ticks specified in the @c wait_time 
+     *           parameter to the queue constructor (the default is forever) or
+     *           until something shows up. This method must @b not be called 
+     *           from within an interrupt service routine. 
+     *  @param   recv_item A reference to the item to be filled with data from
+     *           the queue
+     */
+    void peek (dataType& recv_item)
+    {
+        // If xQueueReceive doesn't return pdTrue, nothing was found in the
+        // queue, so don't change the item
+        xQueuePeek (handle, &recv_item, ticks_to_wait);
+    }
 
-        /** @brief   Return true if the queue has contents which can be read.
-         *  @details This method allows one to check if the queue has any 
-         *           contents. It must @b not be called from within an 
-         *           interrupt service routine.
-         *  @return  @c true if there's something in the queue, @c false if not
-         */
-        bool any (void)
-        {
-            return (uxQueueMessagesWaiting (handle) != 0);
-        }
+    /** @brief   Return the item at the front of the queue without deleting it, 
+     *           from within an ISR.
+     *  @details This method returns the item at the head of the queue without 
+     *           removing that item from the queue. If there's nothing in the 
+     *           queue, this method doesn't change the value of the data given
+     *           as its parameter. This method must @b not be called within an
+     *           interrupt service routine. 
+     *  @param   recv_item A reference to the item to be filled with data from 
+     *           the queue
+     */
+    void ISR_peek (dataType& recv_item)
+    {
+        portBASE_TYPE task_awakened;           // Checks if a task will wake up
 
-        /** @brief   Return true if the queue has items in it, from within an 
-         *           ISR.
-         *  @details This method allows one to check if the queue has any 
-         *           contents from within an interrupt service routine. It must
-         *           @b not be called from within normal, non-ISR code. 
-         *  @return  @c true if there's something in the queue, @c false if not
-         */
-        bool ISR_any (void)
-        {
-            return (uxQueueMessagesWaitingFromISR (handle) != 0);
-        }
+        // If xQueueReceive doesn't return pdTrue, nothing was found in the 
+        // queue, so the value of recv_item is not changed
+        xQueuePeekFromISR (handle, &recv_item, &task_awakened);
+    }
 
-        /** @brief   Return the number of items in the queue.
-         *  @details This method returns the number of items waiting in the 
-         *           queue. It must @b not be called from within an interrupt 
-         *           service routine; the method @c ISR_num_items_in() can be 
-         *           called from within an ISR. 
-         *  @return  The number of items in the queue
-         */
-        unsigned portBASE_TYPE available (void)
-        {
-            return (uxQueueMessagesWaiting (handle));
-        }
+    /** @brief   Return true if the queue has contents which can be read.
+     *  @details This method allows one to check if the queue has any 
+     *           contents. It must @b not be called from within an 
+     *           interrupt service routine.
+     *  @return  @c true if there's something in the queue, @c false if not
+     */
+    bool any (void)
+    {
+        return (uxQueueMessagesWaiting (handle) != 0);
+    }
 
-        /** @brief   Return the number of items in the queue, to an ISR.
-         *  @details This method returns the number of items waiting in the 
-         *           queue; it must be called only from within an interrupt 
-         *           service routine.
-         *  @return  The number of items in the queue
-         */
-        unsigned portBASE_TYPE ISR_available (void)
-        {
-            return (uxQueueMessagesWaitingFromISR (handle));
-        }
+    /** @brief   Return true if the queue has items in it, from within an 
+     *           ISR.
+     *  @details This method allows one to check if the queue has any 
+     *           contents from within an interrupt service routine. It must
+     *           @b not be called from within normal, non-ISR code. 
+     *  @return  @c true if there's something in the queue, @c false if not
+     */
+    bool ISR_any (void)
+    {
+        return (uxQueueMessagesWaitingFromISR (handle) != 0);
+    }
 
-        /** @brief   Print the queue's status to a serial device.
-         *  @details This method makes a printout of the queue's status on 
-         *           the given serial device, then calls this same method 
-         *           for the next item of thread-safe data in the linked list
-         *           of items. 
-         *  @param   print_dev Reference to the serial device on which to print
-         */
-        void print_in_list (Print& print_dev);
+    /** @brief   Return the number of items in the queue.
+     *  @details This method returns the number of items waiting in the 
+     *           queue. It must @b not be called from within an interrupt 
+     *           service routine; the method @c ISR_num_items_in() can be 
+     *           called from within an ISR. 
+     *  @return  The number of items in the queue
+     */
+    unsigned portBASE_TYPE available (void)
+    {
+        return (uxQueueMessagesWaiting (handle));
+    }
 
-        /** @brief   Indicates whether this queue is usable.
-         *  @details This method returns a value which is @c true if this queue
-         *           has been successfully set up and can be used. 
-         *  @returns @c true if this queue is usable, @c false if not
-         */
-        bool usable (void)
-        {
-            return (bool)handle;
-        }
+    /** @brief   Return the number of items in the queue, to an ISR.
+     *  @details This method returns the number of items waiting in the 
+     *           queue; it must be called only from within an interrupt 
+     *           service routine.
+     *  @return  The number of items in the queue
+     */
+    unsigned portBASE_TYPE ISR_available (void)
+    {
+        return (uxQueueMessagesWaitingFromISR (handle));
+    }
 
-        /** @brief   Return a handle to the FreeRTOS structure which runs this
-         *           queue.
-         *  @details If somebody wants to do something which FreeRTOS queues 
-         *           can do but this class doesn't support, a handle for the 
-         *           queue wrapped by this class can be used to access the 
-         *           queue directly. This isn't commonly done.
-         *  @return  The handle of the FreeRTOS queue which is wrapped within 
-         *           this C++ class
-         */
-        QueueHandle_t get_handle (void)
-        {
-            return handle;
-        }
+    /** @brief   Print the queue's status to a serial device.
+     *  @details This method makes a printout of the queue's status on 
+     *           the given serial device, then calls this same method 
+     *           for the next item of thread-safe data in the linked list
+     *           of items. 
+     *  @param   print_dev Reference to the serial device on which to print
+     */
+    void print_in_list (Print& print_dev);
+
+    /** @brief   Indicates whether this queue is usable.
+     *  @details This method returns a value which is @c true if this queue
+     *           has been successfully set up and can be used. 
+     *  @returns @c true if this queue is usable, @c false if not
+     */
+    bool usable (void)
+    {
+        return (bool)handle;
+    }
+
+    /** @brief   Return a handle to the FreeRTOS structure which runs this
+     *           queue.
+     *  @details If somebody wants to do something which FreeRTOS queues 
+     *           can do but this class doesn't support, a handle for the 
+     *           queue wrapped by this class can be used to access the 
+     *           queue directly. This isn't commonly done.
+     *  @return  The handle of the FreeRTOS queue which is wrapped within 
+     *           this C++ class
+     */
+    QueueHandle_t get_handle (void)
+    {
+        return handle;
+    }
 }; // class Queue 
 
 
@@ -312,84 +368,6 @@ Queue<dataType>::Queue (BaseType_t queue_size, const char* p_name,
 
     // We haven't stored any items in the queue yet
     max_full = 0;
-}
-
-
-/** @brief   Remove the item at the head of the queue.
- *  @details This method gets the item at the head of the queue and removes
- *           that item from the queue. If there's nothing in the queue, this 
- *           method waits, blocking the calling task, for the number of RTOS 
- *           ticks specified in the @c wait_time parameter to the queue 
- *           constructor (the default is forever) or until something shows up. 
- *  @param   recv_item A reference to the item to be filled with data from the
- *           queue
- */
-template <class dataType>
-inline void Queue<dataType>::get (dataType& recv_item)
-{
-    // If xQueueReceive doesn't return pdTrue, nothing was found in the queue, 
-    // so no changes are made to the item
-    xQueueReceive (handle, &recv_item, ticks_to_wait);
-}
-
-
-/** @brief   Remove the item at the head of the queue from within an ISR.
- *  @details This method gets and returns the item at the head of the queue 
- *           from within an interrupt service routine. This method must @b not 
- *           be called from within normal non-ISR code. 
- *  @param   recv_item A reference to the item to be filled with data from the
- *           queue
- */
-template <class dataType>
-inline void Queue<dataType>::ISR_get (dataType& recv_item)
-{
-    portBASE_TYPE task_awakened;            // Checks if context switch needed
-
-    // If xQueueReceive doesn't return pdTrue, nothing was found in the queue,
-    // so we'll return the item as created by its default constructor
-    xQueueReceiveFromISR (handle, &recv_item, &task_awakened);
-}
-
-
-/** @brief   Return the item at the queue head without removing it.
- *  @details This method returns the item at the head of the queue without 
- *           removing that item from the queue. If there's nothing in the queue
- *           this method waits, blocking the calling task, for for the number
- *           of RTOS ticks specified in the @c wait_time parameter to the queue
- *           constructor (the default is forever) or until something shows up. 
- *           This method must \b not be called from within an interrupt service
- *           routine. 
- *  @param   recv_item A reference to the item to be filled with data from the
- *           queue
- */
-template <class dataType>
-inline void Queue<dataType>::peek (dataType& recv_item)
-{
-    // If xQueueReceive doesn't return pdTrue, nothing was found in the queue,
-    // so don't change the item
-    xQueuePeek (handle, &recv_item, ticks_to_wait);
-}
-
-
-/** @brief   Return the item at the front of the queue without deleting it, 
- *           from within an ISR.
- *  @details This method returns the item at the head of the queue without 
- *           removing that item from the queue. If there's nothing in the 
- *           queue, this method returns the result of the default constructor 
- *           for the data item, usually zero in the given data type. This 
- *           method must \b not be called from within an interrupt service 
- *           routine. 
- *  @param   recv_item A reference to the item to be filled with data from the
- *           queue
- */
-template <class dataType>
-inline void Queue<dataType>::ISR_peek (dataType& recv_item)
-{
-    portBASE_TYPE task_awakened;             // Checks if a task will wake up
-
-    // If xQueueReceive doesn't return pdTrue, nothing was found in the queue,
-    // so the value of recv_item is not changed
-    xQueuePeekFromISR (handle, &recv_item, &task_awakened);
 }
 
 
@@ -459,7 +437,7 @@ inline bool Queue<dataType>::ISR_put (const dataType& item)
  *  @return  True if the item was successfully queued, false if not
  */
 template <class dataType>
-bool Queue<dataType>::ISR_butt_in (const dataType& item)
+inline bool Queue<dataType>::ISR_butt_in (const dataType& item)
 {
     // This value is set true if a context switch should occur due to this data
     signed portBASE_TYPE shouldSwitch = pdFALSE;

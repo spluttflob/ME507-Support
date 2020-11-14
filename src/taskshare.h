@@ -113,179 +113,152 @@
  */
 template <class DataType> class Share : public BaseShare
 {
-    protected:
-        DataType the_data;                    ///< Holds the data to be shared
+protected:
+    ///< Holds the data to be shared between tasks
+    DataType the_data;                    
 
-    #ifdef ESP32
-        /// A mutex used on ESP32's for critical sections
-        portMUX_TYPE mutex;
-    #endif
+#ifdef ESP32
+    /// A mutex used on ESP32's for critical sections
+    portMUX_TYPE mutex;
+#endif
 
-    public:
-        /** @brief   Construct a shared data item.
-         *  @details This default constructor for a shared data item doesn't do
-         *           much besides allocate memory because there isn't any 
-         *           particular setup required. Note that the data is @b not 
-         *           initialized. 
-         *  @param   p_name A name to be shown in the list of task shares 
-         *           (default @c NULL)
-         */
-        Share<DataType> (const char* p_name = NULL) : BaseShare (p_name)
-        {
-        }
+public:
+    /** @brief   Construct a shared data item.
+     *  @details This default constructor for a shared data item doesn't do
+     *           much besides allocate memory because there isn't any 
+     *           particular setup required. Note that the data is @b not 
+     *           initialized. 
+     *  @param   p_name A name to be shown in the list of task shares 
+     *           (default @c NULL)
+     */
+    Share<DataType> (const char* p_name = NULL) : BaseShare (p_name)
+    {
+    }
 
-        // This method is used to write data into the shared data item
-        void put (DataType);
+    /** @brief   Put data into the shared data item.
+     *  @details This method is used to write data into the shared data item. 
+     *  @param   new_data The data which is to be written
+     */
+    void put (DataType new_data)
+    {
+        SHARE_ENTER_CRITICAL (&mutex);
+        the_data = new_data;
+        SHARE_EXIT_CRITICAL (&mutex);
+    }
 
-        // This method is used to write data from within an ISR only
-        void ISR_put (DataType);
+    /** @brief   Put data into the shared data item from within an ISR.
+     *  @details This method writes data from an ISR into the shared data item. 
+     *           It must only be called from within an interrupt service 
+     *           routine, not a normal task. 
+     *  @param   new_data The data to be written into the shared data item
+     */
+    void ISR_put (DataType new_data)
+    {
+        #ifndef ESP32
+            // taskENTER_CRITICAL_FROM_ISR ();
+        #endif
+        the_data = new_data;
+        #ifndef ESP32
+            // taskEXIT_CRITICAL_FROM_ISR ();
+        #endif
+    }
 
-        // This method is used to read data from the shared data item
-        void get (DataType&);
+    /** @brief   Read data from the shared data item.
+     *  @details This method is used to read data from the shared data item 
+     *           with critical section protection to ensure that the data 
+     *           cannot be corrupted by a task switch. The shared data is 
+     *           copied into the variable which is given as this method's 
+     *           parameter, replacing the previous contents of that variable. 
+     *  @param   recv_data A reference to the variable in which to put received
+     *           data
+     */
+    void get (DataType& recv_data)
+    {
+        // Copy the data from the queue into the receiving variable
+        SHARE_ENTER_CRITICAL (&mutex);
+        recv_data = the_data;
+        SHARE_EXIT_CRITICAL (&mutex);
+    }
 
-        // This method is used to read data from within an ISR only
-        void ISR_get (DataType&);
+    /** @brief   Read data from the shared data item, from within an ISR.
+     *  @details This method is used to enable code within an ISR to read data 
+     *           from the shared data item. It must only be called from within 
+     *           an interrupt service routine, not a normal task. 
+     *  @param   recv_data A reference to the variable in which to put received
+     *           data
+     */
+    void ISR_get (DataType& recv_data)
+    {
+        #ifndef ESP32
+            // taskENTER_CRITICAL_FROM_ISR ();
+        #endif
+        recv_data = the_data;
+        #ifndef ESP32
+            // taskEXIT_CRITICAL_FROM_ISR ();
+        #endif
+    }
 
-        // Print the share's status within a list of all shares' statuses
-        void print_in_list (Print& printer);
+    // Print the share's status within a list of all shares' statuses
+    void print_in_list (Print& printer);
 
-        /**   @brief   The prefix increment causes the shared data to increase
-         *             by one.
-         *    @details This operator just increases by one the variable held by
-         *             the shared data item. @b BUG: It should return a 
-         *             reference to this shared data item, but for some reason 
-         *             the compiler insists it must return a reference to the 
-         *             data @e in the shared data object. Why is unknown. 
-         */
-        DataType& operator ++ (void)
-        {
-            SHARE_ENTER_CRITICAL (&mutex);
-            the_data++;
-            SHARE_EXIT_CRITICAL (&mutex);
+    /** @brief   The prefix increment causes the shared data to increase by
+     *           one.
+     *  @details This operator just increases by one the variable held by the
+     *           shared data item.
+     *  @returns The value of the data after it has been increased by one
+     */
+    DataType& operator ++ (void)
+    {
+        SHARE_ENTER_CRITICAL (&mutex);
+        the_data++;
+        SHARE_EXIT_CRITICAL (&mutex);
 
-            return (the_data);
-        }
+        return (the_data);
+    }
 
-        /**   @brief The postfix increment causes the shared data to increase
-         *           by one.
-         */
-        DataType operator ++ (int)
-        {
-            DataType result = the_data;
-            SHARE_ENTER_CRITICAL (&mutex);
-            the_data++;
-            SHARE_EXIT_CRITICAL (&mutex);
+    /** @brief   The postfix increment causes the shared data to increase by
+     *           by one.
+     *  @returns The value of the data before it was increased by one
+     */
+    DataType operator ++ (int)
+    {
+        DataType result = the_data;
+        SHARE_ENTER_CRITICAL (&mutex);
+        the_data++;
+        SHARE_EXIT_CRITICAL (&mutex);
 
-            return (result);
-        }
+        return (result);
+    }
 
-        /**   @brief   The prefix decrement causes the shared data to decrease
-         *             by one.
-         *    @details This operator just decreases by one the variable held by
-         *             the shared data item. @b BUG: It should return a 
-         *             reference to this shared data item, but for some reason 
-         *             the compiler insists it must return a reference to the 
-         *             data @e in the shared data object. Why is unknown. 
-         */
-        DataType& operator -- (void)
-        {
-            SHARE_ENTER_CRITICAL (&mutex);
-            the_data--;
-            SHARE_EXIT_CRITICAL (&mutex);
+    /** @brief   The prefix decrement causes the shared data to decrease by 
+     *           one.
+     *  @details This operator just decreases by one the variable held by
+     *           the shared data item. 
+     *  @returns A copy of the data after it has been decreased
+     */
+    DataType& operator -- (void)
+    {
+        SHARE_ENTER_CRITICAL (&mutex);
+        the_data--;
+        SHARE_EXIT_CRITICAL (&mutex);
 
-            return (the_data); //// *this);  The BUG
-        }
+        return (the_data);
+    }
 
-        /**   @brief The postfix decrement causes the shared data to decrease
-         *           by one.
-         */
-        DataType operator -- (int)
-        {
-            DataType result = the_data;
-            SHARE_ENTER_CRITICAL (&mutex);
-            the_data--;
-            SHARE_EXIT_CRITICAL (&mutex);
+    /** @brief   The postfix decrement causes the shared data to decrease by 
+     *           one.
+     *  @returns The value of the data before it was decreased by one
+     */
+    DataType operator -- (int)
+    {
+        DataType result = the_data;
+        SHARE_ENTER_CRITICAL (&mutex);
+        the_data--;
+        SHARE_EXIT_CRITICAL (&mutex);
 
-            return (result);
-        }
+        return (result);
+    }
 }; // class TaskShare<DataType>
-
-
-/** @brief   Put data into the shared data item.
- *  @details This method is used to write data into the shared data item. It's
- *           declared @c inline so that instead of a regular function call at 
- *           the assembly language level, <tt>an_object.put (x);</tt> will 
- *           result in the code within this function being inserted directly 
- *           into the calling function. This is faster than doing a regular 
- *           function call, which involves pushing the program counter on the 
- *           stack, pushing parameters, jumping, making space for local 
- *           variables, jumping back and popping the program counter, @e etc.
- *  @param   new_data The data which is to be written
- */
-template <class DataType>
-inline void Share<DataType>::put (DataType new_data)
-{
-    SHARE_ENTER_CRITICAL (&mutex);
-    the_data = new_data;
-    SHARE_EXIT_CRITICAL (&mutex);
-}
-
-
-/** @brief   Put data into the shared data item from within an ISR.
- *  @details This method writes data from an ISR into the shared data item. It
- *           must only be called from within an interrupt, not a normal task. 
- *  @param   new_data The data which is to be written into the shared data item
- */
-template <class DataType>
-void Share<DataType>::ISR_put (DataType new_data)
-{
-    #ifndef ESP32
-        // taskENTER_CRITICAL_FROM_ISR ();
-    #endif
-    the_data = new_data;
-    #ifndef ESP32
-        // taskEXIT_CRITICAL_FROM_ISR ();
-    #endif
-}
-
-
-/** @brief   Read data from the shared data item.
- *  @details This method is used to read data from the shared data item with 
- *           critical section protection to ensure that the data cannot be 
- *           corrupted by a task switch. The shared data is copied into the
- *           variable which is given as this parameter's function, replacing
- *           the previous contents of that variable. 
- *  @param   recv_data A reference to the variable in which to put received
- *           data
- */
-template <class DataType>
-void Share<DataType>::get (DataType& recv_data)
-{
-    // Copy the data from the queue into the receiving variable
-    SHARE_ENTER_CRITICAL (&mutex);
-    recv_data = the_data;
-    SHARE_EXIT_CRITICAL (&mutex);
-}
-
-
-/** @brief   Read data from the shared data item, from within an ISR.
- *  @details This method is used to enable code within an ISR to read data from
- *           the shared data item. It must only be called from within an 
- *           interrupt service routine, not a normal task. 
- *  @param   recv_data A reference to the variable in which to put received
- *           data
- */
-template <class DataType>
-void Share<DataType>::ISR_get (DataType& recv_data)
-{
-    #ifndef ESP32
-        // taskENTER_CRITICAL_FROM_ISR ();
-    #endif
-    recv_data = the_data;
-    #ifndef ESP32
-        // taskEXIT_CRITICAL_FROM_ISR ();
-    #endif
-}
 
 
 /** @brief   Print the name and type (share) of this data item.
