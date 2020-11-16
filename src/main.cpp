@@ -19,6 +19,8 @@
 
 #include "task_receive.h"
 
+#include <HardwareTimer.h>
+
 
 /// This shared data item allows thread-safe transfer of data between tasks
 Share<uint32_t> test_share_0 ("Share 0");
@@ -58,33 +60,13 @@ void task_send (void* p_params)
         number = random (0xFFFF);
         number |= number << 16;
         bad_global_0 = number;
-        test_share_0.put (number);
+        test_share_0 << number; // .put (number);
         test_queue_0.put (number);
 
         // Delay the given number of RTOS ticks until beginning to run this
         // task loop again. The resulting timing is not accurate, as the time
         // it took to run the task adds to this interval and accumulates
         vTaskDelay (1);
-    }
-}
-
-
-/** @brief   Task which occasionally prints a carriage return.
- *  @details Since the serial monitor gets all ugly when we don't end lines at
- *           reasonable intervals, this task prints a carriage return now and
- *           then.
- *  @param   p_params A pointer to function parameters which we don't use.
- */
-void task_returns (void* p_params)
-{
-    (void)p_params;            // Does nothing but shut up a compiler warning
-
-    for (;;)
-    {
-        Serial << " Hi. ";
-
-        // Delay the given number of RTOS ticks
-        vTaskDelay (32768);
     }
 }
 
@@ -101,7 +83,7 @@ void setup ()
     delay (2000);
     Serial << "\033[2JTesting queues and shares and stuff" << endl;
 
-    // Create a task which prints a slightly disagreeable message
+    // Create a task which sends malarkey
     xTaskCreate (task_send,
                  "Send",                          // Name for printouts
                  256,                             // Stack size
@@ -109,21 +91,13 @@ void setup ()
                  3,                               // Priority
                  NULL);                           // Task handle
 
-    // Create a task which prints a more agreeable message
+    // Create a task which receives the aforementioned malarkey
     xTaskCreate (task_receive,
                  "Receive",
                  256,                             // Stack size
                  NULL,
                  4,                               // Priority
                  NULL);
-
-    // // Create a task which prints a more agreeable message
-    // xTaskCreate (task_returns,
-    //              "Endl",
-    //              256,                             // Stack size
-    //              NULL,
-    //              1,                               // Priority
-    //              NULL);
 
     print_all_shares (Serial);
 

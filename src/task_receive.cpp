@@ -54,7 +54,7 @@ void task_receive (void* p_params)
 
         // Now get data from the share and global variable. These should be
         // the same as what arrived in the queue
-        test_share_0.get (share_data);
+        test_share_0 >> share_data;
         global_data = bad_global_0;
 
         // Check the data

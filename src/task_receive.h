@@ -7,6 +7,9 @@
  *  @date 11 Oct 2020  Original file
  */
 
+#ifndef _TASK_RECEIVE_H_
+#define _TASK_RECEIVE_H_
+
 #include <Arduino.h>
 #include <STM32FreeRTOS.h>
 #include <PrintStream.h>
@@ -17,3 +20,4 @@
 // This is the function that implements the shared data receiving task
 void task_receive (void* p_params);
 
+#endif // _TASK_RECEIVE_H_

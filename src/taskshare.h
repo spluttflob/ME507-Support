@@ -43,13 +43,13 @@
 #ifdef ESP32
     #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL(x)
     #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL(x)
-    // #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR(x)
-    // #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR(x)
+    #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR(x)
+    #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR(x)
 #else
     #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL()
     #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL()
-    // #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR()
-    // #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR()
+    #define SHARE_ENTER_CRITICAL_FROM_ISR(x)  // taskENTER_CRITICAL_FROM_ISR()
+    #define SHARE_EXIT_CRITICAL_FROM_ISR(x)   // taskEXIT_CRITICAL_FROM_ISR()
 #endif
 
 
@@ -161,6 +161,62 @@ public:
         #ifndef ESP32
             // taskEXIT_CRITICAL_FROM_ISR ();
         #endif
+    }
+
+    /** @brief   Operator which inserts data into the share.
+     *  @details This convenient operator puts data into the share, protecting
+     *           the data from corruption by thread switching. It checks if the
+     *           processor is currently in an interupt service routine (ISR);
+     *           if so, it calls ISR specific functions to prevent corruption,
+     *           so this function may be used within an ISR or outside one. It
+     *           runs a little more slowly than the @c put() method. 
+     *  @param   new_data The data which is to be put into the share
+     */
+    void operator << (DataType new_data)
+    {
+        if (xPortIsInsideInterrupt ())
+        {
+            SHARE_ENTER_CRITICAL_FROM_ISR (&mutex);
+            the_data = new_data;
+            SHARE_EXIT_CRITICAL_FROM_ISR (&mutex);
+        }
+        else
+        {
+            SHARE_ENTER_CRITICAL (&mutex);
+            the_data = new_data;
+            SHARE_EXIT_CRITICAL (&mutex);
+        }
+    }
+
+    /** @brief   Read data from the shared data item.
+     *  @details This method is used to read data from the shared data item 
+     *           with critical section protection to ensure that the data 
+     *           cannot be corrupted by a task switch. The shared data is 
+     *           copied into the variable which is given as this method's 
+     *           parameter, replacing the previous contents of that. This 
+     *           method checks if the processor is currently in an interupt 
+     *           service routine (ISR) and if so, it calls ISR specific 
+     *           functions to prevent corruption, so this function may be used 
+     *           within an ISR or outside one. It runs a little more slowly 
+     *           than the @c get() method. 
+     *  @param   put_here A reference to the variable in which to put received
+     *           data
+     */
+    void operator >> (DataType& put_here)
+    {
+        if (xPortIsInsideInterrupt ())
+        {
+             // Copy the data from the queue into the receiving variable
+            SHARE_ENTER_CRITICAL_FROM_ISR (&mutex);
+            put_here = the_data;
+            SHARE_EXIT_CRITICAL_FROM_ISR (&mutex);
+        }
+        else
+        {
+            SHARE_ENTER_CRITICAL (&mutex);
+            put_here = the_data;
+            SHARE_EXIT_CRITICAL (&mutex);
+        }
     }
 
     /** @brief   Read data from the shared data item.
