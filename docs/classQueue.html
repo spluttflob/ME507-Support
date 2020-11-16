@@ -139,7 +139,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac0d4a3d7feae804dea7f3cc72f21c624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the queue is empty, from within an ISR.  <a href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">More...</a><br /></td></tr>
 <tr class="separator:ac0d4a3d7feae804dea7f3cc72f21c624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14df528749e226183df3fa5472368e82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82">get</a> (dataType &amp;recv_item)</td></tr>
-<tr class="memdesc:a14df528749e226183df3fa5472368e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the item at the head of the queue.  <a href="classQueue.html#a14df528749e226183df3fa5472368e82">More...</a><br /></td></tr>
+<tr class="memdesc:a14df528749e226183df3fa5472368e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve and remove the item at the head of the queue.  <a href="classQueue.html#a14df528749e226183df3fa5472368e82">More...</a><br /></td></tr>
 <tr class="separator:a14df528749e226183df3fa5472368e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd37b4f184be25ecebf7957900321bbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">ISR_get</a> (dataType &amp;recv_item)</td></tr>
 <tr class="memdesc:afd37b4f184be25ecebf7957900321bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the item at the head of the queue from within an ISR.  <a href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">More...</a><br /></td></tr>
@@ -217,12 +217,12 @@ class Queue&lt; dataType &gt;</h3>
 <p>Since multithreaded tasks must not use unprotected shared data items for communication, queues are a primary means of intertask communication. Other means include shared data items (see <code><a class="el" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread-safe manner.">taskshare.h</a></code>) and carrier pigeons. The use of a C++ class template allows the compiler to check that you're putting the correct type of data into each queue and getting the correct type of data out, thus helping to prevent programming mistakes that can corrupt your data.</p>
 <p>As a template class, <code>Queue&lt;dataType&gt;</code> can be used to make queues which hold data of many types. "Plain Old Data" types such as <code>bool</code> or <code>uint16_t</code> are supported, of course. But you can also use queues which hold compound data types. For example, if you have <code>class</code> <code>my_data</code> which holds several measurements together in an object, you can make a queue for <code>my_data</code> objects with <code>Queue&lt;my_data&gt;</code>. Each item in the queue will then hold several measurements.</p>
 <p>The size of FreeRTOS queues is limited to 255 items in 8-bit microcontrollers whose <code>portBASE_TYPE</code> is an 8-bit number. This is a FreeRTOS feature.</p>
-<p>Normal writing and reading are done with methods <code><a class="el" href="classQueue.html#aa0667e09529d356a04f1efde346af266" title="Put an item into the queue behind other items.">put()</a></code> and <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Remove the item at the head of the queue.">get()</a></code>. Normal writing means that the sending task must wait until there is empty space in the queue, and then it puts a data item into the "back" of the queue, where "back" means that the item in the back of the queue will be read after all items that were previously put into the queue have been read. Normal reading means that when an item is read from the front of the queue, it will then be removed, making space for more items at the back. This process is often used to synchronize tasks, as the reading task's <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Remove the item at the head of the queue.">get()</a></code> method blocks, meaning that the reading task gets stuck waiting for an item to arrive in the queue; it won't do anything useful until new data has been read. Note that this is acceptable behavior in an RTOS because the RTOS scheduler will ensure that other tasks get to run even while the reading task is blocking itself waiting for data.</p>
+<p>Normal writing and reading are done with methods <code><a class="el" href="classQueue.html#aa0667e09529d356a04f1efde346af266" title="Put an item into the queue behind other items.">put()</a></code> and <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code>. Normal writing means that the sending task must wait until there is empty space in the queue, and then it puts a data item into the "back" of the queue, where "back" means that the item in the back of the queue will be read after all items that were previously put into the queue have been read. Normal reading means that when an item is read from the front of the queue, it will then be removed, making space for more items at the back. This process is often used to synchronize tasks, as the reading task's <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> method blocks, meaning that the reading task gets stuck waiting for an item to arrive in the queue; it won't do anything useful until new data has been read. Note that this is acceptable behavior in an RTOS because the RTOS scheduler will ensure that other tasks get to run even while the reading task is blocking itself waiting for data.</p>
 <p>In some cases, one may need to use less normal reading and writing methods. Methods whose name begins with <code>ISR_</code> are to be used only within a hardware interrupt service routine. If there is a need to put data at the front of the queue instead of the back, use <code><a class="el" href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3" title="Put an item into the front of the queue to be retrieved first.">butt_in()</a></code> instead of <code><a class="el" href="classQueue.html#aa0667e09529d356a04f1efde346af266" title="Put an item into the queue behind other items.">put()</a></code>. If one needs to read data from the queue without removing that data, the <code>look_at()</code> method allows this to be done. If something particularly unusual needs to be done with the queue, one can use the method <code><a class="el" href="classQueue.html#ab009e50722f689c48d146125f6d50519" title="Return a handle to the FreeRTOS structure which runs this queue.">get_handle()</a></code> to retrieve the handle used by the C language functions in FreeRTOS to access the <a class="el" href="classQueue.html" title="Implements a queue to transmit data from one RTOS task to another.">Queue</a> object's underlying data structure directly.</p>
 <h1><a class="anchor" id="queue_usage"></a>
 Usage</h1>
 <p>The following bits of code show how to set up and use a queue to transfer data of type <code>int16_t</code> from one hypothetical task called <code>task_A</code> to another called <code>task_B</code>.</p>
-<p>Near the top of the file which contains <code><a class="el" href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title="Arduino setup function which runs once at program startup.">setup()</a></code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
+<p>Near the top of the file which contains <code>setup()</code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
 <div class="line">...<span class="comment"></span></div>
 <div class="line"><span class="comment">/// This queue holds hockey puck accelerations</span></div>
 <div class="line"><span class="comment"></span>Queue&lt;int16_t&gt; hockey_queue (10, <span class="stringliteral">&quot;Puckey&quot;</span>);</div>
@@ -231,7 +231,7 @@ Usage</h1>
 <div class="line"><span class="comment"></span>...</div>
 <div class="line">an_item = stick_sensor.get_data (2);  <span class="comment">// Read data from sensor </span></div>
 <div class="line">hockey_queue.<a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">put</a> (a_data_item);       <span class="comment">// Put data into queue</span></div>
-</div><!-- fragment --><p> In the receiving task, data is read from the queue. In typical usage, the call to <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Remove the item at the head of the queue.">get()</a></code> will block the receiving task until data has been put into the queue by the sending task: </p><div class="fragment"><div class="line">int16_t data_we_got;                  <span class="comment">///&lt; Holds received data</span></div>
+</div><!-- fragment --><p> In the receiving task, data is read from the queue. In typical usage, the call to <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> will block the receiving task until data has been put into the queue by the sending task: </p><div class="fragment"><div class="line">int16_t data_we_got;                  <span class="comment">///&lt; Holds received data</span></div>
 <div class="line"><span class="comment"></span>...</div>
 <div class="line">hockey_queue.get (data_we_got);       <span class="comment">// Get data from the queue</span></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -272,7 +272,7 @@ template&lt;class dataType &gt; </div>
 <p>Construct a queue object, allocating memory for the buffer. </p>
 <p>This constructor creates the FreeRTOS queue which is wrapped by the <code><a class="el" href="classQueue.html" title="Implements a queue to transmit data from one RTOS task to another.">Queue</a></code> class. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">queue_size</td><td>The number of characters which can be stored in the queue </td></tr>
+    <tr><td class="paramname">queue_size</td><td>The number of items which can be stored in the queue </td></tr>
     <tr><td class="paramname">p_name</td><td>A name to be shown in the list of task shares (default empty String) </td></tr>
     <tr><td class="paramname">wait_time</td><td>How long, in RTOS ticks, to wait for a queue to become empty before a character can be sent. (Default: <code>portMAX_DELAY</code>, which causes the sending task to block until sending occurs.) </td></tr>
   </table>
@@ -407,7 +407,7 @@ template&lt;class dataType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Remove the item at the head of the queue. </p>
+<p>Retrieve and remove the item at the head of the queue. </p>
 <p>This method gets the item at the head of the queue and removes that item from the queue. If there's nothing in the queue, this method waits, blocking the calling task, for the number of RTOS ticks specified in the <code>wait_time</code> parameter to the queue constructor (the default is forever) or until something shows up. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
@@ -548,6 +548,9 @@ template&lt;class dataType &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::ISR_butt_in </td>
@@ -557,6 +560,11 @@ template&lt;class dataType &gt; </div>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Put an item into the front of the queue from within an ISR. </p>
@@ -633,7 +641,7 @@ template&lt;class dataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if the queue is empty, from within an ISR. </p>
-<p>This method checks if the queue is empty from within an interrupt service routine. It must not be used in normal non-ISR code. </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if the queue is empty, <code>false</code> if it's not empty </dd></dl>
+<p>This method checks if the queue is empty from within an interrupt service routine. It must <b>not</b> be used in normal non-ISR code. </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if the queue is empty, <code>false</code> if it's not empty </dd></dl>
 
 </div>
 </div>
@@ -664,7 +672,7 @@ template&lt;class dataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the item at the front of the queue without deleting it, from within an ISR. </p>
-<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method returns the result of the default constructor for the data item, usually zero in the given data type. This method must <b>not</b> be called from within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method doesn't change the value of the data given as its parameter. This method must <b>not</b> be called within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
   </table>
@@ -850,8 +858,8 @@ template&lt;class dataType &gt; </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="ataskqueue_8h_html"><div class="ttname"><a href="taskqueue_8h.html">taskqueue.h</a></div></div>
-<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:408</div></div>
-<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:126</div></div>
+<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:384</div></div>
+<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:124</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

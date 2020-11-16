@@ -84,7 +84,8 @@ $(document).ready(function(){initNavTree('taskshare_8h.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">taskshare.h File Reference</div>  </div>
 </div><!--header-->
@@ -110,10 +111,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="taskshare_8h__dep__incl.png" border="0" usemap="#taskshare_8hdep" alt=""/></div>
 <map name="taskshare_8hdep" id="taskshare_8hdep">
-<area shape="rect" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="45,5,144,32"/>
-<area shape="rect" href="main_8cpp.html" title=" " alt="" coords="5,155,88,181"/>
-<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="84,80,201,107"/>
-<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="113,155,245,181"/>
+<area shape="rect" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="21,5,111,32"/>
+<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="13,80,119,107"/>
+<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="5,155,127,181"/>
 </map>
 </div>
 </div>
@@ -124,6 +124,21 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html">Share&lt; DataType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for data to be shared in a thread-safe manner between tasks.  <a href="classShare.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a4bf01a1d5f343d5dd7b4cb8c620e3657"><td class="memItemLeft" align="right" valign="top"><a id="a4bf01a1d5f343d5dd7b4cb8c620e3657"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SHARE_ENTER_CRITICAL</b>(x)&#160;&#160;&#160;portENTER_CRITICAL()</td></tr>
+<tr class="separator:a4bf01a1d5f343d5dd7b4cb8c620e3657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0ebbc2e566fa7c247a8743659f41c0"><td class="memItemLeft" align="right" valign="top"><a id="acb0ebbc2e566fa7c247a8743659f41c0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SHARE_EXIT_CRITICAL</b>(x)&#160;&#160;&#160;portEXIT_CRITICAL()</td></tr>
+<tr class="separator:acb0ebbc2e566fa7c247a8743659f41c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfd5fb013d4d090e1f18715fb08ecb32"><td class="memItemLeft" align="right" valign="top"><a id="adfd5fb013d4d090e1f18715fb08ecb32"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SHARE_ENTER_CRITICAL_FROM_ISR</b>(x)</td></tr>
+<tr class="separator:adfd5fb013d4d090e1f18715fb08ecb32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8b625e41126af5addaba0a1214bf2de"><td class="memItemLeft" align="right" valign="top"><a id="ac8b625e41126af5addaba0a1214bf2de"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SHARE_EXIT_CRITICAL_FROM_ISR</b>(x)</td></tr>
+<tr class="separator:ac8b625e41126af5addaba0a1214bf2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data which can be shared between tasks in a thread-safe manner. </p>
@@ -134,7 +149,9 @@ Classes</h2></td></tr>
 <dd>
 2014-Oct-18 JRR Added linked list of all shares for tracking and debugging </dd>
 <dd>
-2020-Oct-10 JRR Made compatible with Arduino, class name to <code><a class="el" href="classShare.html" title="Class for data to be shared in a thread-safe manner between tasks.">Share</a></code> </dd></dl>
+2020-Oct-10 JRR Made compatible with Arduino, class name to <code><a class="el" href="classShare.html" title="Class for data to be shared in a thread-safe manner between tasks.">Share</a></code> </dd>
+<dd>
+2020-Nov-14 JRR Added new-ESP32 compatible <code>SHARE_</code>..._CRITICAL(x)</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>This file is copyright 2014 &ndash; 2019 by JR Ridgely and released under the Lesser GNU Public License, version 2. It intended for educational use only, but its use is not limited thereto. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
