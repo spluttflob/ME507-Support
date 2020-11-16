@@ -18,3 +18,7 @@ STM32L476RG processors, but hopefully it will work on others.
 * `encoder_counter.*`
 * The example `encoder_test.cpp`
 
+## Documentation
+The author didn't write all those Doxygen comments for nothing. Have a look: 
+<https://spluttflob.github.io/ME507-Support/>
+
