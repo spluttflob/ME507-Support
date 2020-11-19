@@ -17,6 +17,7 @@
  *        debugging
  *  @date 2020-Oct-10 JRR Made compatible with Arduino, class name to @c Share
  *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x)
+ *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue
  *
  *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released 
  *    under the Lesser GNU Public License, version 2. It intended for 
@@ -39,21 +40,6 @@
 
 #include "baseshare.h"                      // Base class for shared data items
 #include "FreeRTOS.h"                       // Main header for FreeRTOS
-
-
-// Macros that allow critical sections on ESP32's to use a mutex, while those
-// on some other processors do not. This is being debugged as of 2020-Nov-14
-#ifdef ESP32
-    #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL(x)
-    #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL(x)
-    #define SHARE_ENTER_CRITICAL_FROM_ISR(x) portENTER_CRITICAL_FROM_ISR(x)
-    #define SHARE_EXIT_CRITICAL_FROM_ISR(x)  portEXIT_CRITICAL_FROM_ISR(x)
-#else
-    #define SHARE_ENTER_CRITICAL(x) portENTER_CRITICAL()
-    #define SHARE_EXIT_CRITICAL(x)  portEXIT_CRITICAL()
-    #define SHARE_ENTER_CRITICAL_FROM_ISR(x)  // taskENTER_CRITICAL_FROM_ISR()
-    #define SHARE_EXIT_CRITICAL_FROM_ISR(x)   // taskEXIT_CRITICAL_FROM_ISR()
-#endif
 
 
 /** @brief   Class for data to be shared in a thread-safe manner between tasks.
@@ -117,36 +103,29 @@
 template <class DataType> class Share : public BaseShare
 {
 protected:
-    ///< Holds the data to be shared between tasks
-    DataType the_data;                    
-
-#ifdef ESP32
-    /// A mutex used on ESP32's for critical sections
-    portMUX_TYPE mutex;
-#endif
+    /// A queue is used to hold the data, as it's portable to different CPU's
+    QueueHandle_t queue;
 
 public:
     /** @brief   Construct a shared data item.
-     *  @details This default constructor for a shared data item doesn't do
-     *           much besides allocate memory because there isn't any 
-     *           particular setup required. Note that the data is @b not 
+     *  @details This constructor for a shared data item creates a queue in 
+     *           which to hold one item of data. Note that the data is @b not 
      *           initialized. 
      *  @param   p_name A name to be shown in the list of task shares 
      *           (default @c NULL)
      */
     Share<DataType> (const char* p_name = NULL) : BaseShare (p_name)
     {
+        queue = xQueueCreate (1, sizeof (DataType));
     }
 
     /** @brief   Put data into the shared data item.
      *  @details This method is used to write data into the shared data item. 
      *  @param   new_data The data which is to be written
      */
-    void put (DataType new_data)
+    void put (DataType& new_data)
     {
-        SHARE_ENTER_CRITICAL (&mutex);
-        the_data = new_data;
-        SHARE_EXIT_CRITICAL (&mutex);
+        xQueueOverwrite (queue, &new_data);
     }
 
     /** @brief   Put data into the shared data item from within an ISR.
@@ -155,15 +134,10 @@ public:
      *           routine, not a normal task. 
      *  @param   new_data The data to be written into the shared data item
      */
-    void ISR_put (DataType new_data)
+    void ISR_put (DataType& new_data)
     {
-        #ifndef ESP32
-            // taskENTER_CRITICAL_FROM_ISR ();
-        #endif
-        the_data = new_data;
-        #ifndef ESP32
-            // taskEXIT_CRITICAL_FROM_ISR ();
-        #endif
+        BaseType_t wake_up;
+        xQueueOverwriteFromISR (queue, &new_data, &wake_up);
     }
 
     /** @brief   Operator which inserts data into the share.
@@ -175,20 +149,17 @@ public:
      *           runs a little more slowly than the @c put() method. 
      *  @param   new_data The data which is to be put into the share
      */
-    void operator << (DataType new_data)
+    void operator << (DataType& new_data)
     {
         if (xPortIsInsideInterrupt ())
         {
-            SHARE_ENTER_CRITICAL_FROM_ISR (&mutex);
-            the_data = new_data;
-            SHARE_EXIT_CRITICAL_FROM_ISR (&mutex);
+            BaseType_t wake_up;
+            xQueueOverwriteFromISR (queue, &new_data, &wake_up);
         }
         else
         {
-            SHARE_ENTER_CRITICAL (&mutex);
-            the_data = new_data;
-            SHARE_EXIT_CRITICAL (&mutex);
-        }
+            xQueueOverwrite (queue, &new_data);
+       }
     }
 
     /** @brief   Read data from the shared data item.
@@ -209,34 +180,28 @@ public:
     {
         if (xPortIsInsideInterrupt ())
         {
-             // Copy the data from the queue into the receiving variable
-            SHARE_ENTER_CRITICAL_FROM_ISR (&mutex);
-            put_here = the_data;
-            SHARE_EXIT_CRITICAL_FROM_ISR (&mutex);
+            // Copy the data from the queue into the receiving variable
+            xQueuePeekFromISR (queue, &put_here);
         }
         else
         {
-            SHARE_ENTER_CRITICAL (&mutex);
-            put_here = the_data;
-            SHARE_EXIT_CRITICAL (&mutex);
+            xQueuePeek (queue, &put_here, portMAX_DELAY);
         }
     }
 
     /** @brief   Read data from the shared data item.
      *  @details This method is used to read data from the shared data item 
-     *           with critical section protection to ensure that the data 
-     *           cannot be corrupted by a task switch. The shared data is 
-     *           copied into the variable which is given as this method's 
-     *           parameter, replacing the previous contents of that variable. 
+     *           with protection to ensure that the data cannot be corrupted by
+     *           a task switch. The shared data is copied into the variable 
+     *           which is given as this method's parameter, replacing the 
+     *           previous contents of that variable. 
      *  @param   recv_data A reference to the variable in which to put received
      *           data
      */
     void get (DataType& recv_data)
     {
         // Copy the data from the queue into the receiving variable
-        SHARE_ENTER_CRITICAL (&mutex);
-        recv_data = the_data;
-        SHARE_EXIT_CRITICAL (&mutex);
+        xQueuePeek (queue, &recv_data, portMAX_DELAY);
     }
 
     /** @brief   Read data from the shared data item, from within an ISR.
@@ -248,75 +213,12 @@ public:
      */
     void ISR_get (DataType& recv_data)
     {
-        #ifndef ESP32
-            // taskENTER_CRITICAL_FROM_ISR ();
-        #endif
-        recv_data = the_data;
-        #ifndef ESP32
-            // taskEXIT_CRITICAL_FROM_ISR ();
-        #endif
+        xQueuePeekFromISR (queue, &recv_data);
     }
 
     // Print the share's status within a list of all shares' statuses
     void print_in_list (Print& printer);
 
-    /** @brief   The prefix increment causes the shared data to increase by
-     *           one.
-     *  @details This operator just increases by one the variable held by the
-     *           shared data item.
-     *  @returns The value of the data after it has been increased by one
-     */
-    DataType& operator ++ (void)
-    {
-        SHARE_ENTER_CRITICAL (&mutex);
-        the_data++;
-        SHARE_EXIT_CRITICAL (&mutex);
-
-        return (the_data);
-    }
-
-    /** @brief   The postfix increment causes the shared data to increase by
-     *           by one.
-     *  @returns The value of the data before it was increased by one
-     */
-    DataType operator ++ (int)
-    {
-        DataType result = the_data;
-        SHARE_ENTER_CRITICAL (&mutex);
-        the_data++;
-        SHARE_EXIT_CRITICAL (&mutex);
-
-        return (result);
-    }
-
-    /** @brief   The prefix decrement causes the shared data to decrease by 
-     *           one.
-     *  @details This operator just decreases by one the variable held by
-     *           the shared data item. 
-     *  @returns A copy of the data after it has been decreased
-     */
-    DataType& operator -- (void)
-    {
-        SHARE_ENTER_CRITICAL (&mutex);
-        the_data--;
-        SHARE_EXIT_CRITICAL (&mutex);
-
-        return (the_data);
-    }
-
-    /** @brief   The postfix decrement causes the shared data to decrease by 
-     *           one.
-     *  @returns The value of the data before it was decreased by one
-     */
-    DataType operator -- (int)
-    {
-        DataType result = the_data;
-        SHARE_ENTER_CRITICAL (&mutex);
-        the_data--;
-        SHARE_EXIT_CRITICAL (&mutex);
-
-        return (result);
-    }
 }; // class TaskShare<DataType>
 
 
