@@ -108,10 +108,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="taskqueue_8h__dep__incl.png" border="0" usemap="#taskqueue_8hdep" alt=""/></div>
 <map name="taskqueue_8hdep" id="taskqueue_8hdep">
-<area shape="rect" title=" " alt="" coords="41,5,135,32"/>
-<area shape="rect" href="main_8cpp.html" title=" " alt="" coords="5,155,80,181"/>
-<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="80,80,187,107"/>
-<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="105,155,226,181"/>
+<area shape="rect" title=" " alt="" coords="19,5,113,32"/>
+<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="13,80,119,107"/>
+<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="5,155,127,181"/>
 </map>
 </div>
 </div>
@@ -124,12 +123,14 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains a very simple wrapper class for the FreeRTOS queue. It makes using the queue just a little bit easier in C++ than it is in C.</p>
+<div class="textblock"><p>This file contains a very simple wrapper class for the FreeRTOS queue. It makes using the queue just a little bit easier in C++ than it is in C. This version is known to work on STM32's and ESP32's only because the insertion and extraction operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> need specific functions to determine if they're running in ISR's or not.</p>
 <dl class="section date"><dt>Date</dt><dd>2012-Oct-21 JRR Original file </dd>
 <dd>
 2014-Aug-26 JRR Changed file names and queue class name to <a class="el" href="classQueue.html" title="Implements a queue to transmit data from one RTOS task to another.">Queue</a> </dd>
 <dd>
-2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment</dd></dl>
+2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment </dd>
+<dd>
+2020-Nov-18 JRR Added <code>&lt;&lt;</code> and <code>&gt;&gt;</code> operators for ESP32 and STM32</dd></dl>
 <p>License: This file is copyright 2012-2020 by JR Ridgely and released under the Lesser GNU Public License, version 2. It intended for educational use only, but its use is not limited thereto. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->

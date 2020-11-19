@@ -4,10 +4,10 @@
  *           between tasks. The data must be protected against damage due to 
  *           context switches, so it is protected by a mutex or by causing 
  *           transfers to take place inside critical sections of code which are
- *           not interrupted. 
- * 
- *           This code has been tested on STM32L476 and ESP32 microcontrollers
- *           so far. 
+ *           not interrupted. This version is known to work on STM32's and 
+ *           ESP32's only because the insertion and extraction operators @c <<
+ *           and @c >> need specific functions to determine if they're running 
+ *           in ISR's or not. 
  *
  *  @date 2012-Oct-29 JRR Original file
  *  @date 2014-Aug-26 JRR Changed file names, class name to @c TaskShare, 
@@ -16,7 +16,8 @@
  *  @date 2014-Oct-18 JRR Added linked list of all shares for tracking and 
  *        debugging
  *  @date 2020-Oct-10 JRR Made compatible with Arduino, class name to @c Share
- *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x)
+ *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x);
+ *                        added @c << and @c >> operators
  *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue
  *
  *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released 
@@ -40,7 +41,6 @@
 
 #include "baseshare.h"                      // Base class for shared data items
 #include "FreeRTOS.h"                       // Main header for FreeRTOS
-
 
 /** @brief   Class for data to be shared in a thread-safe manner between tasks.
  *  @details This class implements an item of data which can be shared between
@@ -165,7 +165,7 @@ public:
      */
     void operator << (DataType& new_data)
     {
-        if (xPortIsInsideInterrupt ())
+        if (CHECK_IF_IN_ISR ())
         {
             BaseType_t wake_up;
             xQueueOverwriteFromISR (queue, &new_data, &wake_up);
@@ -173,7 +173,7 @@ public:
         else
         {
             xQueueOverwrite (queue, &new_data);
-       }
+        }
     }
 
     /** @brief   Read data from the shared data item.
@@ -192,7 +192,7 @@ public:
      */
     void operator >> (DataType& put_here)
     {
-        if (xPortIsInsideInterrupt ())
+        if (CHECK_IF_IN_ISR ())
         {
             // Copy the data from the queue into the receiving variable
             xQueuePeekFromISR (queue, &put_here);

@@ -93,10 +93,10 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *           between tasks. The data must be protected against damage due to </span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *           context switches, so it is protected by a mutex or by causing </span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *           transfers to take place inside critical sections of code which are</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *           not interrupted. </span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *           This code has been tested on STM32L476 and ESP32 microcontrollers</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *           so far. </span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *           not interrupted. This version is known to work on STM32&#39;s and </span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *           ESP32&#39;s only because the insertion and extraction operators @c &lt;&lt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *           and @c &gt;&gt; need specific functions to determine if they&#39;re running </span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *           in ISR&#39;s or not. </span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *  @date 2012-Oct-29 JRR Original file</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *  @date 2014-Aug-26 JRR Changed file names, class name to @c TaskShare, </span></div>
@@ -105,31 +105,31 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *  @date 2014-Oct-18 JRR Added linked list of all shares for tracking and </span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *        debugging</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *  @date 2020-Oct-10 JRR Made compatible with Arduino, class name to @c Share</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x)</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released </span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> *    under the Lesser GNU Public License, version 2. It intended for </span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> *    educational use only, but its use is not limited thereto. */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">/*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> *    IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR </span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> *    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIB-</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> *    UTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> *    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF </span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> *    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *    THE POSSIBILITY OF SUCH DAMAGE. */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// This define prevents this .h file from being included more than once</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef _TASKSHARE_H_</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define _TASKSHARE_H_</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="baseshare_8h.html">baseshare.h</a>&quot;</span>                      <span class="comment">// Base class for shared data items</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span>                       <span class="comment">// Main header for FreeRTOS</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x);</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> *                        added @c &lt;&lt; and @c &gt;&gt; operators</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released </span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> *    under the Lesser GNU Public License, version 2. It intended for </span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> *    educational use only, but its use is not limited thereto. */</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">/*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> *    IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> *    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR </span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> *    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIB-</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> *    UTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> *    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> *    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> *    THE POSSIBILITY OF SUCH DAMAGE. */</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// This define prevents this .h file from being included more than once</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef _TASKSHARE_H_</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define _TASKSHARE_H_</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="baseshare_8h.html">baseshare.h</a>&quot;</span>                      <span class="comment">// Base class for shared data items</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span>                       <span class="comment">// Main header for FreeRTOS</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/** @brief   Class for data to be shared in a thread-safe manner between tasks.</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *  @details This class implements an item of data which can be shared between</span></div>
@@ -254,7 +254,7 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00166"></a><span class="lineno"><a class="line" href="classShare.html#a5cc2700434f93be77c30ba0f0ea6a2ce">  166</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classShare.html#a5cc2700434f93be77c30ba0f0ea6a2ce">operator &lt;&lt; </a>(DataType&amp; new_data)</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    {</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">if</span> (xPortIsInsideInterrupt ())</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">if</span> (CHECK_IF_IN_ISR ())</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        {</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            BaseType_t wake_up;</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            xQueueOverwriteFromISR (<a class="code" href="classShare.html#a1b82b2d5fa5e69b0445fb5a718a9575a">queue</a>, &amp;new_data, &amp;wake_up);</div>
@@ -262,7 +262,7 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        {</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            xQueueOverwrite (<a class="code" href="classShare.html#a1b82b2d5fa5e69b0445fb5a718a9575a">queue</a>, &amp;new_data);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;       }</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        }</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    }</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment">    /** @brief   Read data from the shared data item.</span></div>
@@ -281,7 +281,7 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="classShare.html#a5b6813f9c61f93f65535b3e155f4933c">  193</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classShare.html#a5b6813f9c61f93f65535b3e155f4933c">operator &gt;&gt; </a>(DataType&amp; put_here)</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    {</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">if</span> (xPortIsInsideInterrupt ())</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">if</span> (CHECK_IF_IN_ISR ())</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        {</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="comment">// Copy the data from the queue into the receiving variable</span></div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            xQueuePeekFromISR (<a class="code" href="classShare.html#a1b82b2d5fa5e69b0445fb5a718a9575a">queue</a>, &amp;put_here);</div>
@@ -362,7 +362,7 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="ttc" id="abaseshare_8h_html"><div class="ttname"><a href="baseshare_8h.html">baseshare.h</a></div><div class="ttdoc">Headers for a base class for type-safe, thread-safe task data exchange classes.</div></div>
 <div class="ttc" id="aclassShare_html_a6f69eaea2dd026247dd6772a1aea23c4"><div class="ttname"><a href="classShare.html#a6f69eaea2dd026247dd6772a1aea23c4">Share::ISR_get</a></div><div class="ttdeci">void ISR_get(DataType &amp;recv_data)</div><div class="ttdoc">Read data from the shared data item, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskshare.h:228</div></div>
 <div class="ttc" id="aclassShare_html_a5cc2700434f93be77c30ba0f0ea6a2ce"><div class="ttname"><a href="classShare.html#a5cc2700434f93be77c30ba0f0ea6a2ce">Share::operator&lt;&lt;</a></div><div class="ttdeci">void operator&lt;&lt;(DataType &amp;new_data)</div><div class="ttdoc">Operator which inserts data into the share.</div><div class="ttdef"><b>Definition:</b> taskshare.h:166</div></div>
-<div class="ttc" id="aclassBaseShare_html"><div class="ttname"><a href="classBaseShare.html">BaseShare</a></div><div class="ttdoc">Base class for classes that share data in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> baseshare.h:46</div></div>
+<div class="ttc" id="aclassBaseShare_html"><div class="ttname"><a href="classBaseShare.html">BaseShare</a></div><div class="ttdoc">Base class for classes that share data in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> baseshare.h:54</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

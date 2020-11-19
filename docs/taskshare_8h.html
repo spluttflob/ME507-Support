@@ -110,10 +110,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="taskshare_8h__dep__incl.png" border="0" usemap="#taskshare_8hdep" alt=""/></div>
 <map name="taskshare_8hdep" id="taskshare_8hdep">
-<area shape="rect" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="43,5,133,32"/>
-<area shape="rect" href="main_8cpp.html" title=" " alt="" coords="5,155,80,181"/>
-<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="80,80,187,107"/>
-<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="105,155,226,181"/>
+<area shape="rect" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="21,5,111,32"/>
+<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="13,80,119,107"/>
+<area shape="rect" href="task__receive_8cpp.html" title=" " alt="" coords="5,155,127,181"/>
 </map>
 </div>
 </div>
@@ -127,8 +126,7 @@ Classes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data which can be shared between tasks in a thread-safe manner. </p>
-<p>This file contains a template class for data which is to be shared between tasks. The data must be protected against damage due to context switches, so it is protected by a mutex or by causing transfers to take place inside critical sections of code which are not interrupted.</p>
-<p>This code has been tested on STM32L476 and ESP32 microcontrollers so far.</p>
+<p>This file contains a template class for data which is to be shared between tasks. The data must be protected against damage due to context switches, so it is protected by a mutex or by causing transfers to take place inside critical sections of code which are not interrupted. This version is known to work on STM32's and ESP32's only because the insertion and extraction operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> need specific functions to determine if they're running in ISR's or not.</p>
 <dl class="section date"><dt>Date</dt><dd>2012-Oct-29 JRR Original file </dd>
 <dd>
 2014-Aug-26 JRR Changed file names, class name to <code>TaskShare</code>, removed unused version that uses semaphores, renamed <code>put()</code> and <code>get()</code> </dd>
@@ -137,7 +135,7 @@ Classes</h2></td></tr>
 <dd>
 2020-Oct-10 JRR Made compatible with Arduino, class name to <code><a class="el" href="classShare.html" title="Class for data to be shared in a thread-safe manner between tasks.">Share</a></code> </dd>
 <dd>
-2020-Nov-14 JRR Added new-ESP32 compatible <code>SHARE_</code>..._CRITICAL(x) </dd>
+2020-Nov-14 JRR Added new-ESP32 compatible <code>SHARE_</code>..._CRITICAL(x); added <code>&lt;&lt;</code> and <code>&gt;&gt;</code> operators </dd>
 <dd>
 2020-Nov-18 JRR Critical sections not reliable; changed to a queue</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>This file is copyright 2014 &ndash; 2019 by JR Ridgely and released under the Lesser GNU Public License, version 2. It intended for educational use only, but its use is not limited thereto. </dd></dl>

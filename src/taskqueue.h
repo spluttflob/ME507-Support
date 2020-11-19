@@ -1,10 +1,14 @@
 /** @file taskqueue.h
  *    This file contains a very simple wrapper class for the FreeRTOS queue. 
- *    It makes using the queue just a little bit easier in C++ than it is in C. 
+ *    It makes using the queue just a little bit easier in C++ than it is in C.
+ *    This version is known to work on STM32's and ESP32's only because the 
+ *    insertion and extraction operators @c << and @c >> need specific 
+ *    functions to determine if they're running in ISR's or not. 
  *
  *  @date 2012-Oct-21 JRR Original file
  *  @date 2014-Aug-26 JRR Changed file names and queue class name to Queue
  *  @date 2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment
+ *  @date 2020-Nov-18 JRR Added @c << and @c >> operators for ESP32 and STM32
  *
  *  License:
  *    This file is copyright 2012-2020 by JR Ridgely and released under the 
@@ -281,7 +285,7 @@ public:
      */
     void operator << (dataType new_data)
     {
-        if (xPortIsInsideInterrupt ())
+        if (CHECK_IF_IN_ISR ())
         {
             ISR_put (new_data);
         }
@@ -305,7 +309,7 @@ public:
      */
     void operator >> (dataType& put_here)
     {
-        if (xPortIsInsideInterrupt ())
+        if (CHECK_IF_IN_ISR ())
         {
             portBASE_TYPE task_awakened;     // Checks if context switch needed
 

@@ -7,9 +7,7 @@
  */
 
 #include <Arduino.h>
-#if (defined STM32F4xx || defined STM32L4xx)
-    #include <STM32FreeRTOS.h>
-#endif
+#include <FreeRTOS.h>
 
 
 /** @brief   Class which implements a mutex which can guard a resource. 

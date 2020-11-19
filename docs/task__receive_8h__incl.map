@@ -1,10 +1,9 @@
 <map id="task_receive.h" name="task_receive.h">
-<area shape="rect" id="node1" title=" " alt="" coords="259,5,376,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="225,229,309,256"/>
-<area shape="rect" id="node3" title=" " alt="" coords="355,80,496,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="521,80,631,107"/>
-<area shape="rect" id="node5" href="$taskqueue_8h.html" title=" " alt="" coords="177,80,279,107"/>
-<area shape="rect" id="node8" href="$taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="53,80,152,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="131,155,229,181"/>
-<area shape="rect" id="node7" href="$baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="5,155,107,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="175,5,282,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="29,229,106,256"/>
+<area shape="rect" id="node3" title=" " alt="" coords="309,80,412,107"/>
+<area shape="rect" id="node4" href="$taskqueue_8h.html" title=" " alt="" coords="22,80,115,107"/>
+<area shape="rect" id="node7" href="$taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="141,80,231,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="138,155,234,181"/>
+<area shape="rect" id="node6" href="$baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="21,155,114,181"/>
 </map>

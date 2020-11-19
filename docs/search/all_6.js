@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loop_23',['loop',['../main_8cpp.html#afe461d27b9c48d5921c00d521181f12f',1,'main.cpp']]]
+  ['name_22',['name',['../classBaseShare.html#abc438f82d56097f13a1e791dcd617a72',1,'BaseShare']]]
 ];

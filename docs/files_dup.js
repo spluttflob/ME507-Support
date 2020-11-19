@@ -2,11 +2,6 @@ var files_dup =
 [
     [ "baseshare.cpp", "baseshare_8cpp.html", "baseshare_8cpp" ],
     [ "baseshare.h", "baseshare_8h.html", "baseshare_8h" ],
-    [ "encoder_counter.cpp", "encoder__counter_8cpp.html", null ],
-    [ "encoder_counter.h", "encoder__counter_8h.html", [
-      [ "STM32Encoder", "classSTM32Encoder.html", "classSTM32Encoder" ]
-    ] ],
-    [ "main.cpp", "main_8cpp.html", "main_8cpp" ],
     [ "mutex.h", "mutex_8h.html", [
       [ "Mutex", "classMutex.html", "classMutex" ]
     ] ],

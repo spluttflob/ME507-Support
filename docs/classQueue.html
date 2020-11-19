@@ -228,7 +228,7 @@ class Queue&lt; dataType &gt;</h3>
 <h1><a class="anchor" id="queue_usage"></a>
 Usage</h1>
 <p>The following bits of code show how to set up and use a queue to transfer data of type <code>int16_t</code> from one hypothetical task called <code>task_A</code> to another called <code>task_B</code>.</p>
-<p>Near the top of the file which contains <code><a class="el" href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title="Arduino setup function which runs once at program startup.">setup()</a></code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
+<p>Near the top of the file which contains <code>setup()</code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
 <div class="line">...<span class="comment"></span></div>
 <div class="line"><span class="comment">/// This queue holds hockey puck accelerations</span></div>
 <div class="line"><span class="comment"></span>Queue&lt;int16_t&gt; hockey_queue (10, <span class="stringliteral">&quot;Puckey&quot;</span>);</div>
@@ -944,8 +944,8 @@ template&lt;class dataType &gt; </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="ataskqueue_8h_html"><div class="ttname"><a href="taskqueue_8h.html">taskqueue.h</a></div></div>
-<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:430</div></div>
-<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:122</div></div>
+<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:434</div></div>
+<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:126</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

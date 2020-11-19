@@ -96,68 +96,66 @@ $(document).ready(function(){initNavTree('mutex_8h_source.html',''); initResizab
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#if (defined STM32F4xx || defined STM32L4xx)</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">    #include &lt;STM32FreeRTOS.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/** @brief   Class which implements a mutex which can guard a resource. </span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *  @details A mutex (short for MUTual EXclusion) is used to ensure that two</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *           tasks don&#39;t use a resource at the same time. This is one method</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *           which can be used to prevent data corruption due to task </span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *           switching. This class doesn&#39;t add functionality to the FreeRTOS</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> *           mutex; it just simplifies the programming interface. </span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classMutex.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMutex.html">Mutex</a></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">   25</a></span>&#160;    SemaphoreHandle_t <a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>;    <span class="comment">///&lt; Handle to the FreeRTOS mutex being used</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">   26</a></span>&#160;<span class="comment"></span>    TickType_t <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>;          <span class="comment">///&lt; How many RTOS ticks to wait for the mutex</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:<span class="comment"></span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    /** @brief   Create a mutex and save a handle to it.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">     *  @details A mutex @b must @b not @b be @b used within an interrupt</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">     *           service routine; there are ways to use queues to accomplish</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">     *           the same goal. See the FreeRTOS documentation for details. </span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">     *  @param   timeout The number of RTOS ticks to wait for the mutex to</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">     *           become available if another task has it (default </span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">     *           @c portMAX_DELAY which means wait forever)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">   37</a></span>&#160;    <a class="code" href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">Mutex</a> (TickType_t <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a> = portMAX_DELAY)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a> = xSemaphoreCreateMutex ();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        this-&gt;timeout = <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">    /** @brief   Take the mutex, preventing other tasks from using whatever</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">     *           resource the mutex protects.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">     *  @returns @c true if the mutex was taken or @c false if we timed out</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">   47</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">take</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        portBASE_TYPE result = xSemaphoreTake (<a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>, <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> (result == pdTRUE);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">    /** @brief   Give back the mutex, allowing other tasks to access the</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">     *           resource protected by the mutex.</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">   57</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">give</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        xSemaphoreGive (<a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;FreeRTOS.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/** @brief   Class which implements a mutex which can guard a resource. </span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> *  @details A mutex (short for MUTual EXclusion) is used to ensure that two</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *           tasks don&#39;t use a resource at the same time. This is one method</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *           which can be used to prevent data corruption due to task </span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *           switching. This class doesn&#39;t add functionality to the FreeRTOS</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *           mutex; it just simplifies the programming interface. </span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classMutex.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMutex.html">Mutex</a></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">   23</a></span>&#160;    SemaphoreHandle_t <a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>;    <span class="comment">///&lt; Handle to the FreeRTOS mutex being used</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">   24</a></span>&#160;<span class="comment"></span>    TickType_t <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>;          <span class="comment">///&lt; How many RTOS ticks to wait for the mutex</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">    /** @brief   Create a mutex and save a handle to it.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">     *  @details A mutex @b must @b not @b be @b used within an interrupt</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">     *           service routine; there are ways to use queues to accomplish</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">     *           the same goal. See the FreeRTOS documentation for details. </span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">     *  @param   timeout The number of RTOS ticks to wait for the mutex to</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">     *           become available if another task has it (default </span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">     *           @c portMAX_DELAY which means wait forever)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">   35</a></span>&#160;    <a class="code" href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">Mutex</a> (TickType_t <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a> = portMAX_DELAY)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a> = xSemaphoreCreateMutex ();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        this-&gt;timeout = <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">    /** @brief   Take the mutex, preventing other tasks from using whatever</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">     *           resource the mutex protects.</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">     *  @returns @c true if the mutex was taken or @c false if we timed out</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">   45</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">take</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        portBASE_TYPE result = xSemaphoreTake (<a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>, <a class="code" href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">timeout</a>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> (result == pdTRUE);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">    /** @brief   Give back the mutex, allowing other tasks to access the</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">     *           resource protected by the mutex.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">   55</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">give</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        xSemaphoreGive (<a class="code" href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">handle</a>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclassMutex_html_a1bd8d9978c427a9f314595214c4e605e"><div class="ttname"><a href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">Mutex::timeout</a></div><div class="ttdeci">TickType_t timeout</div><div class="ttdoc">How many RTOS ticks to wait for the mutex.</div><div class="ttdef"><b>Definition:</b> mutex.h:26</div></div>
-<div class="ttc" id="aclassMutex_html_ae45adddf5c24ba65ef16767437f9c032"><div class="ttname"><a href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">Mutex::take</a></div><div class="ttdeci">bool take(void)</div><div class="ttdoc">Take the mutex, preventing other tasks from using whatever resource the mutex protects.</div><div class="ttdef"><b>Definition:</b> mutex.h:47</div></div>
-<div class="ttc" id="aclassMutex_html_a1fa013189d4335e8c1963b3ae799c435"><div class="ttname"><a href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">Mutex::Mutex</a></div><div class="ttdeci">Mutex(TickType_t timeout=portMAX_DELAY)</div><div class="ttdoc">Create a mutex and save a handle to it.</div><div class="ttdef"><b>Definition:</b> mutex.h:37</div></div>
-<div class="ttc" id="aclassMutex_html_a3c7db240ed634989205e2b17a3c8fe5d"><div class="ttname"><a href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">Mutex::give</a></div><div class="ttdeci">void give(void)</div><div class="ttdoc">Give back the mutex, allowing other tasks to access the resource protected by the mutex.</div><div class="ttdef"><b>Definition:</b> mutex.h:57</div></div>
-<div class="ttc" id="aclassMutex_html"><div class="ttname"><a href="classMutex.html">Mutex</a></div><div class="ttdoc">Class which implements a mutex which can guard a resource.</div><div class="ttdef"><b>Definition:</b> mutex.h:22</div></div>
-<div class="ttc" id="aclassMutex_html_a5da1e7e042bbc8024265eed21d47a194"><div class="ttname"><a href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">Mutex::handle</a></div><div class="ttdeci">SemaphoreHandle_t handle</div><div class="ttdoc">Handle to the FreeRTOS mutex being used.</div><div class="ttdef"><b>Definition:</b> mutex.h:25</div></div>
+<div class="ttc" id="aclassMutex_html_a1bd8d9978c427a9f314595214c4e605e"><div class="ttname"><a href="classMutex.html#a1bd8d9978c427a9f314595214c4e605e">Mutex::timeout</a></div><div class="ttdeci">TickType_t timeout</div><div class="ttdoc">How many RTOS ticks to wait for the mutex.</div><div class="ttdef"><b>Definition:</b> mutex.h:24</div></div>
+<div class="ttc" id="aclassMutex_html_ae45adddf5c24ba65ef16767437f9c032"><div class="ttname"><a href="classMutex.html#ae45adddf5c24ba65ef16767437f9c032">Mutex::take</a></div><div class="ttdeci">bool take(void)</div><div class="ttdoc">Take the mutex, preventing other tasks from using whatever resource the mutex protects.</div><div class="ttdef"><b>Definition:</b> mutex.h:45</div></div>
+<div class="ttc" id="aclassMutex_html_a1fa013189d4335e8c1963b3ae799c435"><div class="ttname"><a href="classMutex.html#a1fa013189d4335e8c1963b3ae799c435">Mutex::Mutex</a></div><div class="ttdeci">Mutex(TickType_t timeout=portMAX_DELAY)</div><div class="ttdoc">Create a mutex and save a handle to it.</div><div class="ttdef"><b>Definition:</b> mutex.h:35</div></div>
+<div class="ttc" id="aclassMutex_html_a3c7db240ed634989205e2b17a3c8fe5d"><div class="ttname"><a href="classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d">Mutex::give</a></div><div class="ttdeci">void give(void)</div><div class="ttdoc">Give back the mutex, allowing other tasks to access the resource protected by the mutex.</div><div class="ttdef"><b>Definition:</b> mutex.h:55</div></div>
+<div class="ttc" id="aclassMutex_html"><div class="ttname"><a href="classMutex.html">Mutex</a></div><div class="ttdoc">Class which implements a mutex which can guard a resource.</div><div class="ttdef"><b>Definition:</b> mutex.h:20</div></div>
+<div class="ttc" id="aclassMutex_html_a5da1e7e042bbc8024265eed21d47a194"><div class="ttname"><a href="classMutex.html#a5da1e7e042bbc8024265eed21d47a194">Mutex::handle</a></div><div class="ttdeci">SemaphoreHandle_t handle</div><div class="ttdoc">Handle to the FreeRTOS mutex being used.</div><div class="ttdef"><b>Definition:</b> mutex.h:23</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

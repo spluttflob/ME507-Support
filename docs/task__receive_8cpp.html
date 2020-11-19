@@ -96,15 +96,14 @@ Include dependency graph for task_receive.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="task__receive_8cpp__incl.png" border="0" usemap="#task__receive_8cpp" alt=""/></div>
 <map name="task__receive_8cpp" id="task__receive_8cpp">
-<area shape="rect" title=" " alt="" coords="251,5,383,32"/>
-<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="259,80,376,107"/>
-<area shape="rect" title=" " alt="" coords="225,304,309,331"/>
-<area shape="rect" title=" " alt="" coords="355,155,496,181"/>
-<area shape="rect" title=" " alt="" coords="521,155,631,181"/>
-<area shape="rect" href="taskqueue_8h.html" title=" " alt="" coords="177,155,279,181"/>
-<area shape="rect" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="53,155,152,181"/>
-<area shape="rect" title=" " alt="" coords="131,229,229,256"/>
-<area shape="rect" href="baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="5,229,107,256"/>
+<area shape="rect" title=" " alt="" coords="168,5,289,32"/>
+<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="175,80,282,107"/>
+<area shape="rect" title=" " alt="" coords="29,304,106,331"/>
+<area shape="rect" title=" " alt="" coords="309,155,412,181"/>
+<area shape="rect" href="taskqueue_8h.html" title=" " alt="" coords="22,155,115,181"/>
+<area shape="rect" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="141,155,231,181"/>
+<area shape="rect" title=" " alt="" coords="138,229,234,256"/>
+<area shape="rect" href="baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="21,229,114,256"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -117,12 +116,13 @@ Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a5dec94127dffd185c7d15fae3f7d2d4c"><td class="memItemLeft" align="right" valign="top"><a id="a5dec94127dffd185c7d15fae3f7d2d4c"></a>
-<a class="el" href="classShare.html">Share</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="task__receive_8cpp.html#a5dec94127dffd185c7d15fae3f7d2d4c">test_share_0</a></td></tr>
-<tr class="memdesc:a5dec94127dffd185c7d15fae3f7d2d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This shared data item allows thread-safe transfer of data between tasks. <br /></td></tr>
+<a class="el" href="classShare.html">Share</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>test_share_0</b></td></tr>
 <tr class="separator:a5dec94127dffd185c7d15fae3f7d2d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09db82460cc871b77dc4c8701e0863ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classQueue.html">Queue</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="task__receive_8cpp.html#a09db82460cc871b77dc4c8701e0863ef">test_queue_0</a></td></tr>
+<tr class="memitem:a09db82460cc871b77dc4c8701e0863ef"><td class="memItemLeft" align="right" valign="top"><a id="a09db82460cc871b77dc4c8701e0863ef"></a>
+<a class="el" href="classQueue.html">Queue</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>test_queue_0</b></td></tr>
 <tr class="separator:a09db82460cc871b77dc4c8701e0863ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a640ba08114db644da3248db71daf3d96"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="task__receive_8cpp.html#a640ba08114db644da3248db71daf3d96">bad_global_0</a></td></tr>
+<tr class="memitem:a640ba08114db644da3248db71daf3d96"><td class="memItemLeft" align="right" valign="top"><a id="a640ba08114db644da3248db71daf3d96"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>bad_global_0</b></td></tr>
 <tr class="separator:a640ba08114db644da3248db71daf3d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -153,37 +153,6 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a640ba08114db644da3248db71daf3d96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a640ba08114db644da3248db71daf3d96">&#9670;&nbsp;</a></span>bad_global_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t bad_global_0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This unprotected global variable (ugh) is used to send data from one task to another, but it isn't thread protected and may cause errors </p>
-
-</div>
-</div>
-<a id="a09db82460cc871b77dc4c8701e0863ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09db82460cc871b77dc4c8701e0863ef">&#9670;&nbsp;</a></span>test_queue_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classQueue.html">Queue</a>&lt;uint32_t&gt; test_queue_0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This queue transmits data from one task to another and has a buffer to hold data in case it piles up when transmitted more quickly than received for a short time </p>
 
 </div>
 </div>

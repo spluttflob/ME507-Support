@@ -124,73 +124,81 @@ $(document).ready(function(){initNavTree('baseshare_8h_source.html',''); initRes
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/** @brief   Base class for classes that share data in a thread-safe manner </span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *           between tasks.</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *  @details This is a base class for classes which share data between tasks</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *           without the risk of data corruption associated with global </span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *           variables. Queues and task shares are two examples of such shared</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *           data classes. </span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classBaseShare.html">   46</a></span>&#160;<span class="keyword">class </span><a class="code" href="classBaseShare.html">BaseShare</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">protected</span>:<span class="comment"></span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">        /** @brief   The name of the shared item.</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">         *  @details This string holds the shared item&#39;s name. The name is only</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">         *           used for identification on debugging printouts or logs.</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">         */</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">   53</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">name</a>[16];</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">        /** @brief   Pointer to the next item in the linked list of shares.</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">         *  @details This pointer points to the next item in the system&#39;s list</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">         *           of shared data items (shares, queues, @e etc.) If this </span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">         *           share is the most recently created one, the pointer will </span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">         *           be @c NULL. The list goes backwards; the next item is the</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">         *           previously created one.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">         */</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">   62</a></span>&#160;        <a class="code" href="classBaseShare.html">BaseShare</a>* <a class="code" href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">p_next</a>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">        /** @brief   Pointer to the most recently created shared data item.</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">         *  @details This @c static variable, one copy of which is shared by </span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">         *           all shared data items, is a pointer to the most recently </span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">         *           created one. It is used as the beginning of a linked list</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">         *           of all shared data items in the system. </span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Different functions are used in STM32&#39;s and ESP32&#39;s to determine if the CPU</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// is currently running within an interrupt service routine</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifdef ESP32</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    #define CHECK_IF_IN_ISR() xPortInIsrContext()</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#elif (defined STM32F4xx || defined STM32L4xx)</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">    #define CHECK_IF_IN_ISR() xPortIsInsideInterrupt()</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/** @brief   Base class for classes that share data in a thread-safe manner </span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *           between tasks.</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *  @details This is a base class for classes which share data between tasks</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *           without the risk of data corruption associated with global </span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *           variables. Queues and task shares are two examples of such shared</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *           data classes. </span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classBaseShare.html">   54</a></span>&#160;<span class="keyword">class </span><a class="code" href="classBaseShare.html">BaseShare</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">protected</span>:<span class="comment"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">        /** @brief   The name of the shared item.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">         *  @details This string holds the shared item&#39;s name. The name is only</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">         *           used for identification on debugging printouts or logs.</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">         */</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">   61</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">name</a>[16];</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">        /** @brief   Pointer to the next item in the linked list of shares.</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">         *  @details This pointer points to the next item in the system&#39;s list</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">         *           of shared data items (shares, queues, @e etc.) If this </span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">         *           share is the most recently created one, the pointer will </span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">         *           be @c NULL. The list goes backwards; the next item is the</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">         *           previously created one.</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">         */</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">   70</a></span>&#160;        <span class="keyword">static</span> <a class="code" href="classBaseShare.html">BaseShare</a>* <a class="code" href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">p_newest</a>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">// Construct a base shared data item</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="classBaseShare.html#a73741a4ad0b9b54f6f6da20855c2e30b">BaseShare</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* p_name = NULL);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">        /** @brief   Print one shared data item within a list.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">         *  @details Make a printout showing the condition of this shared data</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">         *           item, such as the value of a shared variable or how full a</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">         *           queue&#39;s buffer is. This method must be overridden in each</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">         *           descendent class with a method that actually @e does </span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">         *           something. </span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">         *  @param   printer Reference to a serial device on which to print </span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">         */</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classBaseShare.html#a6f72027a717afada4679fd08d08bb4b6">print_in_list</a> (Print&amp; printer) = 0;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// }</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classBaseShare.html#a4700b5f4d08a994556955c2aa75f3236">print_all_shares</a> (Print&amp; printer);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// Function that prints a list of shares and queues</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">void</span> <a class="code" href="baseshare_8h.html#a4700b5f4d08a994556955c2aa75f3236">print_all_shares</a> (Print&amp; printer);</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">   70</a></span>&#160;        <a class="code" href="classBaseShare.html">BaseShare</a>* <a class="code" href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">p_next</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">        /** @brief   Pointer to the most recently created shared data item.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">         *  @details This @c static variable, one copy of which is shared by </span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">         *           all shared data items, is a pointer to the most recently </span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">         *           created one. It is used as the beginning of a linked list</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">         *           of all shared data items in the system. </span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">         */</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">   78</a></span>&#160;        <span class="keyword">static</span> <a class="code" href="classBaseShare.html">BaseShare</a>* <a class="code" href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">p_newest</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">// Construct a base shared data item</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="classBaseShare.html#a73741a4ad0b9b54f6f6da20855c2e30b">BaseShare</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* p_name = NULL);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">        /** @brief   Print one shared data item within a list.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">         *  @details Make a printout showing the condition of this shared data</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">         *           item, such as the value of a shared variable or how full a</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">         *           queue&#39;s buffer is. This method must be overridden in each</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">         *           descendent class with a method that actually @e does </span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">         *           something. </span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">         *  @param   printer Reference to a serial device on which to print </span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">         */</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classBaseShare.html#a6f72027a717afada4679fd08d08bb4b6">print_in_list</a> (Print&amp; printer) = 0;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif // _BASESHARE_H_</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">// }</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classBaseShare.html#a4700b5f4d08a994556955c2aa75f3236">print_all_shares</a> (Print&amp; printer);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;};</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// Function that prints a list of shares and queues</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keywordtype">void</span> <a class="code" href="baseshare_8h.html#a4700b5f4d08a994556955c2aa75f3236">print_all_shares</a> (Print&amp; printer);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif // _BASESHARE_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassBaseShare_html_a4700b5f4d08a994556955c2aa75f3236"><div class="ttname"><a href="classBaseShare.html#a4700b5f4d08a994556955c2aa75f3236">BaseShare::print_all_shares</a></div><div class="ttdeci">friend void print_all_shares(Print &amp;printer)</div><div class="ttdoc">Start the printout showing the status of all shared data items.</div><div class="ttdef"><b>Definition:</b> baseshare.cpp:74</div></div>
 <div class="ttc" id="aclassBaseShare_html_a6f72027a717afada4679fd08d08bb4b6"><div class="ttname"><a href="classBaseShare.html#a6f72027a717afada4679fd08d08bb4b6">BaseShare::print_in_list</a></div><div class="ttdeci">virtual void print_in_list(Print &amp;printer)=0</div><div class="ttdoc">Print one shared data item within a list.</div></div>
-<div class="ttc" id="aclassBaseShare_html_abc438f82d56097f13a1e791dcd617a72"><div class="ttname"><a href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">BaseShare::name</a></div><div class="ttdeci">char name[16]</div><div class="ttdoc">The name of the shared item.</div><div class="ttdef"><b>Definition:</b> baseshare.h:53</div></div>
-<div class="ttc" id="aclassBaseShare_html_a8077022ea40c4ba44a6ff07ab24cac83"><div class="ttname"><a href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">BaseShare::p_next</a></div><div class="ttdeci">BaseShare * p_next</div><div class="ttdoc">Pointer to the next item in the linked list of shares.</div><div class="ttdef"><b>Definition:</b> baseshare.h:62</div></div>
-<div class="ttc" id="aclassBaseShare_html_a0657d8a02509e79c3bb418aaa9cce33c"><div class="ttname"><a href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">BaseShare::p_newest</a></div><div class="ttdeci">static BaseShare * p_newest</div><div class="ttdoc">Pointer to the most recently created shared data item.</div><div class="ttdef"><b>Definition:</b> baseshare.h:70</div></div>
+<div class="ttc" id="aclassBaseShare_html_abc438f82d56097f13a1e791dcd617a72"><div class="ttname"><a href="classBaseShare.html#abc438f82d56097f13a1e791dcd617a72">BaseShare::name</a></div><div class="ttdeci">char name[16]</div><div class="ttdoc">The name of the shared item.</div><div class="ttdef"><b>Definition:</b> baseshare.h:61</div></div>
+<div class="ttc" id="aclassBaseShare_html_a8077022ea40c4ba44a6ff07ab24cac83"><div class="ttname"><a href="classBaseShare.html#a8077022ea40c4ba44a6ff07ab24cac83">BaseShare::p_next</a></div><div class="ttdeci">BaseShare * p_next</div><div class="ttdoc">Pointer to the next item in the linked list of shares.</div><div class="ttdef"><b>Definition:</b> baseshare.h:70</div></div>
+<div class="ttc" id="aclassBaseShare_html_a0657d8a02509e79c3bb418aaa9cce33c"><div class="ttname"><a href="classBaseShare.html#a0657d8a02509e79c3bb418aaa9cce33c">BaseShare::p_newest</a></div><div class="ttdeci">static BaseShare * p_newest</div><div class="ttdoc">Pointer to the most recently created shared data item.</div><div class="ttdef"><b>Definition:</b> baseshare.h:78</div></div>
 <div class="ttc" id="aclassBaseShare_html_a73741a4ad0b9b54f6f6da20855c2e30b"><div class="ttname"><a href="classBaseShare.html#a73741a4ad0b9b54f6f6da20855c2e30b">BaseShare::BaseShare</a></div><div class="ttdeci">BaseShare(const char *p_name=NULL)</div><div class="ttdoc">Construct a base shared data item.</div><div class="ttdef"><b>Definition:</b> baseshare.cpp:46</div></div>
 <div class="ttc" id="abaseshare_8h_html_a4700b5f4d08a994556955c2aa75f3236"><div class="ttname"><a href="baseshare_8h.html#a4700b5f4d08a994556955c2aa75f3236">print_all_shares</a></div><div class="ttdeci">void print_all_shares(Print &amp;printer)</div><div class="ttdoc">Start the printout showing the status of all shared data items.</div><div class="ttdef"><b>Definition:</b> baseshare.cpp:74</div></div>
-<div class="ttc" id="aclassBaseShare_html"><div class="ttname"><a href="classBaseShare.html">BaseShare</a></div><div class="ttdoc">Base class for classes that share data in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> baseshare.h:46</div></div>
+<div class="ttc" id="aclassBaseShare_html"><div class="ttname"><a href="classBaseShare.html">BaseShare</a></div><div class="ttdoc">Base class for classes that share data in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> baseshare.h:54</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

@@ -35,6 +35,14 @@
 
 #include <Arduino.h>
 
+// Different functions are used in STM32's and ESP32's to determine if the CPU
+// is currently running within an interrupt service routine
+#ifdef ESP32
+    #define CHECK_IF_IN_ISR() xPortInIsrContext()
+#elif (defined STM32F4xx || defined STM32L4xx)
+    #define CHECK_IF_IN_ISR() xPortIsInsideInterrupt()
+#endif
+
 
 /** @brief   Base class for classes that share data in a thread-safe manner 
  *           between tasks.
