@@ -1,4 +1,3 @@
-//*****************************************************************************
 /** @file taskqueue.h
  *    This file contains a very simple wrapper class for the FreeRTOS queue. 
  *    It makes using the queue just a little bit easier in C++ than it is in C. 
@@ -22,7 +21,6 @@
  *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
  *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *    THE POSSIBILITY OF SUCH DAMAGE. */
-//*****************************************************************************
 
 // This define prevents this .h file from being included more than once
 #ifndef _TASKQUEUE_H_
@@ -272,6 +270,54 @@ public:
         return (uxQueueMessagesWaiting (handle) != 0);
     }
 
+    /** @brief   Operator which inserts data into the queue.
+     *  @details This convenient operator puts data into the queue, protecting
+     *           the data from corruption by thread switching. It checks if the
+     *           processor is currently in an interupt service routine (ISR);
+     *           if so, it calls ISR specific functions to prevent corruption,
+     *           so this function may be used within an ISR or outside one. It
+     *           runs a little more slowly than the @c put() method. 
+     *  @param   new_data The data which is to be put into the queue
+     */
+    void operator << (dataType new_data)
+    {
+        if (xPortIsInsideInterrupt ())
+        {
+            ISR_put (new_data);
+        }
+        else
+        {
+            put (new_data);
+        }
+    }
+
+    /** @brief   Read data from the queue.
+     *  @details This method is used to read data from the queue . The 
+     *           retrieved data is copied into the variable which is given as 
+     *           this method's parameter, replacing the previous contents. This 
+     *           method checks if the processor is currently in an interupt 
+     *           service routine (ISR) and if so, it calls ISR specific 
+     *           functions to prevent corruption, so this function may be used 
+     *           within an ISR or outside one. It runs a little more slowly 
+     *           than the @c get() method. 
+     *  @param   put_here A reference to the variable in which to put received
+     *           data
+     */
+    void operator >> (dataType& put_here)
+    {
+        if (xPortIsInsideInterrupt ())
+        {
+            portBASE_TYPE task_awakened;     // Checks if context switch needed
+
+             // Copy the data from the queue into the receiving variable
+            xQueueReceiveFromISR (handle, &put_here, &task_awakened);
+        }
+        else
+        {
+            xQueueReceive (handle, &put_here, ticks_to_wait);
+        }
+    }
+
     /** @brief   Return true if the queue has items in it, from within an 
      *           ISR.
      *  @details This method allows one to check if the queue has any 
@@ -381,7 +427,7 @@ Queue<dataType>::Queue (BaseType_t queue_size, const char* p_name,
  *  @return  True if the item was successfully queued, false if not
  */
 template <class dataType>
-bool Queue<dataType>::put (const dataType& item)
+inline bool Queue<dataType>::put (const dataType& item)
 {
     bool return_value = (bool)(xQueueSendToBack (handle, &item, 
                                                  ticks_to_wait));
@@ -482,6 +528,5 @@ void Queue<dataType>::print_in_list (Print& print_dev)
         p_next->print_in_list (print_dev);
     }
 }
-
 
 #endif  // _TASKQUEUE_H_

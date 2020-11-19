@@ -24,9 +24,10 @@
  *           the full position reading does not overflow.
  * 
  *           So far this class has been tested with the following timers and 
- *           pins:
+ *           pins on an STM32L476RG:
  *           * Timer @c TIM2 using pins @c PA0 and @c PA1
  *           * Timer @c TIM3 using pins @c PB4 and @c PB5
+ *           * Timer @c TIM3 using pins @c PA6 and @c PA7
  *           * Timer @c TIM4 using pins @c PB6 and @c PB7
  *           * Timer @c TIM8 using pins @c PC6 and @c PC7
  */

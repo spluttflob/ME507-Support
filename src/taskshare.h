@@ -4,7 +4,10 @@
  *           between tasks. The data must be protected against damage due to 
  *           context switches, so it is protected by a mutex or by causing 
  *           transfers to take place inside critical sections of code which are
- *           not interrupted.
+ *           not interrupted. 
+ * 
+ *           This code has been tested on STM32L476 and ESP32 microcontrollers
+ *           so far. 
  *
  *  @date 2012-Oct-29 JRR Original file
  *  @date 2014-Aug-26 JRR Changed file names, class name to @c TaskShare, 
@@ -193,12 +196,12 @@ public:
      *           with critical section protection to ensure that the data 
      *           cannot be corrupted by a task switch. The shared data is 
      *           copied into the variable which is given as this method's 
-     *           parameter, replacing the previous contents of that. This 
-     *           method checks if the processor is currently in an interupt 
-     *           service routine (ISR) and if so, it calls ISR specific 
-     *           functions to prevent corruption, so this function may be used 
-     *           within an ISR or outside one. It runs a little more slowly 
-     *           than the @c get() method. 
+     *           parameter, replacing the previous contents. This method checks
+     *           if the processor is currently in an interupt service routine 
+     *           (ISR) and if so, it calls ISR specific functions to prevent 
+     *           corruption, so this function may be used within an ISR or 
+     *           outside one. It runs a little more slowly than the @c get() 
+     *           method because of the run-time ISR check. 
      *  @param   put_here A reference to the variable in which to put received
      *           data
      */
