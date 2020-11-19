@@ -99,6 +99,20 @@
  *           ...
  *           my_share.get (got_data);       // Get local copy of shared data
  *           @endcode
+ * 
+ *           @b The @b Easy @b Way
+ *           It's also possible to use overloaded stream insertion and 
+ *           extraction operators to interact with the share. These operators
+ *           contain code which checks if they're running in an interrupt
+ *           service routine (ISR) or not and use the appropriate method to
+ *           interact with the internal queue which holds the data, so they're
+ *           a little slower than @c put() and @c get(). Usage is as follows,
+ *           assuming that the share and local variable have been set up above:
+ *           @code
+ *           my_share << a_data_item;       // In sending task
+ *           ...
+ *           my_share >> got_data;          // In receiving task
+ *           @endcode
  */
 template <class DataType> class Share : public BaseShare
 {

@@ -87,519 +87,566 @@ $(document).ready(function(){initNavTree('taskqueue_8h_source.html',''); initRes
 <div class="title">taskqueue.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="taskqueue_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//*****************************************************************************</span><span class="comment"></span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">/** @file taskqueue.h</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *    This file contains a very simple wrapper class for the FreeRTOS queue. </span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *    It makes using the queue just a little bit easier in C++ than it is in C. </span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *  @date 2012-Oct-21 JRR Original file</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *  @date 2014-Aug-26 JRR Changed file names and queue class name to Queue</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *  @date 2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *  License:</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *    This file is copyright 2012-2020 by JR Ridgely and released under the </span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *    Lesser GNU Public License, version 2. It intended for educational use </span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *    only, but its use is not limited thereto. */</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *    IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR </span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIB-</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *    UTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF </span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> *    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> *    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> *    THE POSSIBILITY OF SUCH DAMAGE. */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">//*****************************************************************************</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// This define prevents this .h file from being included more than once</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef _TASKQUEUE_H_</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define _TASKQUEUE_H_</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span>                       <span class="comment">// Main header for FreeRTOS</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="baseshare_8h.html">baseshare.h</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">/** @brief   Implements a queue to transmit data from one RTOS task to another. </span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> *  @details Since multithreaded tasks must not use unprotected shared data </span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *           items for communication, queues are a primary means of intertask </span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *           communication. Other means include shared data items (see </span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *           @c taskshare.h) and carrier pigeons. The use of a C++ class</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *           template allows the compiler to check that you&#39;re putting the </span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *           correct type of data into each queue and getting the correct type</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> *           of data out, thus helping to prevent programming mistakes that can</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *           corrupt your data. </span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *           As a template class, @c Queue&lt;dataType&gt; can be used to make </span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> *           queues which hold data of many types. &quot;Plain Old Data&quot; types such</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *           as @c bool or @c uint16_t are supported, of course. But you can </span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *           also use queues which hold compound data types. For example, if</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *           you have @c class @c my_data which holds several measurements </span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *           together in an object, you can make a queue for @c my_data objects</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> *           with @c Queue&lt;my_data&gt;.  Each item in the queue will then hold</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> *           several measurements. </span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *           The size of FreeRTOS queues is limited to 255 items in 8-bit </span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> *           microcontrollers whose @c portBASE_TYPE is an 8-bit number. This </span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *           is a FreeRTOS feature. </span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *           Normal writing and reading are done with methods @c put() and </span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *           @c get(). Normal writing means that the sending task must wait </span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *           until there is empty space in the queue, and then it puts a data</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *           item into the &quot;back&quot; of the queue, where &quot;back&quot; means that the </span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> *           item in the back of the queue will be read after all items that </span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> *           were previously put into the queue have been read. Normal reading</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> *           means that when an item is read from the front of the queue, it </span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> *           will then be removed, making space for more items at the back. </span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> *           This process is often used to synchronize tasks, as the reading </span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *           task&#39;s @c get() method blocks, meaning that the reading task gets</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *           stuck waiting for an item to arrive in the queue; it won&#39;t do </span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> *           anything useful until new data has been read. Note that this is </span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> *           acceptable behavior in an RTOS because the RTOS scheduler will</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> *           ensure that other tasks get to run even while the reading task </span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> *           is blocking itself waiting for data. </span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *           In some cases, one may need to use less normal reading and writing</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> *           methods. Methods whose name begins with @c ISR_ are to be used </span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *           only within a hardware interrupt service routine. If there is a</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *           need to put data at the front of the queue instead of the back, </span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> *           use @c butt_in() instead of @c put(). If one needs to read data </span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *           from the queue without removing that data, the @c look_at() method</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *           allows this to be done. If something particularly unusual needs to</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> *           be done with the queue, one can use the method @c get_handle() to</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> *           retrieve the handle used by the C language functions in FreeRTOS</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *           to access the Queue object&#39;s underlying data structure directly. </span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * </span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *           @section queue_usage Usage</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *           The following bits of code show how to set up and use a queue to</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> *           transfer data of type @c int16_t from one hypothetical task </span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> *           called @c task_A to another called @c task_B.</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *  </span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> *           Near the top of the file which contains @c setup() we create a </span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *           queue. The constructor of the @c Queue&lt;int16_t&gt; class is given the</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> *           number of items in the queue (10 in this example) and an optional </span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *           name for the queue: </span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> *           @code</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *           #include &quot;taskqueue.h&quot;</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> *           ...</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> *           /// This queue holds hockey puck accelerations</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *           Queue&lt;int16_t&gt; hockey_queue (10, &quot;Puckey&quot;);</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *           @endcode</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *           In a location which is before we use the queue in any other file</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *           than the one in which the queue was created, we re-declare the</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> *           queue with the keyword @c extern to make it accessible to any task</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *           within that file:</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *           @code</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *           extern Queue&lt;int16_t&gt; hockey_queue;</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> *           @endcode</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *           In the sending task, data is put into the queue:</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> *           @code</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> *           int16_t an_item = -3;                 ///&lt; Local acceleration data</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> *           ...</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> *           an_item = stick_sensor.get_data (2);  // Read data from sensor </span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> *           hockey_queue.put (a_data_item);       // Put data into queue</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> *           @endcode</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> *           In the receiving task, data is read from the queue. In typical </span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> *           usage, the call to @c get() will block the receiving task until </span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment"> *           data has been put into the queue by the sending task:</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment"> *           @code</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment"> *           int16_t data_we_got;                  ///&lt; Holds received data</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"> *           ...</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment"> *           hockey_queue.get (data_we_got);       // Get data from the queue</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment"> *           @endcode</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="classQueue.html">  124</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt; <span class="keyword">class </span><a class="code" href="classQueue.html">Queue</a> : <span class="keyword">public</span> <a class="code" href="classBaseShare.html">BaseShare</a></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;{</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// This protected data can only be accessed from this class or its </span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">// descendents</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">  129</a></span>&#160;    QueueHandle_t <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;             <span class="comment">///&lt; Hhandle for the FreeTOS queue</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">  130</a></span>&#160;<span class="comment"></span>    TickType_t <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>;         <span class="comment">///&lt; RTOS ticks to wait for empty</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">  131</a></span>&#160;<span class="comment"></span>    uint16_t <a class="code" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">buf_size</a>;                <span class="comment">///&lt; Size of queue buffer in bytes</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">  132</a></span>&#160;<span class="comment"></span>    uint16_t <a class="code" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">max_full</a>;                <span class="comment">///&lt; Maximum number of bytes in queue</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// Public methods can be called from anywhere in the program where there is</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// a pointer or reference to an object of this class</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="comment">// The constructor creates a FreeRTOS queue</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <a class="code" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue</a> (BaseType_t queue_size, <span class="keyword">const</span> <span class="keywordtype">char</span>* p_name = NULL, </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            TickType_t = portMAX_DELAY);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="comment">// Put an item into the queue behind other items.</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">put</a> (<span class="keyword">const</span> dataType&amp; item);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="comment">// This method puts an item of data into the back of the queue from </span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="comment">// within an interrupt service routine. It must not be used within </span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="comment">// non-ISR code. </span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">ISR_put</a> (<span class="keyword">const</span> dataType&amp; item);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">    /** @brief   Put an item into the front of the queue to be retrieved </span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">     *           first.</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">     *  @details This method puts an item into the front of the queue so</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">     *           that it will be received first as long as nothing else is</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">     *           put in front of it. This is not the normal way to put </span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">     *           things into a queue; using @c put() to put items into the</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">     *           back of the queue is. If you always use this method, </span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">     *           you&#39;re making a stack rather than a queue, you weirdo. </span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment">     *           This method must @b not be used within an interrupt </span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">     *           service routine. </span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="comment">     *  @param   item Reference to the item which is going to be (rudely) </span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">     *           put into the front of the queue</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="comment">     *  @return  @c True if the item was successfully queued, false if not</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">  163</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> ((<span class="keywordtype">bool</span>)(xQueueSendToFront (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>)));</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="comment">// This method puts an item into the front of the queue from within </span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="comment">// an ISR. It must not be used within normal, non-ISR code. </span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="comment">    /** @brief   Return true if the queue is empty.</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="comment">     *  @details This method checks if the queue is empty. It returns </span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">     *           @c true if there are no items in the queue and @c false if</span></div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">     *           there are items.</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">     *  @return  @c true if the queue is empty, @c false if it&#39;s not empty</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">  178</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">is_empty</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) == 0);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    }</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="comment">    /** @brief   Return true if the queue is empty, from within an ISR.</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">     *  @details This method checks if the queue is empty from within an </span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">     *           interrupt service routine. It must @b not be used in normal</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">     *           non-ISR code. </span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment">     *  @return  @c true if the queue is empty, @c false if it&#39;s not empty</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">  189</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">ISR_is_empty</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) == 0);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment">    /** @brief   Retrieve and remove the item at the head of the queue.</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">     *  @details This method gets the item at the head of the queue and removes</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">     *           that item from the queue. If there&#39;s nothing in the queue, </span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">     *           this method waits, blocking the calling task, for the number </span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">     *           of RTOS ticks specified in the @c wait_time parameter to the </span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">     *           queue constructor (the default is forever) or until something </span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">     *           shows up. </span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from </span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">     *           the queue</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno"><a class="line" href="classQueue.html#a14df528749e226183df3fa5472368e82">  204</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a14df528749e226183df3fa5472368e82">get</a> (dataType&amp; recv_item)</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    {</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="comment">// queue, so no changes are made to the item</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        xQueueReceive (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>);</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    }</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">    /** @brief   Remove the item at the head of the queue from within an ISR.</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment">     *  @details This method gets and returns the item at the head of the queue </span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment">     *           from within an interrupt service routine. This method must </span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">     *           @b not be called from within normal non-ISR code. </span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">     *           the queue</span></div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno"><a class="line" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">  218</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">ISR_get</a> (dataType&amp; recv_item)</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    {</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        portBASE_TYPE task_awakened;         <span class="comment">// Checks if context switch needed</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        <span class="comment">// queue, so we won&#39;t change the data referenced in the parameter</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        xQueueReceiveFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, &amp;task_awakened);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    }</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">    /** @brief   Return the item at the queue head without removing it.</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">     *  @details This method returns the item at the head of the queue without </span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">     *           removing that item from the queue. If there&#39;s nothing in the </span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">     *           queue this method waits, blocking the calling task, for for </span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">     *           the number of RTOS ticks specified in the @c wait_time </span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">     *           parameter to the queue constructor (the default is forever) or</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment">     *           until something shows up. This method must @b not be called </span></div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment">     *           from within an interrupt service routine. </span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from</span></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment">     *           the queue</span></div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno"><a class="line" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">  238</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">peek</a> (dataType&amp; recv_item)</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    {</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        <span class="comment">// queue, so don&#39;t change the item</span></div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        xQueuePeek (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    }</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment">    /** @brief   Return the item at the front of the queue without deleting it, </span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment">     *           from within an ISR.</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment">     *  @details This method returns the item at the head of the queue without </span></div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment">     *           removing that item from the queue. If there&#39;s nothing in the </span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment">     *           queue, this method doesn&#39;t change the value of the data given</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment">     *           as its parameter. This method must @b not be called within an</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment">     *           interrupt service routine. </span></div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from </span></div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment">     *           the queue</span></div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno"><a class="line" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">  255</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">ISR_peek</a> (dataType&amp; recv_item)</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    {</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        portBASE_TYPE task_awakened;           <span class="comment">// Checks if a task will wake up</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the </span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="comment">// queue, so the value of recv_item is not changed</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        xQueuePeekFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, &amp;task_awakened);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    }</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="comment">    /** @brief   Return true if the queue has contents which can be read.</span></div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">     *  @details This method allows one to check if the queue has any </span></div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">     *           contents. It must @b not be called from within an </span></div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment">     *           interrupt service routine.</span></div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment">     *  @return  @c true if there&#39;s something in the queue, @c false if not</span></div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno"><a class="line" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">  270</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">any</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    {</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) != 0);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    }</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">    /** @brief   Return true if the queue has items in it, from within an </span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">     *           ISR.</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">     *  @details This method allows one to check if the queue has any </span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">     *           contents from within an interrupt service routine. It must</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">     *           @b not be called from within normal, non-ISR code. </span></div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">     *  @return  @c true if there&#39;s something in the queue, @c false if not</span></div>
+<a href="taskqueue_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/** @file taskqueue.h</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *    This file contains a very simple wrapper class for the FreeRTOS queue. </span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *    It makes using the queue just a little bit easier in C++ than it is in C. </span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *  @date 2012-Oct-21 JRR Original file</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *  @date 2014-Aug-26 JRR Changed file names and queue class name to Queue</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *  @date 2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *  License:</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *    This file is copyright 2012-2020 by JR Ridgely and released under the </span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *    Lesser GNU Public License, version 2. It intended for educational use </span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *    only, but its use is not limited thereto. */</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> *    IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR </span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIB-</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *    UTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF </span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> *    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> *    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> *    THE POSSIBILITY OF SUCH DAMAGE. */</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// This define prevents this .h file from being included more than once</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifndef _TASKQUEUE_H_</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define _TASKQUEUE_H_</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span>                       <span class="comment">// Main header for FreeRTOS</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="baseshare_8h.html">baseshare.h</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">/** @brief   Implements a queue to transmit data from one RTOS task to another. </span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> *  @details Since multithreaded tasks must not use unprotected shared data </span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> *           items for communication, queues are a primary means of intertask </span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> *           communication. Other means include shared data items (see </span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> *           @c taskshare.h) and carrier pigeons. The use of a C++ class</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> *           template allows the compiler to check that you&#39;re putting the </span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> *           correct type of data into each queue and getting the correct type</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> *           of data out, thus helping to prevent programming mistakes that can</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"> *           corrupt your data. </span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"> * </span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"> *           As a template class, @c Queue&lt;dataType&gt; can be used to make </span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> *           queues which hold data of many types. &quot;Plain Old Data&quot; types such</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> *           as @c bool or @c uint16_t are supported, of course. But you can </span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"> *           also use queues which hold compound data types. For example, if</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment"> *           you have @c class @c my_data which holds several measurements </span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"> *           together in an object, you can make a queue for @c my_data objects</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> *           with @c Queue&lt;my_data&gt;.  Each item in the queue will then hold</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> *           several measurements. </span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> * </span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> *           The size of FreeRTOS queues is limited to 255 items in 8-bit </span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> *           microcontrollers whose @c portBASE_TYPE is an 8-bit number. This </span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> *           is a FreeRTOS feature. </span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"> * </span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"> *           Normal writing and reading are done with methods @c put() and </span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *           @c get(). Normal writing means that the sending task must wait </span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> *           until there is empty space in the queue, and then it puts a data</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"> *           item into the &quot;back&quot; of the queue, where &quot;back&quot; means that the </span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> *           item in the back of the queue will be read after all items that </span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> *           were previously put into the queue have been read. Normal reading</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> *           means that when an item is read from the front of the queue, it </span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> *           will then be removed, making space for more items at the back. </span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> *           This process is often used to synchronize tasks, as the reading </span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"> *           task&#39;s @c get() method blocks, meaning that the reading task gets</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"> *           stuck waiting for an item to arrive in the queue; it won&#39;t do </span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"> *           anything useful until new data has been read. Note that this is </span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"> *           acceptable behavior in an RTOS because the RTOS scheduler will</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"> *           ensure that other tasks get to run even while the reading task </span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment"> *           is blocking itself waiting for data. </span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> * </span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> *           In some cases, one may need to use less normal reading and writing</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> *           methods. Methods whose name begins with @c ISR_ are to be used </span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"> *           only within a hardware interrupt service routine. If there is a</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment"> *           need to put data at the front of the queue instead of the back, </span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"> *           use @c butt_in() instead of @c put(). If one needs to read data </span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"> *           from the queue without removing that data, the @c look_at() method</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"> *           allows this to be done. If something particularly unusual needs to</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"> *           be done with the queue, one can use the method @c get_handle() to</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment"> *           retrieve the handle used by the C language functions in FreeRTOS</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> *           to access the Queue object&#39;s underlying data structure directly. </span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> * </span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> *           @section queue_usage Usage</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> *           The following bits of code show how to set up and use a queue to</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> *           transfer data of type @c int16_t from one hypothetical task </span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> *           called @c task_A to another called @c task_B.</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment"> *  </span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment"> *           Near the top of the file which contains @c setup() we create a </span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"> *           queue. The constructor of the @c Queue&lt;int16_t&gt; class is given the</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment"> *           number of items in the queue (10 in this example) and an optional </span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment"> *           name for the queue: </span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment"> *           @code</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"> *           #include &quot;taskqueue.h&quot;</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"> *           ...</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"> *           /// This queue holds hockey puck accelerations</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment"> *           Queue&lt;int16_t&gt; hockey_queue (10, &quot;Puckey&quot;);</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"> *           @endcode</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment"> *           In a location which is before we use the queue in any other file</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment"> *           than the one in which the queue was created, we re-declare the</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"> *           queue with the keyword @c extern to make it accessible to any task</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *           within that file:</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> *           @code</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"> *           extern Queue&lt;int16_t&gt; hockey_queue;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment"> *           @endcode</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"> *           In the sending task, data is put into the queue:</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"> *           @code</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment"> *           int16_t an_item = -3;                 ///&lt; Local acceleration data</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment"> *           ...</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"> *           an_item = stick_sensor.get_data (2);  // Read data from sensor </span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"> *           hockey_queue.put (a_data_item);       // Put data into queue</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment"> *           @endcode</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment"> *           In the receiving task, data is read from the queue. In typical </span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment"> *           usage, the call to @c get() will block the receiving task until </span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment"> *           data has been put into the queue by the sending task:</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment"> *           @code</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment"> *           int16_t data_we_got;                  ///&lt; Holds received data</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment"> *           ...</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment"> *           hockey_queue.get (data_we_got);       // Get data from the queue</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment"> *           @endcode</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classQueue.html">  122</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt; <span class="keyword">class </span><a class="code" href="classQueue.html">Queue</a> : <span class="keyword">public</span> <a class="code" href="classBaseShare.html">BaseShare</a></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;{</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// This protected data can only be accessed from this class or its </span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// descendents</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">  127</a></span>&#160;    QueueHandle_t <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;             <span class="comment">///&lt; Hhandle for the FreeTOS queue</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">  128</a></span>&#160;<span class="comment"></span>    TickType_t <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>;         <span class="comment">///&lt; RTOS ticks to wait for empty</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">  129</a></span>&#160;<span class="comment"></span>    uint16_t <a class="code" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">buf_size</a>;                <span class="comment">///&lt; Size of queue buffer in bytes</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">  130</a></span>&#160;<span class="comment"></span>    uint16_t <a class="code" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">max_full</a>;                <span class="comment">///&lt; Maximum number of bytes in queue</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">// Public methods can be called from anywhere in the program where there is</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// a pointer or reference to an object of this class</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="comment">// The constructor creates a FreeRTOS queue</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue</a> (BaseType_t queue_size, <span class="keyword">const</span> <span class="keywordtype">char</span>* p_name = NULL, </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            TickType_t = portMAX_DELAY);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="comment">// Put an item into the queue behind other items.</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">put</a> (<span class="keyword">const</span> dataType&amp; item);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="comment">// This method puts an item of data into the back of the queue from </span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="comment">// within an interrupt service routine. It must not be used within </span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="comment">// non-ISR code. </span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">ISR_put</a> (<span class="keyword">const</span> dataType&amp; item);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment">    /** @brief   Put an item into the front of the queue to be retrieved </span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">     *           first.</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">     *  @details This method puts an item into the front of the queue so</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">     *           that it will be received first as long as nothing else is</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">     *           put in front of it. This is not the normal way to put </span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">     *           things into a queue; using @c put() to put items into the</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">     *           back of the queue is. If you always use this method, </span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">     *           you&#39;re making a stack rather than a queue, you weirdo. </span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">     *           This method must @b not be used within an interrupt </span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">     *           service routine. </span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment">     *  @param   item Reference to the item which is going to be (rudely) </span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">     *           put into the front of the queue</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="comment">     *  @return  @c True if the item was successfully queued, false if not</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">  161</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    {</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">return</span> ((<span class="keywordtype">bool</span>)(xQueueSendToFront (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>)));</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">// This method puts an item into the front of the queue from within </span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="comment">// an ISR. It must not be used within normal, non-ISR code. </span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="comment">    /** @brief   Return true if the queue is empty.</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">     *  @details This method checks if the queue is empty. It returns </span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="comment">     *           @c true if there are no items in the queue and @c false if</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="comment">     *           there are items.</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">     *  @return  @c true if the queue is empty, @c false if it&#39;s not empty</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno"><a class="line" href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">  176</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">is_empty</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    {</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) == 0);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    }</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="comment">    /** @brief   Return true if the queue is empty, from within an ISR.</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment">     *  @details This method checks if the queue is empty from within an </span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="comment">     *           interrupt service routine. It must @b not be used in normal</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">     *           non-ISR code. </span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">     *  @return  @c true if the queue is empty, @c false if it&#39;s not empty</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno"><a class="line" href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">  187</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">ISR_is_empty</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    {</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) == 0);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    }</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">    /** @brief   Retrieve and remove the item at the head of the queue.</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">     *  @details This method gets the item at the head of the queue and removes</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment">     *           that item from the queue. If there&#39;s nothing in the queue, </span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">     *           this method waits, blocking the calling task, for the number </span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">     *           of RTOS ticks specified in the @c wait_time parameter to the </span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">     *           queue constructor (the default is forever) or until something </span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">     *           shows up. </span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from </span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">     *           the queue</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno"><a class="line" href="classQueue.html#a14df528749e226183df3fa5472368e82">  202</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a14df528749e226183df3fa5472368e82">get</a> (dataType&amp; recv_item)</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="comment">// queue, so no changes are made to the item</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        xQueueReceive (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    }</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">    /** @brief   Remove the item at the head of the queue from within an ISR.</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment">     *  @details This method gets and returns the item at the head of the queue </span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">     *           from within an interrupt service routine. This method must </span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment">     *           @b not be called from within normal non-ISR code. </span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">     *           the queue</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno"><a class="line" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">  216</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">ISR_get</a> (dataType&amp; recv_item)</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    {</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        portBASE_TYPE task_awakened;         <span class="comment">// Checks if context switch needed</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        <span class="comment">// queue, so we won&#39;t change the data referenced in the parameter</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        xQueueReceiveFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, &amp;task_awakened);</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    }</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">    /** @brief   Return the item at the queue head without removing it.</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">     *  @details This method returns the item at the head of the queue without </span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">     *           removing that item from the queue. If there&#39;s nothing in the </span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">     *           queue this method waits, blocking the calling task, for for </span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">     *           the number of RTOS ticks specified in the @c wait_time </span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">     *           parameter to the queue constructor (the default is forever) or</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">     *           until something shows up. This method must @b not be called </span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">     *           from within an interrupt service routine. </span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment">     *           the queue</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno"><a class="line" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">  236</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">peek</a> (dataType&amp; recv_item)</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the</span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="comment">// queue, so don&#39;t change the item</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        xQueuePeek (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    }</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment">    /** @brief   Return the item at the front of the queue without deleting it, </span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment">     *           from within an ISR.</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment">     *  @details This method returns the item at the head of the queue without </span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment">     *           removing that item from the queue. If there&#39;s nothing in the </span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment">     *           queue, this method doesn&#39;t change the value of the data given</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment">     *           as its parameter. This method must @b not be called within an</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment">     *           interrupt service routine. </span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment">     *  @param   recv_item A reference to the item to be filled with data from </span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment">     *           the queue</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">  253</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">ISR_peek</a> (dataType&amp; recv_item)</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    {</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        portBASE_TYPE task_awakened;           <span class="comment">// Checks if a task will wake up</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        <span class="comment">// If xQueueReceive doesn&#39;t return pdTrue, nothing was found in the </span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="comment">// queue, so the value of recv_item is not changed</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        xQueuePeekFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;recv_item, &amp;task_awakened);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    }</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="comment">    /** @brief   Return true if the queue has contents which can be read.</span></div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="comment">     *  @details This method allows one to check if the queue has any </span></div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="comment">     *           contents. It must @b not be called from within an </span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">     *           interrupt service routine.</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">     *  @return  @c true if there&#39;s something in the queue, @c false if not</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno"><a class="line" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">  268</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">any</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    {</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) != 0);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="comment">    /** @brief   Operator which inserts data into the queue.</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="comment">     *  @details This convenient operator puts data into the queue, protecting</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">     *           the data from corruption by thread switching. It checks if the</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">     *           processor is currently in an interupt service routine (ISR);</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">     *           if so, it calls ISR specific functions to prevent corruption,</span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">     *           so this function may be used within an ISR or outside one. It</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">     *           runs a little more slowly than the @c put() method. </span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">     *  @param   new_data The data which is to be put into the queue</span></div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno"><a class="line" href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">  282</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">ISR_any</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00282"></a><span class="lineno"><a class="line" href="classQueue.html#a61f764fa35a4880b277a2b6d23651f45">  282</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#a61f764fa35a4880b277a2b6d23651f45">operator &lt;&lt; </a>(dataType new_data)</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    {</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) != 0);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    }</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="comment">    /** @brief   Return the number of items in the queue.</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="comment">     *  @details This method returns the number of items waiting in the </span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment">     *           queue. It must @b not be called from within an interrupt </span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment">     *           service routine; the method @c ISR_num_items_in() can be </span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment">     *           called from within an ISR. </span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="comment">     *  @return  The number of items in the queue</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno"><a class="line" href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">  294</a></span>&#160;    <span class="keywordtype">unsigned</span> portBASE_TYPE <a class="code" href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">available</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    {</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>));</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    }</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment">    /** @brief   Return the number of items in the queue, to an ISR.</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment">     *  @details This method returns the number of items waiting in the </span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment">     *           queue; it must be called only from within an interrupt </span></div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment">     *           service routine.</span></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="comment">     *  @return  The number of items in the queue</span></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00305"></a><span class="lineno"><a class="line" href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">  305</a></span>&#160;    <span class="keywordtype">unsigned</span> portBASE_TYPE <a class="code" href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">ISR_available</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    {</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>));</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment">    /** @brief   Print the queue&#39;s status to a serial device.</span></div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="comment">     *  @details This method makes a printout of the queue&#39;s status on </span></div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="comment">     *           the given serial device, then calls this same method </span></div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="comment">     *           for the next item of thread-safe data in the linked list</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="comment">     *           of items. </span></div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment">     *  @param   print_dev Reference to the serial device on which to print</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">print_in_list</a> (Print&amp; print_dev);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment">    /** @brief   Indicates whether this queue is usable.</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment">     *  @details This method returns a value which is @c true if this queue</span></div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment">     *           has been successfully set up and can be used. </span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment">     *  @returns @c true if this queue is usable, @c false if not</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno"><a class="line" href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">  324</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">usable</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    }</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="comment">    /** @brief   Return a handle to the FreeRTOS structure which runs this</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="comment">     *           queue.</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment">     *  @details If somebody wants to do something which FreeRTOS queues </span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="comment">     *           can do but this class doesn&#39;t support, a handle for the </span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment">     *           queue wrapped by this class can be used to access the </span></div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="comment">     *           queue directly. This isn&#39;t commonly done.</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment">     *  @return  The handle of the FreeRTOS queue which is wrapped within </span></div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment">     *           this C++ class</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00338"></a><span class="lineno"><a class="line" href="classQueue.html#ab009e50722f689c48d146125f6d50519">  338</a></span>&#160;    QueueHandle_t <a class="code" href="classQueue.html#ab009e50722f689c48d146125f6d50519">get_handle</a> (<span class="keywordtype">void</span>)</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    {</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    }</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}; <span class="comment">// class Queue </span></div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        <span class="keywordflow">if</span> (xPortIsInsideInterrupt ())</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        {</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            <a class="code" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">ISR_put</a> (new_data);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        {</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            <a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">put</a> (new_data);</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        }</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    }</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment">    /** @brief   Read data from the queue.</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment">     *  @details This method is used to read data from the queue . The </span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment">     *           retrieved data is copied into the variable which is given as </span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment">     *           this method&#39;s parameter, replacing the previous contents. This </span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment">     *           method checks if the processor is currently in an interupt </span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment">     *           service routine (ISR) and if so, it calls ISR specific </span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment">     *           functions to prevent corruption, so this function may be used </span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment">     *           within an ISR or outside one. It runs a little more slowly </span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment">     *           than the @c get() method. </span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="comment">     *  @param   put_here A reference to the variable in which to put received</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment">     *           data</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno"><a class="line" href="classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">  306</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">operator &gt;&gt; </a>(dataType&amp; put_here)</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    {</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordflow">if</span> (xPortIsInsideInterrupt ())</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            portBASE_TYPE task_awakened;     <span class="comment">// Checks if context switch needed</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;             <span class="comment">// Copy the data from the queue into the receiving variable</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            xQueueReceiveFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;put_here, &amp;task_awakened);</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        }</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        {</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            xQueueReceive (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>, &amp;put_here, <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a>);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        }</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    }</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment">    /** @brief   Return true if the queue has items in it, from within an </span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment">     *           ISR.</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment">     *  @details This method allows one to check if the queue has any </span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment">     *           contents from within an interrupt service routine. It must</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="comment">     *           @b not be called from within normal, non-ISR code. </span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment">     *  @return  @c true if there&#39;s something in the queue, @c false if not</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno"><a class="line" href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">  328</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">ISR_any</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    {</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>) != 0);</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    }</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment">    /** @brief   Return the number of items in the queue.</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="comment">     *  @details This method returns the number of items waiting in the </span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment">     *           queue. It must @b not be called from within an interrupt </span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment">     *           service routine; the method @c ISR_num_items_in() can be </span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment">     *           called from within an ISR. </span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="comment">     *  @return  The number of items in the queue</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno"><a class="line" href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">  340</a></span>&#160;    <span class="keywordtype">unsigned</span> portBASE_TYPE <a class="code" href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">available</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaiting (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>));</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    }</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="comment">/** @brief   Construct a queue object, allocating memory for the buffer.</span></div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="comment"> *  @details This constructor creates the FreeRTOS queue which is wrapped by </span></div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="comment"> *           the @c Queue class. </span></div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="comment"> *  @param   queue_size The number of items which can be stored in the queue</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment"> *  @param   p_name A name to be shown in the list of task shares (default </span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="comment"> *           empty String)</span></div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="comment"> *  @param   wait_time How long, in RTOS ticks, to wait for a queue to become</span></div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="comment"> *           empty before a character can be sent. (Default: @c portMAX_DELAY,</span></div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="comment"> *           which causes the sending task to block until sending occurs.)</span></div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00356"></a><span class="lineno"><a class="line" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">  356</a></span>&#160;<a class="code" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue&lt;dataType&gt;::Queue</a> (BaseType_t queue_size, <span class="keyword">const</span> <span class="keywordtype">char</span>* p_name, </div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;                        TickType_t wait_time)</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    : <a class="code" href="classBaseShare.html">BaseShare</a> (p_name)</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;{</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="comment">// Create a FreeRTOS queue object with space for the data items</span></div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a> = xQueueCreate (queue_size, <span class="keyword">sizeof</span> (dataType));</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160; </div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="comment">// Store the wait time; it will be used when writing to the queue</span></div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a> = wait_time;</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="comment">// Save the buffer size</span></div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <a class="code" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">buf_size</a> = queue_size;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="comment">// We haven&#39;t stored any items in the queue yet</span></div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <a class="code" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">max_full</a> = 0;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;}</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment">/** @brief   Put an item into the queue behind other items.</span></div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment"> *  @details This method puts an item of data into the back of the queue, which</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment"> *           is the normal way to put something into a queue. If you want to be</span></div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment"> *           rude and put an item into the front of the queue so it will be </span></div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment"> *           retrieved first, use @c butt_in() instead. &lt;b&gt;This method must not</span></div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment"> *           be used within an Interrupt Service Routine.&lt;/b&gt;</span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment"> *  @param   item Reference to the item which is going to be put into the queue</span></div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="classQueue.html#aa0667e09529d356a04f1efde346af266">  384</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue&lt;dataType&gt;::put</a> (<span class="keyword">const</span> dataType&amp; item)</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;{</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordtype">bool</span> return_value = (bool)(xQueueSendToBack (handle, &amp;item, </div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                                                 ticks_to_wait));</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue</span></div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    uint16_t fillage = uxQueueMessagesWaiting (handle);</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    {</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        max_full = fillage;</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    }</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;}</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment">/** @brief   Put an item into the queue from within an ISR.</span></div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="comment"> *  @details This method puts an item of data into the back of the queue from</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="comment"> *           within an interrupt service routine. It must \b not be used within</span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="comment"> *           non-ISR code. </span></div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="comment"> *  @param   item Reference to the item which is going to be put into the queue</span></div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00408"></a><span class="lineno"><a class="line" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">  408</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">Queue&lt;dataType&gt;::ISR_put</a> (<span class="keyword">const</span> dataType&amp; item)</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;{</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160; </div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordtype">bool</span> return_value;                      <span class="comment">// Value returned from this method</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="comment">    /** @brief   Return the number of items in the queue, to an ISR.</span></div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="comment">     *  @details This method returns the number of items waiting in the </span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="comment">     *           queue; it must be called only from within an interrupt </span></div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="comment">     *           service routine.</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment">     *  @return  The number of items in the queue</span></div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno"><a class="line" href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">  351</a></span>&#160;    <span class="keywordtype">unsigned</span> portBASE_TYPE <a class="code" href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">ISR_available</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    {</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        <span class="keywordflow">return</span> (uxQueueMessagesWaitingFromISR (<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>));</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    }</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="comment">    /** @brief   Print the queue&#39;s status to a serial device.</span></div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="comment">     *  @details This method makes a printout of the queue&#39;s status on </span></div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="comment">     *           the given serial device, then calls this same method </span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment">     *           for the next item of thread-safe data in the linked list</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">     *           of items. </span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment">     *  @param   print_dev Reference to the serial device on which to print</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">print_in_list</a> (Print&amp; print_dev);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="comment">    /** @brief   Indicates whether this queue is usable.</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;<span class="comment">     *  @details This method returns a value which is @c true if this queue</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="comment">     *           has been successfully set up and can be used. </span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="comment">     *  @returns @c true if this queue is usable, @c false if not</span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno"><a class="line" href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">  370</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">usable</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    {</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)<a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    }</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">    /** @brief   Return a handle to the FreeRTOS structure which runs this</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment">     *           queue.</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment">     *  @details If somebody wants to do something which FreeRTOS queues </span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment">     *           can do but this class doesn&#39;t support, a handle for the </span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment">     *           queue wrapped by this class can be used to access the </span></div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment">     *           queue directly. This isn&#39;t commonly done.</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment">     *  @return  The handle of the FreeRTOS queue which is wrapped within </span></div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment">     *           this C++ class</span></div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="classQueue.html#ab009e50722f689c48d146125f6d50519">  384</a></span>&#160;    QueueHandle_t <a class="code" href="classQueue.html#ab009e50722f689c48d146125f6d50519">get_handle</a> (<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    {</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a>;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;}; <span class="comment">// class Queue </span></div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160; </div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;<span class="comment">/** @brief   Construct a queue object, allocating memory for the buffer.</span></div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="comment"> *  @details This constructor creates the FreeRTOS queue which is wrapped by </span></div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;<span class="comment"> *           the @c Queue class. </span></div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;<span class="comment"> *  @param   queue_size The number of items which can be stored in the queue</span></div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="comment"> *  @param   p_name A name to be shown in the list of task shares (default </span></div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;<span class="comment"> *           empty String)</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="comment"> *  @param   wait_time How long, in RTOS ticks, to wait for a queue to become</span></div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="comment"> *           empty before a character can be sent. (Default: @c portMAX_DELAY,</span></div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="comment"> *           which causes the sending task to block until sending occurs.)</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00402"></a><span class="lineno"><a class="line" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">  402</a></span>&#160;<a class="code" href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue&lt;dataType&gt;::Queue</a> (BaseType_t queue_size, <span class="keyword">const</span> <span class="keywordtype">char</span>* p_name, </div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                        TickType_t wait_time)</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    : <a class="code" href="classBaseShare.html">BaseShare</a> (p_name)</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;{</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <span class="comment">// Create a FreeRTOS queue object with space for the data items</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <a class="code" href="classQueue.html#a69b90b10718e9469499375c61cc9c236">handle</a> = xQueueCreate (queue_size, <span class="keyword">sizeof</span> (dataType));</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160; </div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="comment">// Store the wait time; it will be used when writing to the queue</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <a class="code" href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">ticks_to_wait</a> = wait_time;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="comment">// Save the buffer size</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <a class="code" href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">buf_size</a> = queue_size;</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    return_value = (bool)(xQueueSendToBackFromISR (handle, &amp;item, </div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                                                   &amp;shouldSwitch));</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="comment">// We haven&#39;t stored any items in the queue yet</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    <a class="code" href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">max_full</a> = 0;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;}</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue. BUG: max_full isn&#39;t</span></div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;    <span class="comment">// thread safe (but getting max_full corrupted shouldn&#39;t cause a calamity)</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    uint16_t fillage = uxQueueMessagesWaitingFromISR (handle);</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    {</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        max_full = fillage;</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    }</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160; </div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;}</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160; </div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="comment">/** @brief   Put an item into the front of the queue from within an ISR.</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment"> *  @details This method puts an item into the front of the queue from within</span></div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment"> *           an ISR. It must \b not be used within normal, non-ISR code. </span></div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment"> *  @param   item The item which is going to be (rudely) put into the front of</span></div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment"> *           the queue</span></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00440"></a><span class="lineno"><a class="line" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">  440</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue&lt;dataType&gt;::ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;{</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="comment">/** @brief   Put an item into the queue behind other items.</span></div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="comment"> *  @details This method puts an item of data into the back of the queue, which</span></div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment"> *           is the normal way to put something into a queue. If you want to be</span></div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment"> *           rude and put an item into the front of the queue so it will be </span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment"> *           retrieved first, use @c butt_in() instead. &lt;b&gt;This method must not</span></div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment"> *           be used within an Interrupt Service Routine.&lt;/b&gt;</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment"> *  @param   item Reference to the item which is going to be put into the queue</span></div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00430"></a><span class="lineno"><a class="line" href="classQueue.html#aa0667e09529d356a04f1efde346af266">  430</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue&lt;dataType&gt;::put</a> (<span class="keyword">const</span> dataType&amp; item)</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;{</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordtype">bool</span> return_value = (bool)(xQueueSendToBack (handle, &amp;item, </div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;                                                 ticks_to_wait));</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue</span></div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    uint16_t fillage = uxQueueMessagesWaiting (handle);</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        max_full = fillage;</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    }</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;}</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="keywordtype">bool</span> return_value;                        <span class="comment">// Value returned from this method</span></div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    return_value = (bool)(xQueueSendToFrontFromISR (handle, &amp;item, </div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;                                                    &amp;shouldSwitch));</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160; </div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;}</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment">/** @brief   Print the queue&#39;s status to a serial device.</span></div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="comment"> *  @details This method makes a printout of the queue&#39;s status on the given</span></div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="comment"> *           serial device, then calls this same method for the next item of </span></div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="comment"> *           thread-safe data in the linked list of items. </span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="comment"> *  @param   print_dev Reference to the serial device on which to print</span></div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
-<div class="line"><a name="l00463"></a><span class="lineno"><a class="line" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">  463</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue&lt;dataType&gt;::print_in_list</a> (Print&amp; print_dev)</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;{</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="comment">// Print this task&#39;s name and pad it to 16 characters</span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;    print_dev.printf (<span class="stringliteral">&quot;%-16squeue\t&quot;</span>, name);</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160; </div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="comment">// Print the free and total number of spaces in the queue or an error</span></div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <span class="comment">// message if this queue can&#39;t be used (probably due to a memory error)</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    <span class="keywordflow">if</span> (usable ())</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    {</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        print_dev &lt;&lt; max_full &lt;&lt; <span class="charliteral">&#39;/&#39;</span> &lt;&lt; buf_size &lt;&lt; endl;</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    }</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    {</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        print_dev &lt;&lt; <span class="stringliteral">&quot;UNUSABLE&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    }</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160; </div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="comment">// Call the next item</span></div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    <span class="keywordflow">if</span> (p_next != NULL)</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    {</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        p_next-&gt;print_in_list (print_dev);</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;    }</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;}</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160; </div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;<span class="preprocessor">#endif  // _TASKQUEUE_H_</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="comment">/** @brief   Put an item into the queue from within an ISR.</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="comment"> *  @details This method puts an item of data into the back of the queue from</span></div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="comment"> *           within an interrupt service routine. It must \b not be used within</span></div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="comment"> *           non-ISR code. </span></div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;<span class="comment"> *  @param   item Reference to the item which is going to be put into the queue</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00454"></a><span class="lineno"><a class="line" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">  454</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">Queue&lt;dataType&gt;::ISR_put</a> (<span class="keyword">const</span> dataType&amp; item)</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;{</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160; </div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordtype">bool</span> return_value;                      <span class="comment">// Value returned from this method</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160; </div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    return_value = (bool)(xQueueSendToBackFromISR (handle, &amp;item, </div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;                                                   &amp;shouldSwitch));</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="comment">// Keep track of the maximum fillage of the queue. BUG: max_full isn&#39;t</span></div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;    <span class="comment">// thread safe (but getting max_full corrupted shouldn&#39;t cause a calamity)</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;    uint16_t fillage = uxQueueMessagesWaitingFromISR (handle);</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="keywordflow">if</span> (fillage &gt; max_full)</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    {</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        max_full = fillage;</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    }</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160; </div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;}</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;<span class="comment">/** @brief   Put an item into the front of the queue from within an ISR.</span></div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="comment"> *  @details This method puts an item into the front of the queue from within</span></div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;<span class="comment"> *           an ISR. It must \b not be used within normal, non-ISR code. </span></div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;<span class="comment"> *  @param   item The item which is going to be (rudely) put into the front of</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;<span class="comment"> *           the queue</span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="comment"> *  @return  True if the item was successfully queued, false if not</span></div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00486"></a><span class="lineno"><a class="line" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">  486</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue&lt;dataType&gt;::ISR_butt_in</a> (<span class="keyword">const</span> dataType&amp; item)</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;{</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    <span class="comment">// This value is set true if a context switch should occur due to this data</span></div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="keywordtype">signed</span> portBASE_TYPE shouldSwitch = pdFALSE;</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    <span class="keywordtype">bool</span> return_value;                        <span class="comment">// Value returned from this method</span></div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160; </div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;    <span class="comment">// Call the FreeRTOS function and save its return value</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;    return_value = (bool)(xQueueSendToFrontFromISR (handle, &amp;item, </div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;                                                    &amp;shouldSwitch));</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160; </div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    <span class="comment">// Return the return value saved from the call to xQueueSendToBackFromISR()</span></div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    <span class="keywordflow">return</span> (return_value);</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;}</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;<span class="comment">/** @brief   Print the queue&#39;s status to a serial device.</span></div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="comment"> *  @details This method makes a printout of the queue&#39;s status on the given</span></div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;<span class="comment"> *           serial device, then calls this same method for the next item of </span></div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;<span class="comment"> *           thread-safe data in the linked list of items. </span></div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;<span class="comment"> *  @param   print_dev Reference to the serial device on which to print</span></div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div>
+<div class="line"><a name="l00509"></a><span class="lineno"><a class="line" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">  509</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue&lt;dataType&gt;::print_in_list</a> (Print&amp; print_dev)</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;{</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <span class="comment">// Print this task&#39;s name and pad it to 16 characters</span></div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    print_dev.printf (<span class="stringliteral">&quot;%-16squeue\t&quot;</span>, name);</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160; </div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    <span class="comment">// Print the free and total number of spaces in the queue or an error</span></div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    <span class="comment">// message if this queue can&#39;t be used (probably due to a memory error)</span></div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <span class="keywordflow">if</span> (usable ())</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    {</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        print_dev &lt;&lt; max_full &lt;&lt; <span class="charliteral">&#39;/&#39;</span> &lt;&lt; buf_size &lt;&lt; endl;</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;    }</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    {</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        print_dev &lt;&lt; <span class="stringliteral">&quot;UNUSABLE&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;    }</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160; </div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;    <span class="comment">// Call the next item</span></div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;    <span class="keywordflow">if</span> (p_next != NULL)</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;    {</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        p_next-&gt;print_in_list (print_dev);</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;    }</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;}</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160; </div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;<span class="preprocessor">#endif  // _TASKQUEUE_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclassQueue_html_ac7869eacf6bc024b4d8ce25496fdaaed"><div class="ttname"><a href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">Queue::ticks_to_wait</a></div><div class="ttdeci">TickType_t ticks_to_wait</div><div class="ttdoc">RTOS ticks to wait for empty.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:130</div></div>
-<div class="ttc" id="aclassQueue_html_a80711abebd086d5617e5c88dbd87b77a"><div class="ttname"><a href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">Queue::ISR_any</a></div><div class="ttdeci">bool ISR_any(void)</div><div class="ttdoc">Return true if the queue has items in it, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:282</div></div>
-<div class="ttc" id="aclassQueue_html_ac0d4a3d7feae804dea7f3cc72f21c624"><div class="ttname"><a href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">Queue::ISR_is_empty</a></div><div class="ttdeci">bool ISR_is_empty(void)</div><div class="ttdoc">Return true if the queue is empty, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:189</div></div>
-<div class="ttc" id="aclassQueue_html_a9c966c6f5f91ccaf12bcb7723b8145af"><div class="ttname"><a href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">Queue::ISR_put</a></div><div class="ttdeci">bool ISR_put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:408</div></div>
-<div class="ttc" id="aclassQueue_html_acd5a036b50ef0fc8f1e587bb7307cee4"><div class="ttname"><a href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">Queue::max_full</a></div><div class="ttdeci">uint16_t max_full</div><div class="ttdoc">Maximum number of bytes in queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:132</div></div>
-<div class="ttc" id="aclassQueue_html_a44557ed37c98580b87d0196908330bcc"><div class="ttname"><a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">Queue::peek</a></div><div class="ttdeci">void peek(dataType &amp;recv_item)</div><div class="ttdoc">Return the item at the queue head without removing it.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:238</div></div>
-<div class="ttc" id="aclassQueue_html_a1acce9f67b2549a17a8419536aac396b"><div class="ttname"><a href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">Queue::ISR_available</a></div><div class="ttdeci">unsigned portBASE_TYPE ISR_available(void)</div><div class="ttdoc">Return the number of items in the queue, to an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:305</div></div>
-<div class="ttc" id="aclassQueue_html_a7b240bc3f080ea3656d0847b5d291095"><div class="ttname"><a href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">Queue::is_empty</a></div><div class="ttdeci">bool is_empty(void)</div><div class="ttdoc">Return true if the queue is empty.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:178</div></div>
-<div class="ttc" id="aclassQueue_html_a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><div class="ttname"><a href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">Queue::any</a></div><div class="ttdeci">bool any(void)</div><div class="ttdoc">Return true if the queue has contents which can be read.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:270</div></div>
-<div class="ttc" id="aclassQueue_html_a2f5a7d38f857999a1c4cebe31089b0f7"><div class="ttname"><a href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">Queue::usable</a></div><div class="ttdeci">bool usable(void)</div><div class="ttdoc">Indicates whether this queue is usable.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:324</div></div>
-<div class="ttc" id="aclassQueue_html_ab009e50722f689c48d146125f6d50519"><div class="ttname"><a href="classQueue.html#ab009e50722f689c48d146125f6d50519">Queue::get_handle</a></div><div class="ttdeci">QueueHandle_t get_handle(void)</div><div class="ttdoc">Return a handle to the FreeRTOS structure which runs this queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:338</div></div>
-<div class="ttc" id="aclassQueue_html_a6bef71a925790602cef9eb6274ae61e3"><div class="ttname"><a href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">Queue::available</a></div><div class="ttdeci">unsigned portBASE_TYPE available(void)</div><div class="ttdoc">Return the number of items in the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:294</div></div>
-<div class="ttc" id="aclassQueue_html_a14df528749e226183df3fa5472368e82"><div class="ttname"><a href="classQueue.html#a14df528749e226183df3fa5472368e82">Queue::get</a></div><div class="ttdeci">void get(dataType &amp;recv_item)</div><div class="ttdoc">Retrieve and remove the item at the head of the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:204</div></div>
-<div class="ttc" id="aclassQueue_html_a24849f96865b52468bcd611ee67bd7dc"><div class="ttname"><a href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue::ISR_butt_in</a></div><div class="ttdeci">bool ISR_butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:440</div></div>
-<div class="ttc" id="aclassQueue_html_ace8d2d512e49f018c5e2df4b5a2bf810"><div class="ttname"><a href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue::print_in_list</a></div><div class="ttdeci">void print_in_list(Print &amp;print_dev)</div><div class="ttdoc">Print the queue's status to a serial device.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:463</div></div>
-<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:384</div></div>
-<div class="ttc" id="aclassQueue_html_a69b90b10718e9469499375c61cc9c236"><div class="ttname"><a href="classQueue.html#a69b90b10718e9469499375c61cc9c236">Queue::handle</a></div><div class="ttdeci">QueueHandle_t handle</div><div class="ttdoc">Hhandle for the FreeTOS queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:129</div></div>
+<div class="ttc" id="aclassQueue_html_ac7869eacf6bc024b4d8ce25496fdaaed"><div class="ttname"><a href="classQueue.html#ac7869eacf6bc024b4d8ce25496fdaaed">Queue::ticks_to_wait</a></div><div class="ttdeci">TickType_t ticks_to_wait</div><div class="ttdoc">RTOS ticks to wait for empty.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:128</div></div>
+<div class="ttc" id="aclassQueue_html_a80711abebd086d5617e5c88dbd87b77a"><div class="ttname"><a href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">Queue::ISR_any</a></div><div class="ttdeci">bool ISR_any(void)</div><div class="ttdoc">Return true if the queue has items in it, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:328</div></div>
+<div class="ttc" id="aclassQueue_html_ac0d4a3d7feae804dea7f3cc72f21c624"><div class="ttname"><a href="classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624">Queue::ISR_is_empty</a></div><div class="ttdeci">bool ISR_is_empty(void)</div><div class="ttdoc">Return true if the queue is empty, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:187</div></div>
+<div class="ttc" id="aclassQueue_html_a9c966c6f5f91ccaf12bcb7723b8145af"><div class="ttname"><a href="classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af">Queue::ISR_put</a></div><div class="ttdeci">bool ISR_put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:454</div></div>
+<div class="ttc" id="aclassQueue_html_acd5a036b50ef0fc8f1e587bb7307cee4"><div class="ttname"><a href="classQueue.html#acd5a036b50ef0fc8f1e587bb7307cee4">Queue::max_full</a></div><div class="ttdeci">uint16_t max_full</div><div class="ttdoc">Maximum number of bytes in queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:130</div></div>
+<div class="ttc" id="aclassQueue_html_a44557ed37c98580b87d0196908330bcc"><div class="ttname"><a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">Queue::peek</a></div><div class="ttdeci">void peek(dataType &amp;recv_item)</div><div class="ttdoc">Return the item at the queue head without removing it.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:236</div></div>
+<div class="ttc" id="aclassQueue_html_a1acce9f67b2549a17a8419536aac396b"><div class="ttname"><a href="classQueue.html#a1acce9f67b2549a17a8419536aac396b">Queue::ISR_available</a></div><div class="ttdeci">unsigned portBASE_TYPE ISR_available(void)</div><div class="ttdoc">Return the number of items in the queue, to an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:351</div></div>
+<div class="ttc" id="aclassQueue_html_a7b240bc3f080ea3656d0847b5d291095"><div class="ttname"><a href="classQueue.html#a7b240bc3f080ea3656d0847b5d291095">Queue::is_empty</a></div><div class="ttdeci">bool is_empty(void)</div><div class="ttdoc">Return true if the queue is empty.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:176</div></div>
+<div class="ttc" id="aclassQueue_html_a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><div class="ttname"><a href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">Queue::any</a></div><div class="ttdeci">bool any(void)</div><div class="ttdoc">Return true if the queue has contents which can be read.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:268</div></div>
+<div class="ttc" id="aclassQueue_html_a2f5a7d38f857999a1c4cebe31089b0f7"><div class="ttname"><a href="classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7">Queue::usable</a></div><div class="ttdeci">bool usable(void)</div><div class="ttdoc">Indicates whether this queue is usable.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:370</div></div>
+<div class="ttc" id="aclassQueue_html_ab009e50722f689c48d146125f6d50519"><div class="ttname"><a href="classQueue.html#ab009e50722f689c48d146125f6d50519">Queue::get_handle</a></div><div class="ttdeci">QueueHandle_t get_handle(void)</div><div class="ttdoc">Return a handle to the FreeRTOS structure which runs this queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:384</div></div>
+<div class="ttc" id="aclassQueue_html_a6bef71a925790602cef9eb6274ae61e3"><div class="ttname"><a href="classQueue.html#a6bef71a925790602cef9eb6274ae61e3">Queue::available</a></div><div class="ttdeci">unsigned portBASE_TYPE available(void)</div><div class="ttdoc">Return the number of items in the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:340</div></div>
+<div class="ttc" id="aclassQueue_html_a61f764fa35a4880b277a2b6d23651f45"><div class="ttname"><a href="classQueue.html#a61f764fa35a4880b277a2b6d23651f45">Queue::operator&lt;&lt;</a></div><div class="ttdeci">void operator&lt;&lt;(dataType new_data)</div><div class="ttdoc">Operator which inserts data into the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:282</div></div>
+<div class="ttc" id="aclassQueue_html_a14df528749e226183df3fa5472368e82"><div class="ttname"><a href="classQueue.html#a14df528749e226183df3fa5472368e82">Queue::get</a></div><div class="ttdeci">void get(dataType &amp;recv_item)</div><div class="ttdoc">Retrieve and remove the item at the head of the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:202</div></div>
+<div class="ttc" id="aclassQueue_html_a24849f96865b52468bcd611ee67bd7dc"><div class="ttname"><a href="classQueue.html#a24849f96865b52468bcd611ee67bd7dc">Queue::ISR_butt_in</a></div><div class="ttdeci">bool ISR_butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:486</div></div>
+<div class="ttc" id="aclassQueue_html_ace8d2d512e49f018c5e2df4b5a2bf810"><div class="ttname"><a href="classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810">Queue::print_in_list</a></div><div class="ttdeci">void print_in_list(Print &amp;print_dev)</div><div class="ttdoc">Print the queue's status to a serial device.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:509</div></div>
+<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:430</div></div>
+<div class="ttc" id="aclassQueue_html_a69b90b10718e9469499375c61cc9c236"><div class="ttname"><a href="classQueue.html#a69b90b10718e9469499375c61cc9c236">Queue::handle</a></div><div class="ttdeci">QueueHandle_t handle</div><div class="ttdoc">Hhandle for the FreeTOS queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:127</div></div>
 <div class="ttc" id="abaseshare_8h_html"><div class="ttname"><a href="baseshare_8h.html">baseshare.h</a></div><div class="ttdoc">Headers for a base class for type-safe, thread-safe task data exchange classes.</div></div>
-<div class="ttc" id="aclassQueue_html_ae4a3fd660457ea5f5a4f3605322db150"><div class="ttname"><a href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue::Queue</a></div><div class="ttdeci">Queue(BaseType_t queue_size, const char *p_name=NULL, TickType_t=portMAX_DELAY)</div><div class="ttdoc">Construct a queue object, allocating memory for the buffer.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:356</div></div>
-<div class="ttc" id="aclassQueue_html_a255eb8557d8106fa5900c6e4a5483ce3"><div class="ttname"><a href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">Queue::butt_in</a></div><div class="ttdeci">bool butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue to be retrieved first.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:163</div></div>
-<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:124</div></div>
-<div class="ttc" id="aclassQueue_html_a2ede016bcaf8f330cd87f56a600218b1"><div class="ttname"><a href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">Queue::buf_size</a></div><div class="ttdeci">uint16_t buf_size</div><div class="ttdoc">Size of queue buffer in bytes.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:131</div></div>
-<div class="ttc" id="aclassQueue_html_afd37b4f184be25ecebf7957900321bbf"><div class="ttname"><a href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">Queue::ISR_get</a></div><div class="ttdeci">void ISR_get(dataType &amp;recv_item)</div><div class="ttdoc">Remove the item at the head of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:218</div></div>
-<div class="ttc" id="aclassQueue_html_a087ad13824fab4dfa026ef5cf138ca05"><div class="ttname"><a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">Queue::ISR_peek</a></div><div class="ttdeci">void ISR_peek(dataType &amp;recv_item)</div><div class="ttdoc">Return the item at the front of the queue without deleting it, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:255</div></div>
+<div class="ttc" id="aclassQueue_html_ae4a3fd660457ea5f5a4f3605322db150"><div class="ttname"><a href="classQueue.html#ae4a3fd660457ea5f5a4f3605322db150">Queue::Queue</a></div><div class="ttdeci">Queue(BaseType_t queue_size, const char *p_name=NULL, TickType_t=portMAX_DELAY)</div><div class="ttdoc">Construct a queue object, allocating memory for the buffer.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:402</div></div>
+<div class="ttc" id="aclassQueue_html_a255eb8557d8106fa5900c6e4a5483ce3"><div class="ttname"><a href="classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3">Queue::butt_in</a></div><div class="ttdeci">bool butt_in(const dataType &amp;item)</div><div class="ttdoc">Put an item into the front of the queue to be retrieved first.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:161</div></div>
+<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:122</div></div>
+<div class="ttc" id="aclassQueue_html_a2ede016bcaf8f330cd87f56a600218b1"><div class="ttname"><a href="classQueue.html#a2ede016bcaf8f330cd87f56a600218b1">Queue::buf_size</a></div><div class="ttdeci">uint16_t buf_size</div><div class="ttdoc">Size of queue buffer in bytes.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:129</div></div>
+<div class="ttc" id="aclassQueue_html_adc6d1c4c6d4c3e397aa4f194f4ad2ffb"><div class="ttname"><a href="classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">Queue::operator&gt;&gt;</a></div><div class="ttdeci">void operator&gt;&gt;(dataType &amp;put_here)</div><div class="ttdoc">Read data from the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:306</div></div>
+<div class="ttc" id="aclassQueue_html_afd37b4f184be25ecebf7957900321bbf"><div class="ttname"><a href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">Queue::ISR_get</a></div><div class="ttdeci">void ISR_get(dataType &amp;recv_item)</div><div class="ttdoc">Remove the item at the head of the queue from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:216</div></div>
+<div class="ttc" id="aclassQueue_html_a087ad13824fab4dfa026ef5cf138ca05"><div class="ttname"><a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">Queue::ISR_peek</a></div><div class="ttdeci">void ISR_peek(dataType &amp;recv_item)</div><div class="ttdoc">Return the item at the front of the queue without deleting it, from within an ISR.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:253</div></div>
 <div class="ttc" id="aclassBaseShare_html"><div class="ttname"><a href="classBaseShare.html">BaseShare</a></div><div class="ttdoc">Base class for classes that share data in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> baseshare.h:46</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

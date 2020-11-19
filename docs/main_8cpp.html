@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('main_8cpp.html',''); initResizable(); 
 <div class="contents">
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &lt;PrintStream.h&gt;</code><br />
+<code>#include &lt;HardwareTimer.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="taskqueue_8h_source.html">taskqueue.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="taskshare_8h_source.html">taskshare.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="task__receive_8h_source.html">task_receive.h</a>&quot;</code><br />
@@ -100,26 +101,30 @@ Include dependency graph for main.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="main_8cpp__incl.png" border="0" usemap="#main_8cpp" alt=""/></div>
 <map name="main_8cpp" id="main_8cpp">
-<area shape="rect" title=" " alt="" coords="253,5,335,32"/>
-<area shape="rect" title=" " alt="" coords="199,304,283,331"/>
-<area shape="rect" title=" " alt="" coords="488,155,599,181"/>
-<area shape="rect" href="taskqueue_8h.html" title=" " alt="" coords="21,155,124,181"/>
-<area shape="rect" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="149,155,247,181"/>
-<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="235,80,353,107"/>
-<area shape="rect" title=" " alt="" coords="24,229,121,256"/>
-<area shape="rect" href="baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="146,229,247,256"/>
-<area shape="rect" title=" " alt="" coords="322,155,463,181"/>
+<area shape="rect" title=" " alt="" coords="364,5,439,32"/>
+<area shape="rect" title=" " alt="" coords="192,304,270,331"/>
+<area shape="rect" title=" " alt="" coords="473,155,576,181"/>
+<area shape="rect" title=" " alt="" coords="652,80,773,107"/>
+<area shape="rect" href="taskqueue_8h.html" title=" " alt="" coords="27,155,120,181"/>
+<area shape="rect" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="144,155,235,181"/>
+<area shape="rect" href="task__receive_8h.html" title=" " alt="" coords="276,80,383,107"/>
+<area shape="rect" title=" " alt="" coords="23,229,119,256"/>
+<area shape="rect" href="baseshare_8h.html" title="Headers for a base class for type&#45;safe, thread&#45;safe task data exchange classes." alt="" coords="143,229,236,256"/>
+<area shape="rect" title=" " alt="" coords="310,155,448,181"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a8ba4dcf22be7209fa94a8723bb442ea1"><td class="memItemLeft" align="right" valign="top"><a id="a8ba4dcf22be7209fa94a8723bb442ea1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a8ba4dcf22be7209fa94a8723bb442ea1">timer_ISR</a> (void)</td></tr>
+<tr class="memdesc:a8ba4dcf22be7209fa94a8723bb442ea1"><td class="mdescLeft">&#160;</td><td class="mdescRight">An interrupt service routine which creates malarkey data. <br /></td></tr>
+<tr class="separator:a8ba4dcf22be7209fa94a8723bb442ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ec20427314a940aa54703d54b6065b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a9ec20427314a940aa54703d54b6065b3">set_up_timer</a> (void)</td></tr>
+<tr class="separator:a9ec20427314a940aa54703d54b6065b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adad8dc2832befcde5d76459bd91cd09f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#adad8dc2832befcde5d76459bd91cd09f">task_send</a> (void *p_params)</td></tr>
 <tr class="memdesc:adad8dc2832befcde5d76459bd91cd09f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task which creates data to be sent to other tasks.  <a href="main_8cpp.html#adad8dc2832befcde5d76459bd91cd09f">More...</a><br /></td></tr>
 <tr class="separator:adad8dc2832befcde5d76459bd91cd09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a480f148fad1890cb82185237adb02f1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a480f148fad1890cb82185237adb02f1a">task_returns</a> (void *p_params)</td></tr>
-<tr class="memdesc:a480f148fad1890cb82185237adb02f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task which occasionally prints a carriage return.  <a href="main_8cpp.html#a480f148fad1890cb82185237adb02f1a">More...</a><br /></td></tr>
-<tr class="separator:a480f148fad1890cb82185237adb02f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arduino setup function which runs once at program startup.  <a href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">More...</a><br /></td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +142,9 @@ Variables</h2></td></tr>
 <tr class="separator:a0c84e737127e673cb2f864aff228bba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a640ba08114db644da3248db71daf3d96"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a640ba08114db644da3248db71daf3d96">bad_global_0</a></td></tr>
 <tr class="separator:a640ba08114db644da3248db71daf3d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dedd1f59cd60f894e12e09f7e8c548f"><td class="memItemLeft" align="right" valign="top"><a id="a7dedd1f59cd60f894e12e09f7e8c548f"></a>
+volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>irq_counter</b> = 0UL</td></tr>
+<tr class="separator:a7dedd1f59cd60f894e12e09f7e8c548f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains a simple demonstration program for ME507 which uses FreeRTOS to do multitasking and some custom code to share data between tasks.</p>
@@ -165,6 +173,25 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a9ec20427314a940aa54703d54b6065b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ec20427314a940aa54703d54b6065b3">&#9670;&nbsp;</a></span>set_up_timer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_up_timer </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A control object for a timer which will set off interrupts</p>
+
+</div>
+</div>
 <a id="a4fc01d736fe50cf5b977f755b675f11d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fc01d736fe50cf5b977f755b675f11d">&#9670;&nbsp;</a></span>setup()</h2>
 
@@ -182,32 +209,6 @@ Variables</h2></td></tr>
 
 <p>Arduino setup function which runs once at program startup. </p>
 <p>This function sets up a serial port for communication and creates the tasks which will be run. </p>
-
-</div>
-</div>
-<a id="a480f148fad1890cb82185237adb02f1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a480f148fad1890cb82185237adb02f1a">&#9670;&nbsp;</a></span>task_returns()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task_returns </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>p_params</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Task which occasionally prints a carriage return. </p>
-<p>Since the serial monitor gets all ugly when we don't end lines at reasonable intervals, this task prints a carriage return now and then. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">p_params</td><td>A pointer to function parameters which we don't use. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_47',['zero',['../classSTM32Encoder.html#af1b3a03d36f25377333a24a5b6346219',1,'STM32Encoder']]]
+  ['usable_57',['usable',['../classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7',1,'Queue']]]
 ];

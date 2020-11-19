@@ -128,9 +128,10 @@ HardwareTimer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class which operates an STM32 timer in quadrature encoder mode. </p>
 <p>This class sets up a timer/counter which is capable of reading quadrature signals from an incremental encoder and provides a method for retrieving a count which corresponds to the encoder's position. The position will overflow, and this class doesn't deal with that &ndash; the user must periodically read the position and use it to update a position count with a large enough bit width that the full position reading does not overflow.</p>
-<p>So far this class has been tested with the following timers and pins:</p><ul>
+<p>So far this class has been tested with the following timers and pins on an STM32L476RG:</p><ul>
 <li>Timer <code>TIM2</code> using pins <code>PA0</code> and <code>PA1</code> </li>
 <li>Timer <code>TIM3</code> using pins <code>PB4</code> and <code>PB5</code> </li>
+<li>Timer <code>TIM3</code> using pins <code>PA6</code> and <code>PA7</code> </li>
 <li>Timer <code>TIM4</code> using pins <code>PB6</code> and <code>PB7</code> </li>
 <li>Timer <code>TIM8</code> using pins <code>PC6</code> and <code>PC7</code> </li>
 </ul>
@@ -220,7 +221,7 @@ HardwareTimer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclassSTM32Encoder_html"><div class="ttname"><a href="classSTM32Encoder.html">STM32Encoder</a></div><div class="ttdoc">Class which operates an STM32 timer in quadrature encoder mode.</div><div class="ttdef"><b>Definition:</b> encoder_counter.h:33</div></div>
+<div class="ttc" id="aclassSTM32Encoder_html"><div class="ttname"><a href="classSTM32Encoder.html">STM32Encoder</a></div><div class="ttdoc">Class which operates an STM32 timer in quadrature encoder mode.</div><div class="ttdef"><b>Definition:</b> encoder_counter.h:34</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

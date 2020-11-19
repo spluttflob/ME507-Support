@@ -1,5 +1,6 @@
 <map id="taskshare.h" name="taskshare.h">
-<area shape="rect" id="node1" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="21,5,111,32"/>
-<area shape="rect" id="node2" href="$task__receive_8h.html" title=" " alt="" coords="13,80,119,107"/>
-<area shape="rect" id="node3" href="$task__receive_8cpp.html" title=" " alt="" coords="5,155,127,181"/>
+<area shape="rect" id="node1" title="Data which can be shared between tasks in a thread&#45;safe manner." alt="" coords="43,5,133,32"/>
+<area shape="rect" id="node2" href="$main_8cpp.html" title=" " alt="" coords="5,155,80,181"/>
+<area shape="rect" id="node3" href="$task__receive_8h.html" title=" " alt="" coords="80,80,187,107"/>
+<area shape="rect" id="node4" href="$task__receive_8cpp.html" title=" " alt="" coords="105,155,226,181"/>
 </map>

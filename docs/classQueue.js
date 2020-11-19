@@ -14,6 +14,8 @@ var classQueue =
     [ "ISR_is_empty", "classQueue.html#ac0d4a3d7feae804dea7f3cc72f21c624", null ],
     [ "ISR_peek", "classQueue.html#a087ad13824fab4dfa026ef5cf138ca05", null ],
     [ "ISR_put", "classQueue.html#a9c966c6f5f91ccaf12bcb7723b8145af", null ],
+    [ "operator<<", "classQueue.html#a61f764fa35a4880b277a2b6d23651f45", null ],
+    [ "operator>>", "classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb", null ],
     [ "peek", "classQueue.html#a44557ed37c98580b87d0196908330bcc", null ],
     [ "print_in_list", "classQueue.html#ace8d2d512e49f018c5e2df4b5a2bf810", null ],
     [ "put", "classQueue.html#aa0667e09529d356a04f1efde346af266", null ],

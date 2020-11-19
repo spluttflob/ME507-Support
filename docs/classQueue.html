@@ -153,6 +153,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">any</a> (void)</td></tr>
 <tr class="memdesc:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the queue has contents which can be read.  <a href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">More...</a><br /></td></tr>
 <tr class="separator:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61f764fa35a4880b277a2b6d23651f45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a61f764fa35a4880b277a2b6d23651f45">operator&lt;&lt;</a> (dataType new_data)</td></tr>
+<tr class="memdesc:a61f764fa35a4880b277a2b6d23651f45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operator which inserts data into the queue.  <a href="classQueue.html#a61f764fa35a4880b277a2b6d23651f45">More...</a><br /></td></tr>
+<tr class="separator:a61f764fa35a4880b277a2b6d23651f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc6d1c4c6d4c3e397aa4f194f4ad2ffb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">operator&gt;&gt;</a> (dataType &amp;put_here)</td></tr>
+<tr class="memdesc:adc6d1c4c6d4c3e397aa4f194f4ad2ffb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the queue.  <a href="classQueue.html#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">More...</a><br /></td></tr>
+<tr class="separator:adc6d1c4c6d4c3e397aa4f194f4ad2ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80711abebd086d5617e5c88dbd87b77a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">ISR_any</a> (void)</td></tr>
 <tr class="memdesc:a80711abebd086d5617e5c88dbd87b77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the queue has items in it, from within an ISR.  <a href="classQueue.html#a80711abebd086d5617e5c88dbd87b77a">More...</a><br /></td></tr>
 <tr class="separator:a80711abebd086d5617e5c88dbd87b77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,7 +228,7 @@ class Queue&lt; dataType &gt;</h3>
 <h1><a class="anchor" id="queue_usage"></a>
 Usage</h1>
 <p>The following bits of code show how to set up and use a queue to transfer data of type <code>int16_t</code> from one hypothetical task called <code>task_A</code> to another called <code>task_B</code>.</p>
-<p>Near the top of the file which contains <code>setup()</code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
+<p>Near the top of the file which contains <code><a class="el" href="main_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d" title="Arduino setup function which runs once at program startup.">setup()</a></code> we create a queue. The constructor of the <code>Queue&lt;int16_t&gt;</code> class is given the number of items in the queue (10 in this example) and an optional name for the queue: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="taskqueue_8h.html">taskqueue.h</a>&quot;</span></div>
 <div class="line">...<span class="comment"></span></div>
 <div class="line"><span class="comment">/// This queue holds hockey puck accelerations</span></div>
 <div class="line"><span class="comment"></span>Queue&lt;int16_t&gt; hockey_queue (10, <span class="stringliteral">&quot;Puckey&quot;</span>);</div>
@@ -718,6 +724,78 @@ template&lt;class dataType &gt; </div>
 
 </div>
 </div>
+<a id="a61f764fa35a4880b277a2b6d23651f45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61f764fa35a4880b277a2b6d23651f45">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">dataType&#160;</td>
+          <td class="paramname"><em>new_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operator which inserts data into the queue. </p>
+<p>This convenient operator puts data into the queue, protecting the data from corruption by thread switching. It checks if the processor is currently in an interupt service routine (ISR); if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classQueue.html#aa0667e09529d356a04f1efde346af266" title="Put an item into the queue behind other items.">put()</a></code> method. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_data</td><td>The data which is to be put into the queue </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adc6d1c4c6d4c3e397aa4f194f4ad2ffb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc6d1c4c6d4c3e397aa4f194f4ad2ffb">&#9670;&nbsp;</a></span>operator&gt;&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::operator&gt;&gt; </td>
+          <td>(</td>
+          <td class="paramtype">dataType &amp;&#160;</td>
+          <td class="paramname"><em>put_here</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read data from the queue. </p>
+<p>This method is used to read data from the queue . The retrieved data is copied into the variable which is given as this method's parameter, replacing the previous contents. This method checks if the processor is currently in an interupt service routine (ISR) and if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> method. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">put_here</td><td>A reference to the variable in which to put received data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a44557ed37c98580b87d0196908330bcc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44557ed37c98580b87d0196908330bcc">&#9670;&nbsp;</a></span>peek()</h2>
 
@@ -799,6 +877,9 @@ template&lt;class dataType &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::put </td>
@@ -808,6 +889,11 @@ template&lt;class dataType &gt; </div>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Put an item into the queue behind other items. </p>
@@ -858,8 +944,8 @@ template&lt;class dataType &gt; </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="ataskqueue_8h_html"><div class="ttname"><a href="taskqueue_8h.html">taskqueue.h</a></div></div>
-<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:384</div></div>
-<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:124</div></div>
+<div class="ttc" id="aclassQueue_html_aa0667e09529d356a04f1efde346af266"><div class="ttname"><a href="classQueue.html#aa0667e09529d356a04f1efde346af266">Queue::put</a></div><div class="ttdeci">bool put(const dataType &amp;item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:430</div></div>
+<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:122</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
