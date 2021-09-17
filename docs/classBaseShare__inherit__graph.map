@@ -1,5 +1,7 @@
 <map id="BaseShare" name="BaseShare">
-<area shape="rect" id="node1" title="Base class for classes that share data in a thread&#45;safe manner between tasks." alt="" coords="125,5,215,32"/>
-<area shape="rect" id="node2" href="$classQueue.html" title="Implements a queue to transmit data from one RTOS task to another." alt="" coords="5,80,159,107"/>
-<area shape="rect" id="node3" href="$classShare.html" title="Class for data to be shared in a thread&#45;safe manner between tasks." alt="" coords="183,80,333,107"/>
+<area shape="rect" id="node1" title="Base class for classes that share data in a thread&#45;safe manner between tasks." alt="" coords="179,5,265,32"/>
+<area shape="rect" id="node2" href="$classQueue.html" title="Implements a queue to transmit data from one RTOS task to another." alt="" coords="5,80,143,107"/>
+<area shape="rect" id="node3" href="$classQueue.html" title=" " alt="" coords="167,80,277,107"/>
+<area shape="rect" id="node5" href="$classShare.html" title="Class for data to be shared in a thread&#45;safe manner between tasks." alt="" coords="301,80,437,107"/>
+<area shape="rect" id="node4" href="$classTextQueue.html" title="Implements a queue to transmit text from one RTOS task to another." alt="" coords="179,155,265,181"/>
 </map>

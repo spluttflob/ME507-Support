@@ -12,5 +12,8 @@ var files_dup =
     ] ],
     [ "taskshare.h", "taskshare_8h.html", [
       [ "Share", "classShare.html", "classShare" ]
+    ] ],
+    [ "textqueue.h", "textqueue_8h.html", [
+      [ "TextQueue", "classTextQueue.html", "classTextQueue" ]
     ] ]
 ];

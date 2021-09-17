@@ -4,5 +4,5 @@ var searchData=
   ['baseshare_2ecpp_3',['baseshare.cpp',['../baseshare_8cpp.html',1,'']]],
   ['baseshare_2eh_4',['baseshare.h',['../baseshare_8h.html',1,'']]],
   ['buf_5fsize_5',['buf_size',['../classQueue.html#a2ede016bcaf8f330cd87f56a600218b1',1,'Queue']]],
-  ['butt_5fin_6',['butt_in',['../classQueue.html#a255eb8557d8106fa5900c6e4a5483ce3',1,'Queue']]]
+  ['butt_5fin_6',['butt_in',['../classQueue.html#ad3c592b245b39ce229b157935f5a65fa',1,'Queue']]]
 ];

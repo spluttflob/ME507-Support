@@ -1,0 +1,6 @@
+<map id="TextQueue" name="TextQueue">
+<area shape="rect" id="node1" title="Implements a queue to transmit text from one RTOS task to another." alt="" coords="5,160,91,187"/>
+<area shape="rect" id="node2" title=" " alt="" coords="7,84,57,111"/>
+<area shape="rect" id="node3" href="$classQueue.html" title=" " alt="" coords="81,84,191,111"/>
+<area shape="rect" id="node4" href="$classBaseShare.html" title="Base class for classes that share data in a thread&#45;safe manner between tasks." alt="" coords="93,7,179,33"/>
+</map>
