@@ -98,9 +98,22 @@ class TextQueue : public Print, public Queue<char>
 // Public methods can be called from anywhere in the program where there is
 // a pointer or reference to an object of this class
 public:
-    // The constructor creates a FreeRTOS queue
+    /** @brief   Construct a queue object, allocating memory for the buffer.
+     *  @details This constructor creates the FreeRTOS queue which is wrapped 
+     *           by the @c Queue class. 
+     *  @param   queue_size The number of chars which can be stored in the queue
+     *  @param   p_name A name to be shown in the list of task shares (default 
+     *           empty String)
+     *  @param   wait_time How long, in RTOS ticks, to wait for a queue to 
+     *           empty before a character can be sent. 
+     *           (Default: @c portMAX_DELAY, which causes the sending task to 
+     *           block until sending occurs.)
+     */
     TextQueue (BaseType_t queue_size, const char* p_name = NULL, 
-               TickType_t = portMAX_DELAY);
+               TickType_t wait_time = portMAX_DELAY)
+        : Print (), Queue<char> (queue_size, p_name, wait_time)
+    {
+    }
 
     /** @brief   Write a character into the queue in the @c Print style.
      *  @details This method is pure virtual in class @c Print, so it must be
