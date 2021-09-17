@@ -141,12 +141,12 @@ public:
             TickType_t = portMAX_DELAY);
 
     // Put an item into the queue behind other items.
-    bool put (const dataType& item);
+    bool put (const dataType item);
 
     // This method puts an item of data into the back of the queue from 
     // within an interrupt service routine. It must not be used within 
     // non-ISR code. 
-    bool ISR_put (const dataType& item);
+    bool ISR_put (const dataType item);
 
     /** @brief   Put an item into the front of the queue to be retrieved 
      *           first.
@@ -158,18 +158,18 @@ public:
      *           you're making a stack rather than a queue, you weirdo. 
      *           This method must @b not be used within an interrupt 
      *           service routine. 
-     *  @param   item Reference to the item which is going to be (rudely) 
-     *           put into the front of the queue
+     *  @param   item The item which is going to be (rudely) put into the front
+     *           of the queue
      *  @return  @c True if the item was successfully queued, false if not
      */
-    bool butt_in (const dataType& item)
+    bool butt_in (const dataType item)
     {
         return ((bool)(xQueueSendToFront (handle, &item, ticks_to_wait)));
     }
 
     // This method puts an item into the front of the queue from within 
     // an ISR. It must not be used within normal, non-ISR code. 
-    bool ISR_butt_in (const dataType& item);
+    bool ISR_butt_in (const dataType item);
 
     /** @brief   Return true if the queue is empty.
      *  @details This method checks if the queue is empty. It returns 
@@ -427,11 +427,11 @@ Queue<dataType>::Queue (BaseType_t queue_size, const char* p_name,
  *           rude and put an item into the front of the queue so it will be 
  *           retrieved first, use @c butt_in() instead. <b>This method must not
  *           be used within an Interrupt Service Routine.</b>
- *  @param   item Reference to the item which is going to be put into the queue
+ *  @param   item The item which is going to be put into the queue
  *  @return  True if the item was successfully queued, false if not
  */
 template <class dataType>
-inline bool Queue<dataType>::put (const dataType& item)
+inline bool Queue<dataType>::put (const dataType item)
 {
     bool return_value = (bool)(xQueueSendToBack (handle, &item, 
                                                  ticks_to_wait));
@@ -451,11 +451,11 @@ inline bool Queue<dataType>::put (const dataType& item)
  *  @details This method puts an item of data into the back of the queue from
  *           within an interrupt service routine. It must \b not be used within
  *           non-ISR code. 
- *  @param   item Reference to the item which is going to be put into the queue
+ *  @param   item The item which is going to be put into the queue
  *  @return  True if the item was successfully queued, false if not
  */
 template <class dataType>
-inline bool Queue<dataType>::ISR_put (const dataType& item)
+inline bool Queue<dataType>::ISR_put (const dataType item)
 {
     // This value is set true if a context switch should occur due to this data
     signed portBASE_TYPE shouldSwitch = pdFALSE;
@@ -487,7 +487,7 @@ inline bool Queue<dataType>::ISR_put (const dataType& item)
  *  @return  True if the item was successfully queued, false if not
  */
 template <class dataType>
-inline bool Queue<dataType>::ISR_butt_in (const dataType& item)
+inline bool Queue<dataType>::ISR_butt_in (const dataType item)
 {
     // This value is set true if a context switch should occur due to this data
     signed portBASE_TYPE shouldSwitch = pdFALSE;

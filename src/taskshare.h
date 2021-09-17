@@ -19,6 +19,7 @@
  *  @date 2020-Nov-14 JRR Added new-ESP32 compatible @c SHARE_..._CRITICAL(x);
  *                        added @c << and @c >> operators
  *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue
+ *  @date 2021-Sep-17 JRR Changed some @c put params from references to copies
  *
  *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released 
  *    under the Lesser GNU Public License, version 2. It intended for 
@@ -137,7 +138,7 @@ public:
      *  @details This method is used to write data into the shared data item. 
      *  @param   new_data The data which is to be written
      */
-    void put (DataType& new_data)
+    void put (DataType new_data)
     {
         xQueueOverwrite (queue, &new_data);
     }
@@ -148,7 +149,7 @@ public:
      *           routine, not a normal task. 
      *  @param   new_data The data to be written into the shared data item
      */
-    void ISR_put (DataType& new_data)
+    void ISR_put (DataType new_data)
     {
         BaseType_t wake_up;
         xQueueOverwriteFromISR (queue, &new_data, &wake_up);
@@ -163,7 +164,7 @@ public:
      *           runs a little more slowly than the @c put() method. 
      *  @param   new_data The data which is to be put into the share
      */
-    void operator << (DataType& new_data)
+    void operator << (DataType new_data)
     {
         if (CHECK_IF_IN_ISR ())
         {
@@ -190,7 +191,7 @@ public:
      *  @param   put_here A reference to the variable in which to put received
      *           data
      */
-    void operator >> (DataType& put_here)
+    void operator >> (DataType put_here)
     {
         if (CHECK_IF_IN_ISR ())
         {
