@@ -220,9 +220,9 @@ public:
      *           default is forever) or until something shows up. 
      *  @returns A copy of the contents of the queue item
      */
-    DataType get (void)
+    dataType get (void)
     {
-        DataType return_this;
+        dataType return_this;
         xQueueReceive (handle, &return_this, ticks_to_wait);
         return return_this;
     }
@@ -251,11 +251,11 @@ public:
      *           code.
      *  @returns A copy of the contents of the queue item
      */
-    DataType ISR_get (void)
+    dataType ISR_get (void)
     {
         portBASE_TYPE task_awakened;         // Checks if context switch needed
 
-        DataType return_this;
+        dataType return_this;
         xQueueReceiveFromISR (handle, &return_this, &task_awakened);
         return return_this;
     }
