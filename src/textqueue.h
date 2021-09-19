@@ -47,7 +47,7 @@
  *           microcontrollers whose @c portBASE_TYPE is an 8-bit number. This 
  *           is a FreeRTOS feature. 
  * 
- *           @section queue_usage Usage
+ *           @section textqueue_usage Usage
  *           The following bits of code show how to set up and use a queue to
  *           transfer text from one hypothetical task called @c task_A to 
  *           another called @c task_B.

@@ -20,8 +20,9 @@
  *                        added @c << and @c >> operators
  *  @date 2020-Nov-18 JRR Critical sections not reliable; changed to a queue
  *  @date 2021-Sep-17 JRR Changed some @c put params from references to copies
+ *  @date 2021-Sep-19 JRR Added overloads for @c get() which return values
  *
- *  @copyright This file is copyright 2014 -- 2019 by JR Ridgely and released 
+ *  @copyright This file is copyright 2014 -- 2021 by JR Ridgely and released 
  *    under the Lesser GNU Public License, version 2. It intended for 
  *    educational use only, but its use is not limited thereto. */
 /*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
@@ -204,7 +205,7 @@ public:
         }
     }
 
-    /** @brief   Read data from the shared data item.
+    /** @brief   Read data from the shared data item into a variable.
      *  @details This method is used to read data from the shared data item 
      *           with protection to ensure that the data cannot be corrupted by
      *           a task switch. The shared data is copied into the variable 
@@ -219,6 +220,23 @@ public:
         xQueuePeek (queue, &recv_data, portMAX_DELAY);
     }
 
+    /** @brief   Read and return data from the shared data item.
+     *  @details This method is used to read data from the shared data item 
+     *           with protection to ensure that the data cannot be corrupted by
+     *           a task switch. A copy of the shared data is returned. 
+     *  @param   recv_data A reference to the variable in which to put received
+     *           data
+     */
+    DataType get (void)
+    {
+        DataType return_this;
+    
+        // Copy the data from the queue into the receiving variable
+        xQueuePeek (queue, &return_this, portMAX_DELAY);
+
+        return return_this;
+    }
+
     /** @brief   Read data from the shared data item, from within an ISR.
      *  @details This method is used to enable code within an ISR to read data 
      *           from the shared data item. It must only be called from within 
@@ -229,6 +247,21 @@ public:
     void ISR_get (DataType& recv_data)
     {
         xQueuePeekFromISR (queue, &recv_data);
+    }
+
+    /** @brief   Read and return data from the shared data item, from within an
+     *           ISR.
+     *  @details This method is used to enable code within an ISR to read data 
+     *           from the shared data item. It must only be called from within 
+     *           an interrupt service routine, not a normal task. 
+     *  @param   recv_data A reference to the variable in which to put received
+     *           data
+     */
+    DataType ISR_get (void)
+    {
+        DataType return_this;
+        xQueuePeekFromISR (queue, &return_this);
+        return return_this;
     }
 
     // Print the share's status within a list of all shares' statuses

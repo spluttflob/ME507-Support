@@ -1,7 +1,7 @@
 /** @file taskqueue.h
  *    This file contains a very simple wrapper class for the FreeRTOS queue. 
  *    It makes using the queue just a little bit easier in C++ than it is in C.
- *    This version is known to work on STM32's and ESP32's only because the 
+ *    This version has been tested on STM32's and ESP32's only because the 
  *    insertion and extraction operators @c << and @c >> need specific 
  *    functions to determine if they're running in ISR's or not. 
  *
@@ -9,6 +9,7 @@
  *  @date 2014-Aug-26 JRR Changed file names and queue class name to Queue
  *  @date 2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment
  *  @date 2020-Nov-18 JRR Added @c << and @c >> operators for ESP32 and STM32
+ *  @date 2021-Sep-19 JRR Added overloads of @c get() which return copies
  *
  *  License:
  *    This file is copyright 2012-2020 by JR Ridgely and released under the 
@@ -210,6 +211,22 @@ public:
         xQueueReceive (handle, &recv_item, ticks_to_wait);
     }
 
+    /** @brief   Retrieve, remove, and return the item at the head of the queue.
+     *  @details This method gets the item at the head of the queue and removes
+     *           it from the queue. A copy of the item's contents is returned. 
+     *           If there's nothing in the queue, this method waits, blocking 
+     *           the calling task, for the number of RTOS ticks specified in 
+     *           the @c wait_time parameter to the queue constructor (the 
+     *           default is forever) or until something shows up. 
+     *  @returns A copy of the contents of the queue item
+     */
+    DataType get (void)
+    {
+        DataType return_this;
+        xQueueReceive (handle, &return_this, ticks_to_wait);
+        return return_this;
+    }
+
     /** @brief   Remove the item at the head of the queue from within an ISR.
      *  @details This method gets and returns the item at the head of the queue 
      *           from within an interrupt service routine. This method must 
@@ -224,6 +241,23 @@ public:
         // If xQueueReceive doesn't return pdTrue, nothing was found in the
         // queue, so we won't change the data referenced in the parameter
         xQueueReceiveFromISR (handle, &recv_item, &task_awakened);
+    }
+
+    /** @brief   Retrieve, remove, and return the item at the head of the queue
+     *           when called by ISR code.
+     *  @details This method gets the item at the head of the queue and removes
+     *           it from the queue. A copy of the item's contents is returned. 
+     *           This method must @b not be called from within normal non-ISR 
+     *           code.
+     *  @returns A copy of the contents of the queue item
+     */
+    DataType ISR_get (void)
+    {
+        portBASE_TYPE task_awakened;         // Checks if context switch needed
+
+        DataType return_this;
+        xQueueReceiveFromISR (handle, &return_this, &task_awakened);
+        return return_this;
     }
 
     /** @brief   Return the item at the queue head without removing it.
