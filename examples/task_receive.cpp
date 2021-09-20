@@ -50,7 +50,7 @@ void task_receive (void* p_params)
     {
         // First get data from the queue. This call will block this task from
         // running until some data arrives here.
-        test_queue_0.get (queue_data);
+        test_queue_0 >> queue_data;                 // .get (queue_data);
 
         // Now get data from the share and global variable. These should be
         // the same as what arrived in the queue
@@ -80,7 +80,9 @@ void task_receive (void* p_params)
         {
             Serial << received << "  M: " << mismatches << "  S: " 
                    << share_errors << "  Q: "
-                   << queue_errors << "  G: " << global_errors << endl;
+                   << queue_errors << "  G: " << global_errors 
+                   << "  #: 0x" << hex << share_data << dec 
+                   << endl;
         }
     }
 }

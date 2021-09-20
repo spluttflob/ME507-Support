@@ -1,4 +1,5 @@
-/** @file main.cpp
+/** @cond DONT_DOCUMENT
+ *  @file main.cpp
  *    This file contains a simple demonstration program for ME507 which uses
  *    FreeRTOS to do multitasking and some custom code to share data between
  *    tasks.
@@ -12,14 +13,12 @@
 #include <Arduino.h>
 #if (defined STM32L4xx || defined STM32F4xx)
     #include <STM32FreeRTOS.h>
+    #include <HardwareTimer.h>
 #endif
 #include <PrintStream.h>
 #include "taskqueue.h"
 #include "taskshare.h"
-
 #include "task_receive.h"
-
-#include <HardwareTimer.h>
 
 
 /// This shared data item allows thread-safe transfer of data between tasks
@@ -33,6 +32,45 @@ Queue<uint32_t> test_queue_0 (10, "Queue 0.1");
 /// This unprotected global variable (ugh) is used to send data from one task
 /// to another, but it isn't thread protected and may cause errors
 uint32_t bad_global_0;
+
+///////////////////////////////////////////////////////////////////////////////
+
+#if (defined STM32L4xx || defined STM32F4xx)
+
+    volatile uint32_t irq_counter = 0UL;
+
+    /// An interrupt service routine which creates malarkey data
+    void timer_ISR (void)
+    {
+        irq_counter++;
+
+        digitalWrite (LED_BUILTIN, !digitalRead (LED_BUILTIN));
+    }
+
+
+    void set_up_timer (void)
+    {
+        Serial << "Set up timer...";
+
+        digitalWrite (LED_BUILTIN, HIGH);
+
+        /// A control object for a timer which will set off interrupts
+        HardwareTimer* timmy = new HardwareTimer (TIM3);
+
+        // timmy->pause ();
+        // timmy.setMode (2, TIMER_OUTPUT_COMPARE);          // Channel, mode
+        // timmy.setCount (0);
+        timmy->setOverflow (1000);             // 30000);
+        // timmy.setCompare (TIMER_CH3, 1000);
+        timmy->attachInterrupt (timer_ISR);
+        // timmy.refresh ();
+        timmy->resume ();
+
+        Serial << "done." << endl;
+    }
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 /** @brief   Task which creates data to be sent to other tasks.
@@ -60,8 +98,8 @@ void task_send (void* p_params)
         number = random (0xFFFF);
         number |= number << 16;
         bad_global_0 = number;
-        test_share_0 << number; // .put (number);
-        test_queue_0.put (number);
+        test_share_0 << number;    // .put (number);
+        test_queue_0 << number;    // .put (number);
 
         // Delay the given number of RTOS ticks until beginning to run this
         // task loop again. The resulting timing is not accurate, as the time
@@ -82,11 +120,28 @@ void setup ()
     Serial.begin (115200);
     delay (2000);
     Serial << "\033[2JTesting queues and shares and stuff" << endl;
+    #if (defined STM32L4xx || defined STM32F4xx)
+        Serial << "STM32 Core Version: 0x" << hex << STM32_CORE_VERSION << dec 
+               << endl;
+    #endif
+
+    // ///////////////////////////////////////////////////////////////
+    // set_up_timer ();
+    // Serial << "Timer test..." << endl;
+    // for (uint32_t count = 0; count < 1000; count++)
+    // {
+    //     Serial << "IRQ: " << irq_counter << ", count: " << count << "      \r";
+    //     delay (150);
+    // }
+    // Serial << endl << "done." << endl << endl;
+    // ///////////////////////////////////////////////////////////////
+
+    // while (true);
 
     // Create a task which sends malarkey
     xTaskCreate (task_send,
                  "Send",                          // Name for printouts
-                 256,                             // Stack size
+                 2256,                            // Stack size
                  NULL,                            // Parameters for task fn.
                  3,                               // Priority
                  NULL);                           // Task handle
@@ -94,7 +149,7 @@ void setup ()
     // Create a task which receives the aforementioned malarkey
     xTaskCreate (task_receive,
                  "Receive",
-                 256,                             // Stack size
+                 2256,                            // Stack size
                  NULL,
                  4,                               // Priority
                  NULL);
@@ -103,7 +158,7 @@ void setup ()
 
     // If using an STM32, we need to call the scheduler startup function now;
     // if using an ESP32, it has already been called for us
-    #ifdef STM32L4xx
+    #if (defined STM32L4xx || defined STM32F4xx)
         vTaskStartScheduler ();
     #endif
 }
@@ -118,3 +173,7 @@ void setup ()
 void loop () 
 {
 }
+
+// End of stuff Doxygen should ignore
+/// @endcond
+

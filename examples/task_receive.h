@@ -11,7 +11,9 @@
 #define _TASK_RECEIVE_H_
 
 #include <Arduino.h>
-#include <STM32FreeRTOS.h>
+#if (defined STM32L4xx || defined STM32F4xx)
+    #include <STM32FreeRTOS.h>
+#endif
 #include <PrintStream.h>
 #include "taskqueue.h"
 #include "taskshare.h"
