@@ -9,7 +9,8 @@
  *  @date 2014-Aug-26 JRR Changed file names and queue class name to Queue
  *  @date 2020-Oct-10 JRR Made compatible with Arduino/FreeRTOS environment
  *  @date 2020-Nov-18 JRR Added @c << and @c >> operators for ESP32 and STM32
- *  @date 2021-Sep-19 JRR Added overloads of @c get() which return copies
+ *  @date 2021-Sep-19 JRR Added overloads of @c get(), @c ISR_get(), @c peek(), 
+ *                        and @c ISR_peek() which return copies
  *
  *  License:
  *    This file is copyright 2012-2020 by JR Ridgely and released under the 
@@ -260,16 +261,16 @@ public:
         return return_this;
     }
 
-    /** @brief   Return the item at the queue head without removing it.
-     *  @details This method returns the item at the head of the queue without 
+    /** @brief   Get the item at the queue head without removing it.
+     *  @details This method gets the item at the head of the queue without 
      *           removing that item from the queue. If there's nothing in the 
      *           queue this method waits, blocking the calling task, for for 
      *           the number of RTOS ticks specified in the @c wait_time 
      *           parameter to the queue constructor (the default is forever) or
      *           until something shows up. This method must @b not be called 
      *           from within an interrupt service routine. 
-     *  @param   recv_item A reference to the item to be filled with data from
-     *           the queue
+     *  @param   recv_item A reference to a variable to be filled with data 
+     *           from the queue item
      */
     void peek (dataType& recv_item)
     {
@@ -278,12 +279,30 @@ public:
         xQueuePeek (handle, &recv_item, ticks_to_wait);
     }
 
-    /** @brief   Return the item at the front of the queue without deleting it, 
+    /** @brief   Return a copy of the item at the queue head without removing 
+     *           it.
+     *  @details This method returns the item at the head of the queue without 
+     *           removing that item from the queue. If there's nothing in the 
+     *           queue this method waits, blocking the calling task, for for 
+     *           the number of RTOS ticks specified in the @c wait_time 
+     *           parameter to the queue constructor (the default is forever) or
+     *           until something shows up. This method must @b not be called 
+     *           from within an interrupt service routine. 
+     *  @returns A copy of the data in the item at the head of the queue
+     */
+    dataType peek (void)
+    {
+        dataType recv_item;
+        xQueuePeek (handle, &recv_item, ticks_to_wait);
+        return recv_item;
+    }
+
+    /** @brief   Get the item at the front of the queue without deleting it, 
      *           from within an ISR.
      *  @details This method returns the item at the head of the queue without 
      *           removing that item from the queue. If there's nothing in the 
      *           queue, this method doesn't change the value of the data given
-     *           as its parameter. This method must @b not be called within an
+     *           as its parameter. This method must @b only be called within an
      *           interrupt service routine. 
      *  @param   recv_item A reference to the item to be filled with data from 
      *           the queue
@@ -295,6 +314,24 @@ public:
         // If xQueueReceive doesn't return pdTrue, nothing was found in the 
         // queue, so the value of recv_item is not changed
         xQueuePeekFromISR (handle, &recv_item, &task_awakened);
+    }
+
+    /** @brief   Return a copy of the item at the front of the queue without 
+     *           deleting it, from within an ISR.
+     *  @details This method returns the item at the head of the queue without 
+     *           removing that item from the queue. If there's nothing in the 
+     *           queue, this method doesn't change the value of the data given
+     *           as its parameter. This method must @b only be called within an
+     *           interrupt service routine. 
+     *  @param   recv_item A reference to the item to be filled with data from 
+     *           the queue
+     */
+    dataType ISR_peek (void)
+    {
+        portBASE_TYPE task_awakened;           // Checks if a task will wake up
+        dataType recv_item;
+        xQueuePeekFromISR (handle, &recv_item, &task_awakened);
+        return recv_item;
     }
 
     /** @brief   Return true if the queue has contents which can be read.
