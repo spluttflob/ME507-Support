@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ME507 Utility Library for ARM/Arduino/FreeRTOS: Share&lt; DataType &gt; Class Template Reference</title>
+<title>ME507 Utility Library: Share&lt; DataType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,10 +26,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">ME507 Utility Library for ARM/Arduino/FreeRTOS
+   <div id="projectname">ME507 Utility Library
    &#160;<span id="projectnumber">0.2.1</span>
    </div>
-   <div id="projectbrief">Making Learn by Zooming a little less unbearable</div>
+   <div id="projectbrief">Mechatronics Course Support Software for ARM/Arduino/FreeRTOS</div>
   </td>
  </tr>
  </tbody>
@@ -133,11 +134,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a38fb597f730afaf9fac97240b0286f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the shared data item.  <a href="classShare.html#a38fb597f730afaf9fac97240b0286f55">More...</a><br /></td></tr>
 <tr class="separator:a38fb597f730afaf9fac97240b0286f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a979bfb3c7bf8aa5f0601a649553d516c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html#a979bfb3c7bf8aa5f0601a649553d516c">get</a> (DataType &amp;recv_data)</td></tr>
-<tr class="memdesc:a979bfb3c7bf8aa5f0601a649553d516c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the shared data item.  <a href="classShare.html#a979bfb3c7bf8aa5f0601a649553d516c">More...</a><br /></td></tr>
+<tr class="memdesc:a979bfb3c7bf8aa5f0601a649553d516c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the shared data item into a variable.  <a href="classShare.html#a979bfb3c7bf8aa5f0601a649553d516c">More...</a><br /></td></tr>
 <tr class="separator:a979bfb3c7bf8aa5f0601a649553d516c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac544379dc98c1d1424efca1083baef7d"><td class="memItemLeft" align="right" valign="top">DataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html#ac544379dc98c1d1424efca1083baef7d">get</a> (void)</td></tr>
+<tr class="memdesc:ac544379dc98c1d1424efca1083baef7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read and return data from the shared data item.  <a href="classShare.html#ac544379dc98c1d1424efca1083baef7d">More...</a><br /></td></tr>
+<tr class="separator:ac544379dc98c1d1424efca1083baef7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f69eaea2dd026247dd6772a1aea23c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html#a6f69eaea2dd026247dd6772a1aea23c4">ISR_get</a> (DataType &amp;recv_data)</td></tr>
 <tr class="memdesc:a6f69eaea2dd026247dd6772a1aea23c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the shared data item, from within an ISR.  <a href="classShare.html#a6f69eaea2dd026247dd6772a1aea23c4">More...</a><br /></td></tr>
 <tr class="separator:a6f69eaea2dd026247dd6772a1aea23c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c77e37949f1e231c2c0e5b387eb3ee0"><td class="memItemLeft" align="right" valign="top">DataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html#a8c77e37949f1e231c2c0e5b387eb3ee0">ISR_get</a> (void)</td></tr>
+<tr class="memdesc:a8c77e37949f1e231c2c0e5b387eb3ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read and return data from the shared data item, from within an ISR.  <a href="classShare.html#a8c77e37949f1e231c2c0e5b387eb3ee0">More...</a><br /></td></tr>
+<tr class="separator:a8c77e37949f1e231c2c0e5b387eb3ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbda236ee6fe392200a766d7e4e8a080"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShare.html#afbda236ee6fe392200a766d7e4e8a080">print_in_list</a> (Print &amp;printer)</td></tr>
 <tr class="memdesc:afbda236ee6fe392200a766d7e4e8a080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the name and type (share) of this data item.  <a href="classShare.html#afbda236ee6fe392200a766d7e4e8a080">More...</a><br /></td></tr>
 <tr class="separator:afbda236ee6fe392200a766d7e4e8a080"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,7 +197,7 @@ Usage</h1>
 </div><!-- fragment --><p> In the receiving task, data is read from the share: </p><div class="fragment"><div class="line">uint16_t got_data;             <span class="comment">///&lt; Holds received data</span></div>
 <div class="line"><span class="comment"></span>...</div>
 <div class="line">my_share.get (got_data);       <span class="comment">// Get local copy of shared data</span></div>
-</div><!-- fragment --><p><b>The</b> <b>Easy</b> <b>Way</b> It's also possible to use overloaded stream insertion and extraction operators to interact with the share. These operators contain code which checks if they're running in an interrupt service routine (ISR) or not and use the appropriate method to interact with the internal queue which holds the data, so they're a little slower than <code><a class="el" href="classShare.html#aef08e3bc0686d8032f40613be8c13df4" title="Put data into the shared data item.">put()</a></code> and <code><a class="el" href="classShare.html#a979bfb3c7bf8aa5f0601a649553d516c" title="Read data from the shared data item.">get()</a></code>. Usage is as follows, assuming that the share and local variable have been set up above: </p><div class="fragment"><div class="line">my_share &lt;&lt; a_data_item;       <span class="comment">// In sending task</span></div>
+</div><!-- fragment --><p><b>The</b> <b>Easy</b> <b>Way</b> It's also possible to use overloaded stream insertion and extraction operators to interact with the share. These operators contain code which checks if they're running in an interrupt service routine (ISR) or not and use the appropriate method to interact with the internal queue which holds the data, so they're a little slower than <code><a class="el" href="classShare.html#aef08e3bc0686d8032f40613be8c13df4" title="Put data into the shared data item.">put()</a></code> and <code><a class="el" href="classShare.html#ac544379dc98c1d1424efca1083baef7d" title="Read and return data from the shared data item.">get()</a></code>. Usage is as follows, assuming that the share and local variable have been set up above: </p><div class="fragment"><div class="line">my_share &lt;&lt; a_data_item;       <span class="comment">// In sending task</span></div>
 <div class="line">...</div>
 <div class="line">my_share &gt;&gt; got_data;          <span class="comment">// In receiving task</span></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -232,7 +239,7 @@ template&lt;class DataType &gt; </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a979bfb3c7bf8aa5f0601a649553d516c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a979bfb3c7bf8aa5f0601a649553d516c">&#9670;&nbsp;</a></span>get()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a979bfb3c7bf8aa5f0601a649553d516c">&#9670;&nbsp;</a></span>get() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,7 +264,7 @@ template&lt;class DataType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Read data from the shared data item. </p>
+<p>Read data from the shared data item into a variable. </p>
 <p>This method is used to read data from the shared data item with protection to ensure that the data cannot be corrupted by a task switch. The shared data is copied into the variable which is given as this method's parameter, replacing the previous contents of that variable. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
@@ -267,8 +274,44 @@ template&lt;class DataType &gt; </div>
 
 </div>
 </div>
+<a id="ac544379dc98c1d1424efca1083baef7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac544379dc98c1d1424efca1083baef7d">&#9670;&nbsp;</a></span>get() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DataType <a class="el" href="classShare.html">Share</a>&lt; DataType &gt;::get </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read and return data from the shared data item. </p>
+<p>This method is used to read data from the shared data item with protection to ensure that the data cannot be corrupted by a task switch. A copy of the shared data is returned. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a6f69eaea2dd026247dd6772a1aea23c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f69eaea2dd026247dd6772a1aea23c4">&#9670;&nbsp;</a></span>ISR_get()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f69eaea2dd026247dd6772a1aea23c4">&#9670;&nbsp;</a></span>ISR_get() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,6 +337,42 @@ template&lt;class DataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Read data from the shared data item, from within an ISR. </p>
+<p>This method is used to enable code within an ISR to read data from the shared data item. It must only be called from within an interrupt service routine, not a normal task. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8c77e37949f1e231c2c0e5b387eb3ee0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c77e37949f1e231c2c0e5b387eb3ee0">&#9670;&nbsp;</a></span>ISR_get() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DataType <a class="el" href="classShare.html">Share</a>&lt; DataType &gt;::ISR_get </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read and return data from the shared data item, from within an ISR. </p>
 <p>This method is used to enable code within an ISR to read data from the shared data item. It must only be called from within an interrupt service routine, not a normal task. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
@@ -402,7 +481,7 @@ template&lt;class DataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Read data from the shared data item. </p>
-<p>This method is used to read data from the shared data item with critical section protection to ensure that the data cannot be corrupted by a task switch. The shared data is copied into the variable which is given as this method's parameter, replacing the previous contents. This method checks if the processor is currently in an interupt service routine (ISR) and if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classShare.html#a979bfb3c7bf8aa5f0601a649553d516c" title="Read data from the shared data item.">get()</a></code> method because of the run-time ISR check. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This method is used to read data from the shared data item with critical section protection to ensure that the data cannot be corrupted by a task switch. The shared data is copied into the variable which is given as this method's parameter, replacing the previous contents. This method checks if the processor is currently in an interupt service routine (ISR) and if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classShare.html#ac544379dc98c1d1424efca1083baef7d" title="Read and return data from the shared data item.">get()</a></code> method because of the run-time ISR check. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">put_here</td><td>A reference to the variable in which to put received data </td></tr>
   </table>
@@ -491,8 +570,8 @@ template&lt;class DataType &gt; </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="ataskshare_8h_html"><div class="ttname"><a href="taskshare_8h.html">taskshare.h</a></div><div class="ttdoc">Data which can be shared between tasks in a thread-safe manner.</div></div>
-<div class="ttc" id="aclassShare_html"><div class="ttname"><a href="classShare.html">Share</a></div><div class="ttdoc">Class for data to be shared in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> taskshare.h:118</div></div>
-<div class="ttc" id="aclassShare_html_aef08e3bc0686d8032f40613be8c13df4"><div class="ttname"><a href="classShare.html#aef08e3bc0686d8032f40613be8c13df4">Share::put</a></div><div class="ttdeci">void put(DataType new_data)</div><div class="ttdoc">Put data into the shared data item.</div><div class="ttdef"><b>Definition:</b> taskshare.h:141</div></div>
+<div class="ttc" id="aclassShare_html"><div class="ttname"><a href="classShare.html">Share</a></div><div class="ttdoc">Class for data to be shared in a thread-safe manner between tasks.</div><div class="ttdef"><b>Definition:</b> taskshare.h:119</div></div>
+<div class="ttc" id="aclassShare_html_aef08e3bc0686d8032f40613be8c13df4"><div class="ttname"><a href="classShare.html#aef08e3bc0686d8032f40613be8c13df4">Share::put</a></div><div class="ttdeci">void put(DataType new_data)</div><div class="ttdoc">Put data into the shared data item.</div><div class="ttdef"><b>Definition:</b> taskshare.h:142</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

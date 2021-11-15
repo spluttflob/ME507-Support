@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ME507 Utility Library for ARM/Arduino/FreeRTOS: Queue&lt; dataType &gt; Class Template Reference</title>
+<title>ME507 Utility Library: Queue&lt; dataType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,10 +26,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">ME507 Utility Library for ARM/Arduino/FreeRTOS
+   <div id="projectname">ME507 Utility Library
    &#160;<span id="projectnumber">0.2.1</span>
    </div>
-   <div id="projectbrief">Making Learn by Zooming a little less unbearable</div>
+   <div id="projectbrief">Mechatronics Course Support Software for ARM/Arduino/FreeRTOS</div>
   </td>
  </tr>
  </tbody>
@@ -141,15 +142,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a14df528749e226183df3fa5472368e82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82">get</a> (dataType &amp;recv_item)</td></tr>
 <tr class="memdesc:a14df528749e226183df3fa5472368e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve and remove the item at the head of the queue.  <a href="classQueue.html#a14df528749e226183df3fa5472368e82">More...</a><br /></td></tr>
 <tr class="separator:a14df528749e226183df3fa5472368e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae24699e7027efd7da838f9a1037e29b5"><td class="memItemLeft" align="right" valign="top">dataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5">get</a> (void)</td></tr>
+<tr class="memdesc:ae24699e7027efd7da838f9a1037e29b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve, remove, and return the item at the head of the queue.  <a href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5">More...</a><br /></td></tr>
+<tr class="separator:ae24699e7027efd7da838f9a1037e29b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd37b4f184be25ecebf7957900321bbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">ISR_get</a> (dataType &amp;recv_item)</td></tr>
 <tr class="memdesc:afd37b4f184be25ecebf7957900321bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the item at the head of the queue from within an ISR.  <a href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">More...</a><br /></td></tr>
 <tr class="separator:afd37b4f184be25ecebf7957900321bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf984762445f0361ff8aed3a33d78409"><td class="memItemLeft" align="right" valign="top">dataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#acf984762445f0361ff8aed3a33d78409">ISR_get</a> (void)</td></tr>
+<tr class="memdesc:acf984762445f0361ff8aed3a33d78409"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve, remove, and return the item at the head of the queue when called by ISR code.  <a href="classQueue.html#acf984762445f0361ff8aed3a33d78409">More...</a><br /></td></tr>
+<tr class="separator:acf984762445f0361ff8aed3a33d78409"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44557ed37c98580b87d0196908330bcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">peek</a> (dataType &amp;recv_item)</td></tr>
-<tr class="memdesc:a44557ed37c98580b87d0196908330bcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the item at the queue head without removing it.  <a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">More...</a><br /></td></tr>
+<tr class="memdesc:a44557ed37c98580b87d0196908330bcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the item at the queue head without removing it.  <a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">More...</a><br /></td></tr>
 <tr class="separator:a44557ed37c98580b87d0196908330bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b721db58328663cc8d5466d757fa51"><td class="memItemLeft" align="right" valign="top">dataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a98b721db58328663cc8d5466d757fa51">peek</a> (void)</td></tr>
+<tr class="memdesc:a98b721db58328663cc8d5466d757fa51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a copy of the item at the queue head without removing it.  <a href="classQueue.html#a98b721db58328663cc8d5466d757fa51">More...</a><br /></td></tr>
+<tr class="separator:a98b721db58328663cc8d5466d757fa51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a087ad13824fab4dfa026ef5cf138ca05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">ISR_peek</a> (dataType &amp;recv_item)</td></tr>
-<tr class="memdesc:a087ad13824fab4dfa026ef5cf138ca05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">More...</a><br /></td></tr>
+<tr class="memdesc:a087ad13824fab4dfa026ef5cf138ca05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">More...</a><br /></td></tr>
 <tr class="separator:a087ad13824fab4dfa026ef5cf138ca05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e7e84117611c6074e37a339e9b5b901"><td class="memItemLeft" align="right" valign="top">dataType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a2e7e84117611c6074e37a339e9b5b901">ISR_peek</a> (void)</td></tr>
+<tr class="memdesc:a2e7e84117611c6074e37a339e9b5b901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a copy of the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a2e7e84117611c6074e37a339e9b5b901">More...</a><br /></td></tr>
+<tr class="separator:a2e7e84117611c6074e37a339e9b5b901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">any</a> (void)</td></tr>
 <tr class="memdesc:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the queue has contents which can be read.  <a href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">More...</a><br /></td></tr>
 <tr class="separator:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,7 +236,7 @@ class Queue&lt; dataType &gt;</h3>
 <p>Since multithreaded tasks must not use unprotected shared data items for communication, queues are a primary means of intertask communication. Other means include shared data items (see <code><a class="el" href="taskshare_8h.html" title="Data which can be shared between tasks in a thread-safe manner.">taskshare.h</a></code>) and carrier pigeons. The use of a C++ class template allows the compiler to check that you're putting the correct type of data into each queue and getting the correct type of data out, thus helping to prevent programming mistakes that can corrupt your data.</p>
 <p>As a template class, <code>Queue&lt;dataType&gt;</code> can be used to make queues which hold data of many types. "Plain Old Data" types such as <code>bool</code> or <code>uint16_t</code> are supported, of course. But you can also use queues which hold compound data types. For example, if you have <code>class</code> <code>my_data</code> which holds several measurements together in an object, you can make a queue for <code>my_data</code> objects with <code>Queue&lt;my_data&gt;</code>. Each item in the queue will then hold several measurements.</p>
 <p>The size of FreeRTOS queues is limited to 255 items in 8-bit microcontrollers whose <code>portBASE_TYPE</code> is an 8-bit number. This is a FreeRTOS feature.</p>
-<p>Normal writing and reading are done with methods <code><a class="el" href="classQueue.html#ae7859c00b2e2818183bfd54979091e60" title="Put an item into the queue behind other items.">put()</a></code> and <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code>. Normal writing means that the sending task must wait until there is empty space in the queue, and then it puts a data item into the "back" of the queue, where "back" means that the item in the back of the queue will be read after all items that were previously put into the queue have been read. Normal reading means that when an item is read from the front of the queue, it will then be removed, making space for more items at the back. This process is often used to synchronize tasks, as the reading task's <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> method blocks, meaning that the reading task gets stuck waiting for an item to arrive in the queue; it won't do anything useful until new data has been read. Note that this is acceptable behavior in an RTOS because the RTOS scheduler will ensure that other tasks get to run even while the reading task is blocking itself waiting for data.</p>
+<p>Normal writing and reading are done with methods <code><a class="el" href="classQueue.html#ae7859c00b2e2818183bfd54979091e60" title="Put an item into the queue behind other items.">put()</a></code> and <code><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5" title="Retrieve, remove, and return the item at the head of the queue.">get()</a></code>. Normal writing means that the sending task must wait until there is empty space in the queue, and then it puts a data item into the "back" of the queue, where "back" means that the item in the back of the queue will be read after all items that were previously put into the queue have been read. Normal reading means that when an item is read from the front of the queue, it will then be removed, making space for more items at the back. This process is often used to synchronize tasks, as the reading task's <code><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5" title="Retrieve, remove, and return the item at the head of the queue.">get()</a></code> method blocks, meaning that the reading task gets stuck waiting for an item to arrive in the queue; it won't do anything useful until new data has been read. Note that this is acceptable behavior in an RTOS because the RTOS scheduler will ensure that other tasks get to run even while the reading task is blocking itself waiting for data.</p>
 <p>In some cases, one may need to use less normal reading and writing methods. Methods whose name begins with <code>ISR_</code> are to be used only within a hardware interrupt service routine. If there is a need to put data at the front of the queue instead of the back, use <code><a class="el" href="classQueue.html#ad3c592b245b39ce229b157935f5a65fa" title="Put an item into the front of the queue to be retrieved first.">butt_in()</a></code> instead of <code><a class="el" href="classQueue.html#ae7859c00b2e2818183bfd54979091e60" title="Put an item into the queue behind other items.">put()</a></code>. If one needs to read data from the queue without removing that data, the <code>look_at()</code> method allows this to be done. If something particularly unusual needs to be done with the queue, one can use the method <code><a class="el" href="classQueue.html#ab009e50722f689c48d146125f6d50519" title="Return a handle to the FreeRTOS structure which runs this queue.">get_handle()</a></code> to retrieve the handle used by the C language functions in FreeRTOS to access the <a class="el" href="classQueue.html" title="Implements a queue to transmit data from one RTOS task to another.">Queue</a> object's underlying data structure directly.</p>
 <h1><a class="anchor" id="queue_usage"></a>
 Usage</h1>
@@ -237,7 +250,7 @@ Usage</h1>
 <div class="line"><span class="comment"></span>...</div>
 <div class="line">an_item = stick_sensor.get_data (2);  <span class="comment">// Read data from sensor </span></div>
 <div class="line">hockey_queue.<a class="code" href="classQueue.html#ae7859c00b2e2818183bfd54979091e60">put</a> (a_data_item);       <span class="comment">// Put data into queue</span></div>
-</div><!-- fragment --><p> In the receiving task, data is read from the queue. In typical usage, the call to <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> will block the receiving task until data has been put into the queue by the sending task: </p><div class="fragment"><div class="line">int16_t data_we_got;                  <span class="comment">///&lt; Holds received data</span></div>
+</div><!-- fragment --><p> In the receiving task, data is read from the queue. In typical usage, the call to <code><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5" title="Retrieve, remove, and return the item at the head of the queue.">get()</a></code> will block the receiving task until data has been put into the queue by the sending task: </p><div class="fragment"><div class="line">int16_t data_we_got;                  <span class="comment">///&lt; Holds received data</span></div>
 <div class="line"><span class="comment"></span>...</div>
 <div class="line">hockey_queue.get (data_we_got);       <span class="comment">// Get data from the queue</span></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -388,7 +401,7 @@ template&lt;class dataType &gt; </div>
 </div>
 </div>
 <a id="a14df528749e226183df3fa5472368e82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14df528749e226183df3fa5472368e82">&#9670;&nbsp;</a></span>get()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a14df528749e226183df3fa5472368e82">&#9670;&nbsp;</a></span>get() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,6 +433,37 @@ template&lt;class dataType &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ae24699e7027efd7da838f9a1037e29b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae24699e7027efd7da838f9a1037e29b5">&#9670;&nbsp;</a></span>get() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::get </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieve, remove, and return the item at the head of the queue. </p>
+<p>This method gets the item at the head of the queue and removes it from the queue. A copy of the item's contents is returned. If there's nothing in the queue, this method waits, blocking the calling task, for the number of RTOS ticks specified in the <code>wait_time</code> parameter to the queue constructor (the default is forever) or until something shows up. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the contents of the queue item </dd></dl>
 
 </div>
 </div>
@@ -585,7 +629,7 @@ template&lt;class dataType &gt; </div>
 </div>
 </div>
 <a id="afd37b4f184be25ecebf7957900321bbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd37b4f184be25ecebf7957900321bbf">&#9670;&nbsp;</a></span>ISR_get()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afd37b4f184be25ecebf7957900321bbf">&#9670;&nbsp;</a></span>ISR_get() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -617,6 +661,37 @@ template&lt;class dataType &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="acf984762445f0361ff8aed3a33d78409"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf984762445f0361ff8aed3a33d78409">&#9670;&nbsp;</a></span>ISR_get() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::ISR_get </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieve, remove, and return the item at the head of the queue when called by ISR code. </p>
+<p>This method gets the item at the head of the queue and removes it from the queue. A copy of the item's contents is returned. This method must <b>not</b> be called from within normal non-ISR code. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the contents of the queue item </dd></dl>
 
 </div>
 </div>
@@ -652,7 +727,7 @@ template&lt;class dataType &gt; </div>
 </div>
 </div>
 <a id="a087ad13824fab4dfa026ef5cf138ca05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a087ad13824fab4dfa026ef5cf138ca05">&#9670;&nbsp;</a></span>ISR_peek()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a087ad13824fab4dfa026ef5cf138ca05">&#9670;&nbsp;</a></span>ISR_peek() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -677,8 +752,44 @@ template&lt;class dataType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return the item at the front of the queue without deleting it, from within an ISR. </p>
-<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method doesn't change the value of the data given as its parameter. This method must <b>not</b> be called within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Get the item at the front of the queue without deleting it, from within an ISR. </p>
+<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method doesn't change the value of the data given as its parameter. This method must <b>only</b> be called within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2e7e84117611c6074e37a339e9b5b901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e7e84117611c6074e37a339e9b5b901">&#9670;&nbsp;</a></span>ISR_peek() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::ISR_peek </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a copy of the item at the front of the queue without deleting it, from within an ISR. </p>
+<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method doesn't change the value of the data given as its parameter. This method must <b>only</b> be called within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
   </table>
@@ -787,7 +898,7 @@ template&lt;class dataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Read data from the queue. </p>
-<p>This method is used to read data from the queue . The retrieved data is copied into the variable which is given as this method's parameter, replacing the previous contents. This method checks if the processor is currently in an interupt service routine (ISR) and if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82" title="Retrieve and remove the item at the head of the queue.">get()</a></code> method. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This method is used to read data from the queue . The retrieved data is copied into the variable which is given as this method's parameter, replacing the previous contents. This method checks if the processor is currently in an interupt service routine (ISR) and if so, it calls ISR specific functions to prevent corruption, so this function may be used within an ISR or outside one. It runs a little more slowly than the <code><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5" title="Retrieve, remove, and return the item at the head of the queue.">get()</a></code> method. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">put_here</td><td>A reference to the variable in which to put received data </td></tr>
   </table>
@@ -797,7 +908,7 @@ template&lt;class dataType &gt; </div>
 </div>
 </div>
 <a id="a44557ed37c98580b87d0196908330bcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44557ed37c98580b87d0196908330bcc">&#9670;&nbsp;</a></span>peek()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a44557ed37c98580b87d0196908330bcc">&#9670;&nbsp;</a></span>peek() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -822,13 +933,44 @@ template&lt;class dataType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return the item at the queue head without removing it. </p>
-<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue this method waits, blocking the calling task, for for the number of RTOS ticks specified in the <code>wait_time</code> parameter to the queue constructor (the default is forever) or until something shows up. This method must <b>not</b> be called from within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Get the item at the queue head without removing it. </p>
+<p>This method gets the item at the head of the queue without removing that item from the queue. If there's nothing in the queue this method waits, blocking the calling task, for for the number of RTOS ticks specified in the <code>wait_time</code> parameter to the queue constructor (the default is forever) or until something shows up. This method must <b>not</b> be called from within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
+    <tr><td class="paramname">recv_item</td><td>A reference to a variable to be filled with data from the queue item </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a98b721db58328663cc8d5466d757fa51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98b721db58328663cc8d5466d757fa51">&#9670;&nbsp;</a></span>peek() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class dataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dataType <a class="el" href="classQueue.html">Queue</a>&lt; dataType &gt;::peek </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a copy of the item at the queue head without removing it. </p>
+<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue this method waits, blocking the calling task, for for the number of RTOS ticks specified in the <code>wait_time</code> parameter to the queue constructor (the default is forever) or until something shows up. This method must <b>not</b> be called from within an interrupt service routine. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the data in the item at the head of the queue </dd></dl>
 
 </div>
 </div>
@@ -944,8 +1086,8 @@ template&lt;class dataType &gt; </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="ataskqueue_8h_html"><div class="ttname"><a href="taskqueue_8h.html">taskqueue.h</a></div></div>
-<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:126</div></div>
-<div class="ttc" id="aclassQueue_html_ae7859c00b2e2818183bfd54979091e60"><div class="ttname"><a href="classQueue.html#ae7859c00b2e2818183bfd54979091e60">Queue::put</a></div><div class="ttdeci">bool put(const dataType item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:434</div></div>
+<div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:128</div></div>
+<div class="ttc" id="aclassQueue_html_ae7859c00b2e2818183bfd54979091e60"><div class="ttname"><a href="classQueue.html#ae7859c00b2e2818183bfd54979091e60">Queue::put</a></div><div class="ttdeci">bool put(const dataType item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:505</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

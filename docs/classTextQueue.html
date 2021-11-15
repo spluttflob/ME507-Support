@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ME507 Utility Library for ARM/Arduino/FreeRTOS: TextQueue Class Reference</title>
+<title>ME507 Utility Library: TextQueue Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,10 +26,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">ME507 Utility Library for ARM/Arduino/FreeRTOS
+   <div id="projectname">ME507 Utility Library
    &#160;<span id="projectnumber">0.2.1</span>
    </div>
-   <div id="projectbrief">Making Learn by Zooming a little less unbearable</div>
+   <div id="projectbrief">Mechatronics Course Support Software for ARM/Arduino/FreeRTOS</div>
   </td>
  </tr>
  </tbody>
@@ -151,15 +152,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a14df528749e226183df3fa5472368e82 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a14df528749e226183df3fa5472368e82">get</a> (char &amp;recv_item)</td></tr>
 <tr class="memdesc:a14df528749e226183df3fa5472368e82 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve and remove the item at the head of the queue.  <a href="classQueue.html#a14df528749e226183df3fa5472368e82">More...</a><br /></td></tr>
 <tr class="separator:a14df528749e226183df3fa5472368e82 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae24699e7027efd7da838f9a1037e29b5 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5">get</a> (void)</td></tr>
+<tr class="memdesc:ae24699e7027efd7da838f9a1037e29b5 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve, remove, and return the item at the head of the queue.  <a href="classQueue.html#ae24699e7027efd7da838f9a1037e29b5">More...</a><br /></td></tr>
+<tr class="separator:ae24699e7027efd7da838f9a1037e29b5 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd37b4f184be25ecebf7957900321bbf inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">ISR_get</a> (char &amp;recv_item)</td></tr>
 <tr class="memdesc:afd37b4f184be25ecebf7957900321bbf inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the item at the head of the queue from within an ISR.  <a href="classQueue.html#afd37b4f184be25ecebf7957900321bbf">More...</a><br /></td></tr>
 <tr class="separator:afd37b4f184be25ecebf7957900321bbf inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf984762445f0361ff8aed3a33d78409 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#acf984762445f0361ff8aed3a33d78409">ISR_get</a> (void)</td></tr>
+<tr class="memdesc:acf984762445f0361ff8aed3a33d78409 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve, remove, and return the item at the head of the queue when called by ISR code.  <a href="classQueue.html#acf984762445f0361ff8aed3a33d78409">More...</a><br /></td></tr>
+<tr class="separator:acf984762445f0361ff8aed3a33d78409 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44557ed37c98580b87d0196908330bcc inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a44557ed37c98580b87d0196908330bcc">peek</a> (char &amp;recv_item)</td></tr>
-<tr class="memdesc:a44557ed37c98580b87d0196908330bcc inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the item at the queue head without removing it.  <a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">More...</a><br /></td></tr>
+<tr class="memdesc:a44557ed37c98580b87d0196908330bcc inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the item at the queue head without removing it.  <a href="classQueue.html#a44557ed37c98580b87d0196908330bcc">More...</a><br /></td></tr>
 <tr class="separator:a44557ed37c98580b87d0196908330bcc inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b721db58328663cc8d5466d757fa51 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a98b721db58328663cc8d5466d757fa51">peek</a> (void)</td></tr>
+<tr class="memdesc:a98b721db58328663cc8d5466d757fa51 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a copy of the item at the queue head without removing it.  <a href="classQueue.html#a98b721db58328663cc8d5466d757fa51">More...</a><br /></td></tr>
+<tr class="separator:a98b721db58328663cc8d5466d757fa51 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a087ad13824fab4dfa026ef5cf138ca05 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">ISR_peek</a> (char &amp;recv_item)</td></tr>
-<tr class="memdesc:a087ad13824fab4dfa026ef5cf138ca05 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">More...</a><br /></td></tr>
+<tr class="memdesc:a087ad13824fab4dfa026ef5cf138ca05 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a087ad13824fab4dfa026ef5cf138ca05">More...</a><br /></td></tr>
 <tr class="separator:a087ad13824fab4dfa026ef5cf138ca05 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e7e84117611c6074e37a339e9b5b901 inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a2e7e84117611c6074e37a339e9b5b901">ISR_peek</a> (void)</td></tr>
+<tr class="memdesc:a2e7e84117611c6074e37a339e9b5b901 inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a copy of the item at the front of the queue without deleting it, from within an ISR.  <a href="classQueue.html#a2e7e84117611c6074e37a339e9b5b901">More...</a><br /></td></tr>
+<tr class="separator:a2e7e84117611c6074e37a339e9b5b901 inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d inherit pub_methods_classQueue"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">any</a> (void)</td></tr>
 <tr class="memdesc:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d inherit pub_methods_classQueue"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the queue has contents which can be read.  <a href="classQueue.html#a7eb3e7ac6e9a1ec956a11cbdc7c5a44d">More...</a><br /></td></tr>
 <tr class="separator:a7eb3e7ac6e9a1ec956a11cbdc7c5a44d inherit pub_methods_classQueue"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -343,7 +356,7 @@ Usage</h1>
 </div><!-- doc-content -->
 <div class="ttc" id="atextqueue_8h_html"><div class="ttname"><a href="textqueue_8h.html">textqueue.h</a></div></div>
 <div class="ttc" id="aclassTextQueue_html"><div class="ttname"><a href="classTextQueue.html">TextQueue</a></div><div class="ttdoc">Implements a queue to transmit text from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> textqueue.h:94</div></div>
-<div class="ttc" id="aclassQueue_html_a14df528749e226183df3fa5472368e82"><div class="ttname"><a href="classQueue.html#a14df528749e226183df3fa5472368e82">Queue::get</a></div><div class="ttdeci">void get(dataType &amp;recv_item)</div><div class="ttdoc">Retrieve and remove the item at the head of the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:206</div></div>
+<div class="ttc" id="aclassQueue_html_a14df528749e226183df3fa5472368e82"><div class="ttname"><a href="classQueue.html#a14df528749e226183df3fa5472368e82">Queue::get</a></div><div class="ttdeci">void get(dataType &amp;recv_item)</div><div class="ttdoc">Retrieve and remove the item at the head of the queue.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:208</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

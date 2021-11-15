@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ME507 Utility Library: mutex.h File Reference</title>
+<title>ME507 Utility Library: src Directory Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('mutex_8h.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('dir_68267d1309a1af8e8297ef4c3efbcdba.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -84,43 +84,35 @@ $(document).ready(function(){initNavTree('mutex_8h.html',''); initResizable(); }
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">mutex.h File Reference</div>  </div>
+<div class="title">src Directory Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &lt;FreeRTOS.h&gt;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for mutex.h:</div>
-<div class="dyncontent">
-<div class="center"><img src="mutex_8h__incl.png" border="0" usemap="#mutex_8h" alt=""/></div>
-<map name="mutex_8h" id="mutex_8h">
-<area shape="rect" title=" " alt="" coords="64,5,133,32"/>
-<area shape="rect" title=" " alt="" coords="5,80,83,107"/>
-<area shape="rect" title=" " alt="" coords="107,80,203,107"/>
-</map>
-</div>
-</div>
-<p><a href="mutex_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMutex.html">Mutex</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class which implements a mutex which can guard a resource.  <a href="classMutex.html#details">More...</a><br /></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:baseshare_8cpp"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="baseshare_8cpp.html">baseshare.cpp</a></td></tr>
+<tr class="memdesc:baseshare_8cpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source code of a base class for type-safe, thread-safe task data exchange classes. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:baseshare_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="baseshare_8h.html">baseshare.h</a> <a href="baseshare_8h_source.html">[code]</a></td></tr>
+<tr class="memdesc:baseshare_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Headers for a base class for type-safe, thread-safe task data exchange classes. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:mutex_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mutex_8h.html">mutex.h</a> <a href="mutex_8h_source.html">[code]</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:taskqueue_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskqueue_8h.html">taskqueue.h</a> <a href="taskqueue_8h_source.html">[code]</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:taskshare_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskshare_8h.html">taskshare.h</a> <a href="taskshare_8h_source.html">[code]</a></td></tr>
+<tr class="memdesc:taskshare_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data which can be shared between tasks in a thread-safe manner. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:textqueue_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="textqueue_8h.html">textqueue.h</a> <a href="textqueue_8h_source.html">[code]</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains C++ code which makes it easier to use semaphores such as mutexes (mutices?) to coordinate some actions between tasks.</p>
-<dl class="section author"><dt>Author</dt><dd>JR Ridgely </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2020-Nov-16 Original file </dd></dl>
-</div></div><!-- contents -->
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="mutex_8h.html">mutex.h</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

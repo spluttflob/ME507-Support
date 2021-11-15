@@ -5,8 +5,6 @@ var files_dup =
     [ "mutex.h", "mutex_8h.html", [
       [ "Mutex", "classMutex.html", "classMutex" ]
     ] ],
-    [ "task_receive.cpp", "task__receive_8cpp.html", "task__receive_8cpp" ],
-    [ "task_receive.h", "task__receive_8h.html", "task__receive_8h" ],
     [ "taskqueue.h", "taskqueue_8h.html", [
       [ "Queue", "classQueue.html", "classQueue" ]
     ] ],

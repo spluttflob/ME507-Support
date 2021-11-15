@@ -22,7 +22,7 @@ for the JavaScript code in this file
 */
 var NAVTREE =
 [
-  [ "ME507 Utility Library for ARM/Arduino/FreeRTOS", "index.html", [
+  [ "ME507 Utility Library", "index.html", [
     [ "Introduction", "index.html#s_intro", null ],
     [ "Tasks", "index.html#s_tasks", null ],
     [ "Shares", "index.html#s_shares", null ],
