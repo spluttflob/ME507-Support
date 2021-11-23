@@ -13,7 +13,7 @@
 #include <PrintStream.h>
 #include <STM32FreeRTOS.h>
 
-#include "encoder3.h"
+// #include "encoder3.h"          // Artifact from some previously done testing
 #include "encoder_counter.h"
 
 
