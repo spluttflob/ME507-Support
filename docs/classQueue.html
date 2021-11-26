@@ -789,12 +789,7 @@ template&lt;class dataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Return a copy of the item at the front of the queue without deleting it, from within an ISR. </p>
-<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method doesn't change the value of the data given as its parameter. This method must <b>only</b> be called within an interrupt service routine. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">recv_item</td><td>A reference to the item to be filled with data from the queue </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>This method returns the item at the head of the queue without removing that item from the queue. If there's nothing in the queue, this method returns a default value of the type of data in the queue. This method must <b>only</b> be called within an interrupt service routine. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the data in the queue </dd></dl>
 
 </div>
 </div>
@@ -1087,7 +1082,7 @@ template&lt;class dataType &gt; </div>
 </div><!-- doc-content -->
 <div class="ttc" id="ataskqueue_8h_html"><div class="ttname"><a href="taskqueue_8h.html">taskqueue.h</a></div></div>
 <div class="ttc" id="aclassQueue_html"><div class="ttname"><a href="classQueue.html">Queue</a></div><div class="ttdoc">Implements a queue to transmit data from one RTOS task to another.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:128</div></div>
-<div class="ttc" id="aclassQueue_html_ae7859c00b2e2818183bfd54979091e60"><div class="ttname"><a href="classQueue.html#ae7859c00b2e2818183bfd54979091e60">Queue::put</a></div><div class="ttdeci">bool put(const dataType item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:505</div></div>
+<div class="ttc" id="aclassQueue_html_ae7859c00b2e2818183bfd54979091e60"><div class="ttname"><a href="classQueue.html#ae7859c00b2e2818183bfd54979091e60">Queue::put</a></div><div class="ttdeci">bool put(const dataType item)</div><div class="ttdoc">Put an item into the queue behind other items.</div><div class="ttdef"><b>Definition:</b> taskqueue.h:504</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

@@ -301,12 +301,7 @@ template&lt;class DataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Read and return data from the shared data item. </p>
-<p>This method is used to read data from the shared data item with protection to ensure that the data cannot be corrupted by a task switch. A copy of the shared data is returned. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>This method is used to read data from the shared data item with protection to ensure that the data cannot be corrupted by a task switch. A copy of the shared data is returned. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the data found in the queue, or a default value of the given data type if no data was found in the queue </dd></dl>
 
 </div>
 </div>
@@ -373,12 +368,7 @@ template&lt;class DataType &gt; </div>
 </div><div class="memdoc">
 
 <p>Read and return data from the shared data item, from within an ISR. </p>
-<p>This method is used to enable code within an ISR to read data from the shared data item. It must only be called from within an interrupt service routine, not a normal task. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">recv_data</td><td>A reference to the variable in which to put received data </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>This method is used to enable code within an ISR to read data from the shared data item. It must only be called from within an interrupt service routine, not a normal task. </p><dl class="section return"><dt>Returns</dt><dd>A copy of the data found in the queue, or a default value of the given data type if no data was found in the queue </dd></dl>
 
 </div>
 </div>

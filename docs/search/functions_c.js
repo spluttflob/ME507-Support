@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['usable_109',['usable',['../classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7',1,'Queue']]]
+  ['write_91',['write',['../classTextQueue.html#a615f4828126919020a11e9335c93040f',1,'TextQueue']]]
 ];

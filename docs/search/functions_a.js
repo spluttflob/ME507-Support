@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['usable_81',['usable',['../classQueue.html#a2f5a7d38f857999a1c4cebe31089b0f7',1,'Queue']]]
+  ['take_88',['take',['../classMutex.html#ae45adddf5c24ba65ef16767437f9c032',1,'Mutex']]],
+  ['textqueue_89',['TextQueue',['../classTextQueue.html#a16098feae9a37a69f65dd3c1fa081491',1,'TextQueue']]]
 ];

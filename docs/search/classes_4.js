@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['textqueue_48',['TextQueue',['../classTextQueue.html',1,'']]]
+  ['share_53',['Share',['../classShare.html',1,'']]]
 ];

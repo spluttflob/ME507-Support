@@ -320,11 +320,10 @@ public:
      *           deleting it, from within an ISR.
      *  @details This method returns the item at the head of the queue without 
      *           removing that item from the queue. If there's nothing in the 
-     *           queue, this method doesn't change the value of the data given
-     *           as its parameter. This method must @b only be called within an
+     *           queue, this method returns a default value of the type of data
+     *           in the queue. This method must @b only be called within an
      *           interrupt service routine. 
-     *  @param   recv_item A reference to the item to be filled with data from 
-     *           the queue
+     *  @returns A copy of the data in the queue
      */
     dataType ISR_peek (void)
     {

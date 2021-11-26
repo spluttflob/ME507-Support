@@ -224,8 +224,8 @@ public:
      *  @details This method is used to read data from the shared data item 
      *           with protection to ensure that the data cannot be corrupted by
      *           a task switch. A copy of the shared data is returned. 
-     *  @param   recv_data A reference to the variable in which to put received
-     *           data
+     *  @returns A copy of the data found in the queue, or a default value of
+     *           the given data type if no data was found in the queue
      */
     DataType get (void)
     {
@@ -254,8 +254,8 @@ public:
      *  @details This method is used to enable code within an ISR to read data 
      *           from the shared data item. It must only be called from within 
      *           an interrupt service routine, not a normal task. 
-     *  @param   recv_data A reference to the variable in which to put received
-     *           data
+     *  @returns A copy of the data found in the queue, or a default value of
+     *           the given data type if no data was found in the queue
      */
     DataType ISR_get (void)
     {

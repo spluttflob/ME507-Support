@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['handle_84',['handle',['../classMutex.html#a5da1e7e042bbc8024265eed21d47a194',1,'Mutex::handle()'],['../classQueue.html#a69b90b10718e9469499375c61cc9c236',1,'Queue::handle()']]]
+  ['debug_93',['Debug',['../devnull_8cpp.html#ab37dc5c25ebbcc889f19f2291cc4d317',1,'Debug():&#160;devnull.cpp'],['../devnull_8h.html#ab37dc5c25ebbcc889f19f2291cc4d317',1,'Debug():&#160;devnull.cpp']]]
 ];

@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['get_7',['get',['../classQueue.html#a14df528749e226183df3fa5472368e82',1,'Queue::get(dataType &amp;recv_item)'],['../classQueue.html#ae24699e7027efd7da838f9a1037e29b5',1,'Queue::get(void)'],['../classShare.html#a979bfb3c7bf8aa5f0601a649553d516c',1,'Share::get(DataType &amp;recv_data)'],['../classShare.html#ac544379dc98c1d1424efca1083baef7d',1,'Share::get(void)']]],
-  ['get_5fhandle_8',['get_handle',['../classQueue.html#ab009e50722f689c48d146125f6d50519',1,'Queue']]],
-  ['give_9',['give',['../classMutex.html#a3c7db240ed634989205e2b17a3c8fe5d',1,'Mutex']]]
+  ['debug_7',['Debug',['../devnull_8cpp.html#ab37dc5c25ebbcc889f19f2291cc4d317',1,'Debug():&#160;devnull.cpp'],['../devnull_8h.html#ab37dc5c25ebbcc889f19f2291cc4d317',1,'Debug():&#160;devnull.cpp']]],
+  ['debug_5fprint_5foff_8',['DEBUG_PRINT_OFF',['../devnull_8h.html#a72f843cde7b80d04f2eb5f8170efe333',1,'devnull.h']]],
+  ['devnull_9',['DevNull',['../classDevNull.html',1,'DevNull'],['../classDevNull.html#a35270b6c12d45f14651bf0fc7343eda1',1,'DevNull::DevNull()']]],
+  ['devnull_2ecpp_10',['devnull.cpp',['../devnull_8cpp.html',1,'']]],
+  ['devnull_2eh_11',['devnull.h',['../devnull_8h.html',1,'']]]
 ];

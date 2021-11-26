@@ -314,8 +314,8 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">     *  @details This method is used to read data from the shared data item </span></div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">     *           with protection to ensure that the data cannot be corrupted by</span></div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">     *           a task switch. A copy of the shared data is returned. </span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">     *  @param   recv_data A reference to the variable in which to put received</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">     *           data</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">     *  @returns A copy of the data found in the queue, or a default value of</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">     *           the given data type if no data was found in the queue</span></div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00230"></a><span class="lineno"><a class="line" href="classShare.html#ac544379dc98c1d1424efca1083baef7d">  230</a></span>&#160;    DataType <a class="code" href="classShare.html#ac544379dc98c1d1424efca1083baef7d">get</a> (<span class="keywordtype">void</span>)</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    {</div>
@@ -344,8 +344,8 @@ $(document).ready(function(){initNavTree('taskshare_8h_source.html',''); initRes
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment">     *  @details This method is used to enable code within an ISR to read data </span></div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment">     *           from the shared data item. It must only be called from within </span></div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment">     *           an interrupt service routine, not a normal task. </span></div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment">     *  @param   recv_data A reference to the variable in which to put received</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment">     *           data</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment">     *  @returns A copy of the data found in the queue, or a default value of</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment">     *           the given data type if no data was found in the queue</span></div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00260"></a><span class="lineno"><a class="line" href="classShare.html#a8c77e37949f1e231c2c0e5b387eb3ee0">  260</a></span>&#160;    DataType <a class="code" href="classShare.html#a8c77e37949f1e231c2c0e5b387eb3ee0">ISR_get</a> (<span class="keywordtype">void</span>)</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    {</div>
