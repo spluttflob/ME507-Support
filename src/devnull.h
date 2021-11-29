@@ -40,6 +40,9 @@
  *    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *    THE POSSIBILITY OF SUCH DAMAGE. */
 
+#ifndef _DEVNULL_H_
+#define _DEVNULL_H_
+
 #include <PrintStream.h>
 
 /// If defined, this macro causes debugging printouts to be suppressed.
@@ -91,9 +94,6 @@ DevNull& operator<< (DevNull& no, _Setprecision __f);
 DevNull& operator<< (DevNull& no, _Setbytesep __f);
 
 
-/// Defining this macro causes debugging printouts to be suppressed
-// #define DEBUG_PRINT_OFF
-
 #ifdef DEBUG_PRINT_OFF
     /// If debugging printouts have been turned off, create an object of class
     /// @c DevNull which doesn't cause anything to be printed
@@ -101,6 +101,7 @@ DevNull& operator<< (DevNull& no, _Setbytesep __f);
 #else
     /// If debugging printouts haven't been turned off, use the regular serial
     /// port @c Serial to print debugging messages
-    // #define debug Serial
     extern Print& Debug;
 #endif
+
+#endif // _DEVNULL_H_
