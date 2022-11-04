@@ -42,7 +42,10 @@
 #define _TASKSHARE_H_
 
 #include "baseshare.h"                      // Base class for shared data items
-#include "FreeRTOS.h"                       // Main header for FreeRTOS
+#if (defined STM32F4xx || defined STM32L4xx)
+    #include "FreeRTOS.h"                       // Main header for FreeRTOS
+#endif
+
 
 /** @brief   Class for data to be shared in a thread-safe manner between tasks.
  *  @details This class implements an item of data which can be shared between

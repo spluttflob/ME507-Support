@@ -29,7 +29,9 @@
 #define _TEXTQUEUE_H_
 
 #include <Arduino.h>
-#include "FreeRTOS.h"                       // Main header for FreeRTOS
+#if (defined STM32F4xx || defined STM32L4xx)
+    #include "FreeRTOS.h"                       // Main header for FreeRTOS
+#endif
 #include "taskqueue.h"
 
 
